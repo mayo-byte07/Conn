@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conn — Admin Dashboard</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/theme-picker.css">
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div class="bg-noise"></div>
+
+  <!-- Mobile Sidebar Toggle -->
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+        </div>
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+          <div class="sidebar-logo-text" style="line-height:1;">Conn<span>.</span></div>
+          <span style="font-size: 0.5rem; color: var(--text-secondary); line-height: 1; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8;">powered by aethercodesociety</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-section="links" id="navLinks">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Links
+        </button>
+        <button class="nav-item" data-section="profile" id="navProfile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </button>
+        <button class="nav-item" data-section="themes" id="navThemes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Themes
+        </button>
+        <button class="nav-item" data-section="settings" id="navSettings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </button>
+        <button class="nav-item" data-section="analytics" id="navAnalytics">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Analytics
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="/" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Home Page
+        </a>
+        <a href="/me" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          View My Page
+        </a>
+        <button class="sidebar-logout-btn" id="logoutBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+
+      <!-- ══════ Links Section ══════ -->
+      <section class="admin-section active" id="sectionLinks">
+        <div class="admin-header">
+          <h1>Links</h1>
+          <div class="admin-header-actions">
+            <button class="btn btn-primary" id="addLinkBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Link
+            </button>
+          </div>
+        </div>
+        <div class="admin-links-list" id="adminLinksList"></div>
+      </section>
+
+      <!-- ══════ Profile Section ══════ -->
+      <section class="admin-section" id="sectionProfile">
+        <div class="admin-header">
+          <h1>Profile</h1>
+          <div class="admin-header-actions">
+            <button class="btn btn-primary" id="saveProfileBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Save Changes
+            </button>
+          </div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-header">
+            <h2 class="section-card-title">Basic Info</h2>
+          </div>
+          <div class="profile-form-grid">
+            <div class="form-group">
+              <label class="form-label">Display Name</label>
+              <input class="form-input" type="text" id="inputName" placeholder="Your Name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Avatar URL</label>
+              <input class="form-input" type="text" id="inputAvatar" placeholder="https://...">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Bio</label>
+              <textarea class="form-input" id="inputBio" placeholder="Tell the world about you..." rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-header">
+            <h2 class="section-card-title">Social Links</h2>
+          </div>
+          <div class="profile-form-grid">
+            <div class="form-group">
+              <label class="form-label">Twitter / X</label>
+              <input class="form-input" type="url" id="socialTwitter" placeholder="https://twitter.com/...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Instagram</label>
+              <input class="form-input" type="url" id="socialInstagram" placeholder="https://instagram.com/...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">GitHub</label>
+              <input class="form-input" type="url" id="socialGithub" placeholder="https://github.com/...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">LinkedIn</label>
+              <input class="form-input" type="url" id="socialLinkedin" placeholder="https://linkedin.com/in/...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">YouTube</label>
+              <input class="form-input" type="url" id="socialYoutube" placeholder="https://youtube.com/...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">TikTok</label>
+              <input class="form-input" type="url" id="socialTiktok" placeholder="https://tiktok.com/...">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Email</label>
+              <input class="form-input" type="email" id="socialEmail" placeholder="hello@yourdomain.com">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ Themes Section ══════ -->
+      <section class="admin-section" id="sectionThemes">
+        <div class="admin-header">
+          <h1>Themes</h1>
+          <div class="admin-header-actions">
+            <button class="btn btn-primary" id="saveThemeBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Apply Theme
+            </button>
+          </div>
+        </div>
+        <p style="color:var(--text-secondary); margin-bottom:24px; font-size:0.9rem;">Choose a theme for your public profile page. Click a theme to preview, then click "Apply Theme" to save.</p>
+        <div class="theme-picker-grid" id="themePickerGrid">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+      <!-- ══════ Settings Section ══════ -->
+      <section class="admin-section" id="sectionSettings">
+        <div class="admin-header">
+          <h1>Settings</h1>
+          <div class="admin-header-actions">
+            <button class="btn btn-primary" id="saveSettingsBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Save Settings
+            </button>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-card-header">
+            <h2 class="section-card-title">Page Settings</h2>
+          </div>
+          <div class="profile-form-grid">
+            <div class="form-group full">
+              <label class="form-label">Page Title</label>
+              <input class="form-input" type="text" id="settingPageTitle" placeholder="My Page — Link in Bio">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Meta Description (SEO)</label>
+              <textarea class="form-input" id="settingMetaDesc" placeholder="Description for search engines..." rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-card-header">
+            <h2 class="section-card-title">Visibility</h2>
+          </div>
+          <div class="settings-grid">
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Show Verified Badge</h4>
+                <p>Display the verified checkmark below your name</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="settingVerifiedBadge" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Show Footer Branding</h4>
+                <p>Display the "Conn" badge at the bottom of your page</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="settingShowFooter" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-card-header">
+            <h2 class="section-card-title">Custom CSS</h2>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Inject Custom Styles</label>
+            <textarea class="form-input" id="settingCustomCSS" placeholder="/* Add your custom CSS here */" rows="6" style="font-family: monospace; font-size: 0.82rem;"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ Analytics Section ══════ -->
+      <section class="admin-section" id="sectionAnalytics">
+        <div class="admin-header">
+          <h1>Analytics</h1>
+        </div>
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card">
+            <div class="stat-label">Total Clicks</div>
+            <div class="stat-value" id="statTotalClicks">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total Links</div>
+            <div class="stat-value" id="statTotalLinks">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Avg Clicks/Link</div>
+            <div class="stat-value" id="statAvgClicks">0</div>
+          </div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-header">
+            <h2 class="section-card-title">Top Performing Links</h2>
+          </div>
+          <div class="admin-links-list" id="topLinksList"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ══════ Live Preview Panel ══════ -->
+    <aside class="preview-panel" id="previewPanel">
+      <div class="preview-header">
+        <span class="preview-title">Live Preview</span>
+        <button class="btn btn-icon btn-secondary" title="Share" id="previewShareBtn" onclick="window.open('/me', '_blank')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </button>
+      </div>
+      <div class="phone-wrapper">
+        <div class="phone-mockup">
+          <div class="phone-notch"></div>
+          <iframe id="livePreviewIframe" class="preview-iframe" src="/me" title="Live Profile Preview"></iframe>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ══════ Link Modal ══════ -->
+  <div class="modal-overlay" id="linkModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Add Link</h2>
+        <button class="modal-close" id="modalClose">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Title</label>
+        <input class="form-input" type="text" id="modalLinkTitle" placeholder="🚀 My Awesome Link">
+      </div>
+      <div class="form-group">
+        <label class="form-label">URL</label>
+        <input class="form-input" type="url" id="modalLinkUrl" placeholder="https://...">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="modalCancelBtn">Cancel</button>
+        <button class="btn btn-primary" id="modalSaveBtn">Save Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

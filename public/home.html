@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conn — All Links at One Place | Best Link in Bio Tool</title>
+  <meta name="description"
+    content="Conn is the ultimate link-in-bio tool. Create a stunning portfolio page with gorgeous themes, powerful analytics, and full customization. All your links in one place. Made for creators.">
+  <meta name="keywords"
+    content="link in bio, all links at one place, creator portfolio, bio link tool, linktree alternative, instagram bio link, tiktok bio link, link management, share multiple links">
+  <meta name="author" content="aethercodesociety">
+  <meta name="robots" content="index, follow">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://conn.com" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://conn.com/">
+  <meta property="og:title" content="Conn — All Links at One Place | Best Link in Bio Tool">
+  <meta property="og:description"
+    content="Conn is the ultimate link-in-bio tool. Create a stunning portfolio page with gorgeous themes, powerful analytics, and full customization. All your links in one place.">
+  <meta property="og:image" content="https://conn.com/assets/og-home.jpg">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://conn.com/">
+  <meta name="twitter:title" content="Conn — All Links at One Place | Best Link in Bio Tool">
+  <meta name="twitter:description"
+    content="Conn is the ultimate link-in-bio tool. Create a stunning portfolio page with gorgeous themes, powerful analytics, and full customization. All your links in one place.">
+  <meta name="twitter:image" content="https://conn.com/assets/og-home.jpg">
+
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+
+<body>
+  <!-- Custom Aura Cursor -->
+  <div id="cursor-glow"></div>
+
+  <!-- Aurora Backgrounds -->
+  <div class="bg-gradient"></div>
+  <div class="bg-noise"></div>
+  <div class="floating-orb orb-1"></div>
+  <div class="floating-orb orb-2"></div>
+  <div class="floating-orb orb-3"></div>
+  <canvas class="bg-canvas" id="particleCanvas"></canvas>
+
+  <!-- ══════ NAVBAR ══════ -->
+  <header class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+          </svg>
+        </div>
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+          <span class="logo-text">Conn<span class="logo-dot">.</span></span>
+          <span
+            style="font-size: 0.5rem; color: var(--text-secondary); line-height: 1; margin-top: -1px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8;">powered
+            by aethercodesociety</span>
+        </div>
+      </a>
+      <nav class="navbar-links">
+        <a href="#features">Features</a>
+        <a href="#themes">Themes</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#stats">Why Conn</a>
+        <a href="#contact">Contact Us</a>
+      </nav>
+      <div class="navbar-actions navbar-actions-guest" id="navGuest" style="display:none;">
+        <a href="/login" class="btn-nav btn-nav-ghost">Sign In</a>
+        <a href="/signup" class="btn-nav btn-nav-primary">Sign Up →</a>
+      </div>
+      <div class="navbar-actions navbar-actions-auth" id="navAuth" style="display:none;">
+        <a href="/admin" class="btn-nav btn-nav-ghost">Dashboard</a>
+        <a href="/me" class="btn-nav btn-nav-primary">My Page →</a>
+      </div>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+    </div>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#features">Features</a>
+      <a href="#themes">Themes</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#stats">Why Conn</a>
+      <a href="#contact">Contact Us</a>
+      <hr>
+      <div class="mobile-guest" id="mobileGuest" style="display:none;">
+        <a href="/login">Sign In</a>
+        <a href="/signup">Sign Up</a>
+      </div>
+      <div class="mobile-auth" id="mobileAuth" style="display:none;">
+        <a href="/admin">Dashboard</a>
+        <a href="/me">My Page</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════ HERO ══════ -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-badge animate-on-scroll">
+        <span class="badge-pulse"></span>
+        <span>✨ Your links, your style</span>
+      </div>
+      <h1 class="hero-title animate-on-scroll">
+        One Link.<br>
+        <span class="gradient-text">Infinite Possibilities.</span>
+      </h1>
+      <p class="hero-subtitle animate-on-scroll">
+        <span id="typewriter"></span><span class="typewriter-cursor">|</span><br>
+        <span style="opacity: 0.8; font-size: 0.95rem;">Choose from 12+ stunning themes, track analytics, and make your online presence unforgettable.</span>
+      </p>
+      <div class="hero-cta animate-on-scroll">
+        <a href="/admin" class="btn-hero btn-hero-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+          </svg>
+          Get Started Free
+        </a>
+        <a href="/me" class="btn-hero btn-hero-ghost">
+          See Demo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Hero Visual — Phone Mockup -->
+    <div class="hero-visual animate-on-scroll">
+      <div class="phone-mockup">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="mock-avatar">
+            <div class="mock-avatar-glow"></div>
+            <div class="mock-avatar-circle">C</div>
+          </div>
+          <div class="mock-name">Creator Name</div>
+          <div class="mock-bio">Digital creator & developer</div>
+          <div class="mock-links">
+            <div class="mock-link mock-link-1"><span>🚀</span> My Portfolio</div>
+            <div class="mock-link mock-link-2"><span>📸</span> Instagram</div>
+            <div class="mock-link mock-link-3 mock-featured"><span>🎵</span> Spotify</div>
+            <div class="mock-link mock-link-4"><span>💼</span> LinkedIn</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-glow"></div>
+    </div>
+  </section>
+
+  <!-- ══════ USE CASES ══════ -->
+  <section class="section use-cases-section">
+    <div class="section-inner">
+      <div class="use-cases-grid">
+        <div class="use-case-card animate-on-scroll">
+          <div class="use-case-content">
+            <span class="section-tag">Share content</span>
+            <h2 class="use-case-title">Share every type of content in <span class="gradient-text">limitless ways.</span>
+            </h2>
+            <p>Connect all your content across social media, websites, stores, and more in one link in bio. Customize
+              every detail to match your brand and drive more clicks.</p>
+          </div>
+          <div class="use-case-visual">
+            <div class="mock-card mock-youtube">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+              </svg>
+              <span>Latest Video</span>
+            </div>
+            <div class="mock-card mock-spotify">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 0C5.373 0 0 5.373 0 12c0 6.628 5.372 12 12 12 6.627 0 12-5.373 12-12C24 5.373 18.627 0 12 0zm5.54 17.348c-.218.358-.692.483-1.047.262-2.866-1.75-6.471-2.144-10.741-1.173-.418.095-.838-.178-.934-.595-.095-.418.178-.838.595-.934 4.673-1.06 8.653-.604 11.862 1.355.356.219.484.694.265 1.085zm1.5-3.328c-.279.453-.889.605-1.343.329-3.268-2.012-8.252-2.613-11.967-1.428-.517.164-1.08-.124-1.244-.64-.164-.517.123-1.081.64-1.245 4.316-1.378 9.871-.703 13.621 1.603.454.278.605.889.327 1.341zm.143-3.483C15.26 8.196 8.87 7.986 5.166 9.11c-.604.183-1.24-.155-1.424-.761-.183-.605.155-1.24.761-1.424 4.26-1.294 11.332-1.054 15.938 1.68.552.327.733 1.042.406 1.593-.327.552-1.043.733-1.594.406z" />
+              </svg>
+              <span>New Podcast</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="use-case-card animate-on-scroll reverse">
+          <div class="use-case-content">
+            <span class="section-tag">Monetize</span>
+            <h2 class="use-case-title">Sell products, collect payments and make <span class="gradient-text">monetization
+                simple.</span></h2>
+            <p>Turn your Conn page into a storefront that pays. Add affiliate products, share what you love, and start
+              earning by directing your audience to your curated offers.</p>
+          </div>
+          <div class="use-case-visual relative">
+            <div class="earnings-widget">
+              <div class="earnings-header">Total Earnings</div>
+              <div class="earnings-amount">₹42,500</div>
+              <div class="earnings-chart">
+                <div class="chart-bar" style="height:40%"></div>
+                <div class="chart-bar" style="height:60%"></div>
+                <div class="chart-bar" style="height:50%"></div>
+                <div class="chart-bar" style="height:90%"></div>
+                <div class="chart-bar" style="height:70%"></div>
+                <div class="chart-bar" style="height:100%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="use-case-card animate-on-scroll">
+          <div class="use-case-content">
+            <span class="section-tag">Grow</span>
+            <h2 class="use-case-title">Grow, own and engage your audience <span class="gradient-text">across all
+                channels.</span></h2>
+            <p>Track your engagement over time, monitor click-throughs, and learn what’s converting your audience. Make
+              informed updates on the fly to keep them coming back.</p>
+          </div>
+          <div class="use-case-visual">
+            <div class="analytics-mockup">
+              <div class="analytics-stat">
+                <span>Clicks</span>
+                <strong>12.4K</strong>
+              </div>
+              <div class="analytics-stat">
+                <span>CTR</span>
+                <strong>4.8%</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ PRICING ══════ -->
+  <section class="section pricing-section" id="pricing">
+    <div class="section-inner">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag">Pricing</span>
+        <h2 class="section-title">Simple, <span class="gradient-text">transparent pricing.</span></h2>
+        <p class="section-desc">Start free, upgrade when you're ready. No hidden fees, no surprises.</p>
+      </div>
+
+      <!-- Billing Toggle -->
+      <div class="billing-toggle animate-on-scroll">
+        <span class="billing-label" id="billingMonthlyLabel">Monthly</span>
+        <button class="toggle-switch" id="billingToggle" aria-label="Toggle billing period">
+          <span class="toggle-knob"></span>
+        </button>
+        <span class="billing-label" id="billingYearlyLabel">
+          Yearly
+          <span class="save-badge">Save ₹100</span>
+        </span>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- FREE -->
+        <div class="pricing-card animate-on-scroll" style="--delay: 0s">
+          <div class="pricing-card-header">
+            <div class="plan-icon plan-icon-free">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+              </svg>
+            </div>
+            <h3 class="plan-name">Free</h3>
+            <p class="plan-desc">Get started with the essentials</p>
+          </div>
+          <div class="pricing-card-price">
+            <span class="price-currency">₹</span>
+            <span class="price-amount">0</span>
+            <span class="price-interval">/forever</span>
+          </div>
+          <ul class="plan-features">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Basic link-in-bio page</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>3 themes available</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Up to 5 links</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Basic analytics</li>
+            <li class="feature-disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>Conn branding shown</li>
+          </ul>
+          <a href="/signup" class="pricing-cta pricing-cta-ghost" id="btnLandingFree">Get Started Free</a>
+        </div>
+
+        <!-- PLUS — Popular -->
+        <div class="pricing-card pricing-card-popular animate-on-scroll" style="--delay: 0.1s">
+          <div class="popular-badge">✨ Most Popular</div>
+          <div class="pricing-card-header">
+            <div class="plan-icon plan-icon-plus">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+              </svg>
+            </div>
+            <h3 class="plan-name">Plus</h3>
+            <p class="plan-desc">Perfect for growing creators</p>
+          </div>
+          <div class="pricing-card-price">
+            <span class="price-currency">₹</span>
+            <span class="price-amount" id="plusPrice">50</span>
+            <span class="price-interval" id="plusInterval">/month</span>
+          </div>
+          <div class="yearly-note" id="yearlyNote" style="display: none;">
+            <span>₹500 billed annually</span>
+            <span class="yearly-savings">Save ₹100/yr</span>
+          </div>
+          <ul class="plan-features">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Everything in Free</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>All 12+ themes</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Unlimited links</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Advanced analytics</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Remove Conn branding</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Custom backgrounds</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Priority support</li>
+          </ul>
+          <a href="/signup" class="pricing-cta pricing-cta-primary" id="btnLandingPlus">Upgrade to Plus</a>
+        </div>
+
+        <!-- PROFESSIONAL -->
+        <div class="pricing-card animate-on-scroll" style="--delay: 0.2s">
+          <div class="pricing-card-header">
+            <div class="plan-icon plan-icon-pro">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+            </div>
+            <h3 class="plan-name">Professional</h3>
+            <p class="plan-desc">For serious creators & businesses</p>
+          </div>
+          <div class="pricing-card-price">
+            <span class="price-currency">₹</span>
+            <span class="price-amount" id="proPrice">399</span>
+            <span class="price-interval" id="proInterval">/month</span>
+          </div>
+          <div class="yearly-note" id="proYearlyNote" style="display: none;">
+            <span>₹4000 billed annually</span>
+            <span class="yearly-savings">Save ₹788/yr</span>
+          </div>
+          <ul class="plan-features">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Everything in Plus</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Custom domain support</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>SEO optimization tools</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Detailed click analytics</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Scheduling & automation</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Team collaboration</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Dedicated support</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>Early access to features</li>
+          </ul>
+          <a href="/signup" class="pricing-cta pricing-cta-ghost" id="btnLandingPro">Go Professional</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ FEATURES ══════ -->
+  <section class="section features-section" id="features">
+    <div class="section-inner">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag">Features</span>
+        <h2 class="section-title">Everything you need.<br><span class="gradient-text">Nothing you don't.</span></h2>
+        <p class="section-desc">Powerful tools to build and manage your online presence, wrapped in a beautiful
+          interface.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card animate-on-scroll" style="--delay: 0s">
+          <div class="feature-icon" style="--icon-bg: rgba(168,85,247,0.12); --icon-color: #c084fc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+          </div>
+          <h3>12+ Stunning Themes</h3>
+          <p>From Midnight Noir to Neon Cyber — find the perfect aesthetic that matches your vibe. One click to switch.
+          </p>
+        </div>
+
+        <div class="feature-card animate-on-scroll" style="--delay: 0.1s">
+          <div class="feature-icon" style="--icon-bg: rgba(236,72,153,0.12); --icon-color: #f472b6">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10" />
+              <line x1="12" y1="20" x2="12" y2="4" />
+              <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>
+          </div>
+          <h3>Real-Time Analytics</h3>
+          <p>Track every click, see what's working, optimize your links. Powerful insights with a clean dashboard.</p>
+        </div>
+
+        <div class="feature-card animate-on-scroll" style="--delay: 0.2s">
+          <div class="feature-icon" style="--icon-bg: rgba(34,211,238,0.12); --icon-color: #22d3ee">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+            </svg>
+          </div>
+          <h3>Full Customization</h3>
+          <p>Edit your name, bio, avatar, and social links. Drag to reorder. Toggle links on and off instantly.</p>
+        </div>
+
+        <div class="feature-card animate-on-scroll" style="--delay: 0.3s">
+          <div class="feature-icon" style="--icon-bg: rgba(251,191,36,0.12); --icon-color: #fbbf24">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+            </svg>
+          </div>
+          <h3>Unlimited Links</h3>
+          <p>No limits on how many links you can add. Portfolios, music, stores, socials — all in one beautiful page.
+          </p>
+        </div>
+
+        <div class="feature-card animate-on-scroll" style="--delay: 0.4s">
+          <div class="feature-icon" style="--icon-bg: rgba(74,222,128,0.12); --icon-color: #4ade80">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
+          </div>
+          <h3>Mobile-First Design</h3>
+          <p>Pixel-perfect on every device. Your page looks incredible whether viewed on a phone, tablet, or desktop.
+          </p>
+        </div>
+
+        <div class="feature-card animate-on-scroll" style="--delay: 0.5s">
+          <div class="feature-icon" style="--icon-bg: rgba(251,113,133,0.12); --icon-color: #fb7185">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <h3>Fast & Secure</h3>
+          <p>Lightning-fast load times. No tracking scripts. Your data stays yours. Built with performance in mind.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ THEME GALLERY ══════ -->
+  <section class="section theme-gallery-section" id="themes">
+    <div class="section-inner">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag">Themes</span>
+        <h2 class="section-title">Find your <span class="gradient-text">aesthetic.</span></h2>
+        <p class="section-desc">12 handcrafted themes designed to make your page stand out. Switch anytime with one
+          click.</p>
+      </div>
+
+      <div class="theme-showcase" id="themeShowcase">
+        <div class="theme-preview-card animate-on-scroll" data-theme="midnight">
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #0a0a0a, #1a0a2e, #0a0a0a);">
+            <div class="swatch-dots">
+              <span style="background:#a855f7"></span>
+              <span style="background:#c084fc"></span>
+              <span style="background:#f5f5f5"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Midnight</h4><span>Default</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="neon-cyber">
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #020617, #0c1222, #020617);">
+            <div class="swatch-dots">
+              <span style="background:#06b6d4"></span>
+              <span style="background:#ec4899"></span>
+              <span style="background:#e0f2fe"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Neon Cyber</h4><span>Electric</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="sunset-blaze">
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #1a0a00, #2d1400, #1a0a00);">
+            <div class="swatch-dots">
+              <span style="background:#f97316"></span>
+              <span style="background:#fbbf24"></span>
+              <span style="background:#fff7ed"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Sunset Blaze</h4><span>Warm</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="forest-dusk">
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #021a09, #04260e, #021a09);">
+            <div class="swatch-dots">
+              <span style="background:#22c55e"></span>
+              <span style="background:#4ade80"></span>
+              <span style="background:#f0fdf4"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Forest Dusk</h4><span>Natural</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="ocean-deep">
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #001a2c, #002844, #001a2c);">
+            <div class="swatch-dots">
+              <span style="background:#0ea5e9"></span>
+              <span style="background:#38bdf8"></span>
+              <span style="background:#e0f2fe"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Ocean Deep</h4><span>Cool</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="rose-gold">
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #1a0a10, #2d1520, #1a0a10);">
+            <div class="swatch-dots">
+              <span style="background:#f43f5e"></span>
+              <span style="background:#fda4af"></span>
+              <span style="background:#fbbf24"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Rose Gold</h4><span>Elegant</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="arctic-frost">
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);">
+            <div class="swatch-dots">
+              <span style="background:#94a3b8"></span>
+              <span style="background:#e2e8f0"></span>
+              <span style="background:#f8fafc"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Arctic Frost</h4><span>Minimal</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="lava-flow">
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #1a0000, #2d0a00, #1a0000);">
+            <div class="swatch-dots">
+              <span style="background:#ef4444"></span>
+              <span style="background:#f97316"></span>
+              <span style="background:#fef2f2"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Lava Flow</h4><span>Intense</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="vaporwave">
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #1a0026, #0a0033, #1a0026);">
+            <div class="swatch-dots">
+              <span style="background:#d946ef"></span>
+              <span style="background:#8b5cf6"></span>
+              <span style="background:#fde68a"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Vaporwave</h4><span>Retro</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="monochrome">
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #0a0a0a, #171717, #0a0a0a);">
+            <div class="swatch-dots">
+              <span style="background:#a3a3a3"></span>
+              <span style="background:#d4d4d4"></span>
+              <span style="background:#fafafa"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Monochrome</h4><span>Classic</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="galaxy">
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #0a001a, #150030, #0a0033);">
+            <div class="swatch-dots">
+              <span style="background:#818cf8"></span>
+              <span style="background:#a78bfa"></span>
+              <span style="background:#c4b5fd"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Galaxy</h4><span>Cosmic</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="emerald-matrix">
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #001a00, #002200, #001a00);">
+            <div class="swatch-dots">
+              <span style="background:#10b981"></span>
+              <span style="background:#34d399"></span>
+              <span style="background:#d1fae5"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Emerald Matrix</h4><span>Hacker</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="botanical">
+          <div class="theme-swatch" style="background: #0a2e20;">
+            <div class="swatch-dots">
+              <span style="background:#0a2e20"></span>
+              <span style="background:#d4f7e2"></span>
+              <span style="background:#bcedcc"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Botanical</h4><span>Organic</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="minimal-light">
+          <div class="theme-swatch" style="background: #f0f2f5;">
+            <div class="swatch-dots">
+              <span style="background:#111827"></span>
+              <span style="background:#ffffff"></span>
+              <span style="background:#f9fafb"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Minimal Light</h4><span>Clean</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="muddy-texture">
+          <div class="theme-swatch" style="background: #4a3b32; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.05), rgba(0,0,0,0.05) 5px, transparent 5px, transparent 10px);">
+            <div class="swatch-dots">
+              <span style="background:#f5eedc"></span>
+              <span style="background:rgba(255,255,255,0.4)"></span>
+              <span style="background:transparent; border: 1px solid rgba(255,255,255,0.4)"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Muddy Texture</h4><span>Earthy</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="wavy-purple">
+          <div class="theme-swatch" style="background: radial-gradient(circle at top left, #a78bfa 0%, #7c3aed 100%);">
+            <div class="swatch-dots">
+              <span style="background:#ffffff"></span>
+              <span style="background:#ede9fe"></span>
+              <span style="background:#8b5cf6"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Wavy Purple</h4><span>Playful</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="retro-shadow">
+          <div class="theme-swatch" style="background: #e8e1cc;">
+            <div class="swatch-dots">
+              <span style="background:#171717"></span>
+              <span style="background:#ffffff"></span>
+              <span style="background:#fcfcfc"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Retro Shadow</h4><span>Brutalist</span>
+          </div>
+        </div>
+
+        <div class="theme-preview-card animate-on-scroll" data-theme="sunset-mesh">
+          <div class="theme-swatch" style="background: radial-gradient(circle at top left, #10b981 0%, #ef4444 100%);">
+            <div class="swatch-dots">
+              <span style="background:#ffffff"></span>
+              <span style="background:#ffffff"></span>
+              <span style="background:#f1f5f9"></span>
+            </div>
+          </div>
+          <div class="theme-meta">
+            <h4>Sunset Mesh</h4><span>Vibrant</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ STATS ══════ -->
+  <section class="section stats-section" id="stats">
+    <div class="section-inner">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag">Why Conn?</span>
+        <h2 class="section-title">Built for <span class="gradient-text">creators.</span></h2>
+      </div>
+      <div class="stats-row">
+        <div class="stat-block animate-on-scroll">
+          <div class="stat-number" data-target="12">0</div>
+          <div class="stat-label-text">Themes</div>
+        </div>
+        <div class="stat-block animate-on-scroll">
+          <div class="stat-number" data-target="100">0</div>
+          <div class="stat-label-text">% Free</div>
+        </div>
+        <div class="stat-block animate-on-scroll">
+          <div class="stat-number" data-target="0">0</div>
+          <div class="stat-label-text">Ads</div>
+        </div>
+        <div class="stat-block animate-on-scroll">
+          <div class="stat-number" data-target="50">0</div>
+          <div class="stat-label-text">ms Load Time</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ TESTIMONIALS ══════ -->
+  <section class="section testimonials-section" id="testimonials">
+    <div class="section-inner">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag">Trusted By</span>
+        <h2 class="section-title">The only link in bio <span class="gradient-text">trusted by creators.</span></h2>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card animate-on-scroll" style="--delay: 0s">
+          <div class="testimonial-avatar">DC</div>
+          <p class="testimonial-quote">"Once I got Conn set up, I was like, oh my god – why did I spend ₹5000 on a
+            website? I don’t need all of that! Now, I can see the monetization of my following becoming a full-time
+            thing."</p>
+          <div class="testimonial-author">
+            <h4>David Coleman</h4>
+            <span>Digital Creator</span>
+          </div>
+        </div>
+        <div class="testimonial-card animate-on-scroll" style="--delay: 0.1s">
+          <div class="testimonial-avatar" style="background: var(--accent-light);">CT</div>
+          <p class="testimonial-quote">"It’s so much easier to set up and have all of your links in one place in a
+            well-designed format. I hardly touch my Wordpress site anymore. I just send people to my Conn page!"</p>
+          <div class="testimonial-author">
+            <h4>Catie T.</h4>
+            <span>Musician</span>
+          </div>
+        </div>
+        <div class="testimonial-card animate-on-scroll" style="--delay: 0.2s">
+          <div class="testimonial-avatar" style="background: #f472b6;">TF</div>
+          <p class="testimonial-quote">"We love how Conn has helped us manage our business by having all social media
+            and ways to pay in one location. The verified badge and custom domain make it look extremely professional."
+          </p>
+          <div class="testimonial-author">
+            <h4>Tiffany</h4>
+            <span>Business Owner</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ LEARN & GROW ══════ -->
+  <section class="section learn-section" id="learn">
+    <div class="section-inner">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag">Resources</span>
+        <h2 class="section-title">Learn & <span class="gradient-text">Grow.</span></h2>
+        <p class="section-desc">Master the platform, scale your audience, and boost your earnings with our ultimate guides.</p>
+      </div>
+      <div class="learn-grid">
+        <a href="#" class="learn-card animate-on-scroll" style="--delay: 0s">
+          <div class="learn-image" style="background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(236,72,153,0.1)); color: #c084fc;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="learn-content">
+            <span class="learn-category" style="color: #c084fc; background: rgba(168,85,247,0.1);">Guide</span>
+            <h3>Getting Started with Conn</h3>
+            <p>Everything you need to know to set up your profile and share your first link to the world.</p>
+          </div>
+        </a>
+        <a href="#" class="learn-card animate-on-scroll" style="--delay: 0.1s">
+          <div class="learn-image" style="background: linear-gradient(135deg, rgba(74,222,128,0.1), rgba(59,130,246,0.1)); color: #4ade80;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="learn-content">
+            <span class="learn-category" style="color: #4ade80; background: rgba(74,222,128,0.1);">Strategy</span>
+            <h3>How to Monetize Your Audience</h3>
+            <p>Proven strategies for earning more through digital products, storefronts, and affiliate links.</p>
+          </div>
+        </a>
+        <a href="#" class="learn-card animate-on-scroll" style="--delay: 0.2s">
+          <div class="learn-image" style="background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(248,113,113,0.1)); color: #fbbf24;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+          </div>
+          <div class="learn-content">
+            <span class="learn-category" style="color: #fbbf24; background: rgba(251,191,36,0.1);">Success Story</span>
+            <h3>Zero to 100k: A Creator's Journey</h3>
+            <p>How one creator skyrocketed their engagement by consolidating their web presence on Conn.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ FAQ ══════ -->
+  <section class="section faq-section" id="faq">
+    <div class="section-inner">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag">FAQ</span>
+        <h2 class="section-title">Questions? <span class="gradient-text">Answered.</span></h2>
+      </div>
+      <div class="faq-accordion">
+        <div class="faq-item animate-on-scroll">
+          <button class="faq-question">
+            Why should I use Conn instead of a website?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Every time you have something new to share, changing the link in each of your social bios is
+              time-consuming. Conn means you never have to compromise. You can keep everything you want to share online
+              in one link! If you don't have a website, that's fine. If you have a Conn page, you don't need one.</p>
+          </div>
+        </div>
+        <div class="faq-item animate-on-scroll">
+          <button class="faq-question">
+            Is Conn safe to use on social media?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Yes! Conn is a trusted, identifiable, and familiar link that your audience will feel perfectly safe
+              clicking on. It is fully compliant with the guidelines of major platforms like Instagram, TikTok, and
+              YouTube.</p>
+          </div>
+        </div>
+        <div class="faq-item animate-on-scroll">
+          <button class="faq-question">
+            Can I earn money from my Conn page?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Absolutely! You can share affiliate links, direct audiences to your online stores, or collect leads for
+              your services. Removing the friction between discovery and purchase significantly boosts your conversion
+              rates.</p>
+          </div>
+        </div>
+        <div class="faq-item animate-on-scroll">
+          <button class="faq-question">
+            Do I need coding skills to customize it?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>No coding skills are required! You can change themes, update links, and edit your profile directly from
+              our beautifully simple dashboard. For advanced users on the Plus/Pro plans, we do offer custom CSS if you
+              really want to get technical.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ CTA ══════ -->
+  <section class="section cta-section">
+    <div class="section-inner">
+      <div class="cta-card animate-on-scroll">
+        <h2>Ready to <span class="gradient-text">stand out?</span></h2>
+        <p>Create your page in under a minute. No sign-up needed.</p>
+        <div class="cta-buttons">
+          <a href="/admin" class="btn-hero btn-hero-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+            Launch Your Page
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ CONTACT US ══════ -->
+  <section class="section contact-section" id="contact">
+    <div class="section-inner">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag">Contact</span>
+        <h2 class="section-title">Get in <span class="gradient-text">touch.</span></h2>
+        <p class="section-desc">Have a question, feedback, or want to collaborate? Drop us a message and we'll get back
+          to you.</p>
+      </div>
+
+      <div class="contact-card animate-on-scroll">
+        <form class="contact-form" id="contactForm">
+          <div class="contact-form-row">
+            <div class="form-group">
+              <label class="form-label">Name</label>
+              <input class="form-input" type="text" id="contactName" placeholder="Your name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input class="form-input" type="email" id="contactEmail" placeholder="you@example.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea class="form-input" id="contactMessage" placeholder="What's on your mind?" rows="5"
+              required></textarea>
+          </div>
+          <button type="submit" class="btn-hero btn-hero-primary" style="width:100%; justify-content:center;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+            Send Message
+          </button>
+        </form>
+        <div class="contact-success" id="contactSuccess" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" style="width:48px;height:48px;color:var(--accent-light);margin-bottom:16px;">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+          <h3 style="font-family:var(--font-heading);font-size:1.3rem;margin-bottom:6px;">Message Sent!</h3>
+          <p style="color:var(--text-secondary);font-size:0.9rem;">Thanks for reaching out. We'll get back to you soon.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ FOOTER ══════ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand-section">
+        <a href="/" class="navbar-logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+          </div>
+          <div style="display: flex; flex-direction: column; justify-content: center;">
+            <span class="logo-text">Conn<span class="logo-dot">.</span></span>
+            <span
+              style="font-size: 0.5rem; color: var(--text-secondary); line-height: 1; margin-top: -1px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8;">powered
+              by aethercodesociety</span>
+          </div>
+        </a>
+        <p>Your link-in-bio, reimagined.</p>
+      </div>
+      <div class="footer-links-grid">
+        <div>
+          <h4>Product</h4>
+          <a href="#features">Features</a>
+          <a href="#themes">Themes</a>
+          <a href="#pricing">Pricing</a>
+          <a href="/me">Demo</a>
+        </div>
+        <div>
+          <h4>Get Started</h4>
+          <a href="/admin">Dashboard</a>
+          <a href="/admin">Create Page</a>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <a href="#contact">Contact Us</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Conn. Built with ⚡</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+  <script src="/js/home.js"></script>
+</body>
+
+</html>

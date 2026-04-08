@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — Conn | All Links at One Place</title>
+  <meta name="description" content="Create your Conn account and build your link-in-bio page in seconds. All your links in one place.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div class="bg-noise"></div>
+  <div class="floating-orb orb-1"></div>
+  <div class="floating-orb orb-2"></div>
+
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-header">
+        <a href="/" class="auth-logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <span class="logo-text">Conn<span class="logo-dot">.</span></span>
+        </a>
+        <h1>Create your account</h1>
+        <p>Start building your link-in-bio page today</p>
+      </div>
+
+      <div class="auth-error" id="authError"></div>
+
+      <form class="auth-form" id="signupForm">
+        <div class="form-group">
+          <label class="form-label">Name</label>
+          <input class="form-input" type="text" id="signupName" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="signupEmail" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" id="signupPassword" placeholder="Min. 6 characters" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <input class="form-input" type="password" id="signupConfirm" placeholder="Re-enter password" required>
+        </div>
+        <button type="submit" class="auth-submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Create Account
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="/login">Sign In</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+{
+  "plans": [
+    {
+      "id": "free",
+      "name": "Free",
+      "description": "Get started with the essentials",
+      "price": 0,
+      "yearlyPrice": null,
+      "currency": "INR",
+      "symbol": "₹",
+      "interval": "month",
+      "popular": false,
+      "features": [
+        "Basic link-in-bio page",
+        "3 themes available",
+        "Up to 5 links",
+        "Basic analytics",
+        "Conn branding"
+      ],
+      "cta": "Get Started Free"
+    },
+    {
+      "id": "plus",
+      "name": "Plus",
+      "description": "Perfect for growing creators",
+      "price": 50,
+      "yearlyPrice": 500,
+      "currency": "INR",
+      "symbol": "₹",
+      "interval": "month",
+      "popular": true,
+      "features": [
+        "Everything in Free",
+        "All 12+ themes",
+        "Unlimited links",
+        "Advanced analytics",
+        "Remove Conn branding",
+        "Custom backgrounds",
+        "Priority support"
+      ],
+      "cta": "Upgrade to Plus"
+    },
+    {
+      "id": "professional",
+      "name": "Professional",
+      "description": "For serious creators & businesses",
+      "price": 399,
+      "yearlyPrice": 4000,
+      "currency": "INR",
+      "symbol": "₹",
+      "interval": "month",
+      "popular": false,
+      "features": [
+        "Everything in Plus",
+        "Custom domain support",
+        "SEO optimization tools",
+        "Detailed click analytics",
+        "Scheduling & automation",
+        "Team collaboration",
+        "Dedicated support",
+        "Early access to new features"
+      ],
+      "cta": "Go Professional"
+    }
+  ]
+}

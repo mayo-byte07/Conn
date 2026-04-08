@@ -1,0 +1,19 @@
+{
+  "name": "conn-linktree",
+  "version": "1.0.0",
+  "description": "A stunning Linktree-style link-in-bio website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.19.0",
+    "razorpay": "^2.9.6",
+    "uuid": "^9.0.0"
+  }
+}

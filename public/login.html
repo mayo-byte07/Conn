@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Conn | All Links at One Place</title>
+  <meta name="description" content="Sign in to your Conn account to manage your link-in-bio page and keep all your links in one place.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div class="bg-noise"></div>
+  <div class="floating-orb orb-1"></div>
+  <div class="floating-orb orb-2"></div>
+
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-header">
+        <a href="/" class="auth-logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <span class="logo-text">Conn<span class="logo-dot">.</span></span>
+        </a>
+        <h1>Welcome back</h1>
+        <p>Sign in to manage your link-in-bio page</p>
+      </div>
+
+      <div class="auth-error" id="authError"></div>
+
+      <form class="auth-form" id="loginForm">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="loginEmail" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" id="loginPassword" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="auth-submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Sign In
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="/signup">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/auth.js"></script>
+</body>
+</html>

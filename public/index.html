@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conn — All Links at One Place</title>
+  <meta name="description" content="All my links in one place. Connect with me across the web.">
+  <meta name="keywords" content="link in bio, social links, all links at one place, creator portfolio, connect with me, linktree alternative">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Conn — All Links at One Place">
+  <meta property="og:description" content="All my links in one place. Connect with me across the web.">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Conn — All Links at One Place">
+  <meta name="twitter:description" content="All my links in one place. Connect with me across the web.">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/themes.css">
+</head>
+<body class="theme-midnight">
+  <!-- Background Effects -->
+  <div class="bg-gradient"></div>
+  <div class="bg-noise"></div>
+  <div class="floating-orb orb-1"></div>
+  <div class="floating-orb orb-2"></div>
+  <div class="floating-orb orb-3"></div>
+  <canvas class="bg-canvas" id="particleCanvas"></canvas>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <!-- Profile -->
+    <section class="profile-section" id="profileSection">
+      <div class="avatar-wrapper">
+        <div class="avatar-glow"></div>
+        <div class="avatar" id="avatarEl">
+          <div class="avatar-placeholder" id="avatarPlaceholder">C</div>
+        </div>
+      </div>
+      <h1 class="profile-name" id="profileName">Loading...</h1>
+      <p class="profile-bio" id="profileBio"></p>
+      <div class="verified-badge" id="verifiedBadge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <span>Verified</span>
+      </div>
+    </section>
+
+    <!-- Socials -->
+    <nav class="socials-row" id="socialsRow"></nav>
+
+    <!-- Links -->
+    <div class="links-container" id="linksContainer">
+      <!-- Links populated via JS -->
+    </div>
+
+    <!-- Footer -->
+    <footer class="page-footer" id="pageFooter">
+      <a href="/" class="footer-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </svg>
+        Conn
+      </a>
+    </footer>
+  </main>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
