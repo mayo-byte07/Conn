@@ -25,6 +25,12 @@ Welcome to **Conn**, a next-generation link-in-bio platform built to elevate dig
 
 ---
 
+## 🤝 Contributors Till Now
+
+- **Piyush Singh** (https://github.com/mayo-byte07) 
+
+---
+
 ## ⚙️ Quick Start
 
 Follow these simple steps to get a local copy up and running.
@@ -100,4 +106,4 @@ Distributed under the [MIT License](https://choosealicense.com/licenses/mit/). S
 
 ---
 
-Made with ❤️ by [Your Name/Company](https://github.com/yourusername)
+Made with ❤️ by [Company](https://github.com/aethercodesociety) 
