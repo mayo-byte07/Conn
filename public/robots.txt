@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /features/
+Allow: /u/
+Disallow: /admin
+Disallow: /api/
+Disallow: /login
+Disallow: /signup
+Disallow: /me
+
+Sitemap: https://conn-delta.vercel.app/sitemap.xml

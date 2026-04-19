@@ -1,7 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
    CONN — Public Page Application Logic
    ═══════════════════════════════════════════════════════════ */
-
 (function () {
   'use strict';
 
@@ -200,6 +199,49 @@
       document.getElementById('profileName').textContent = profile.name || 'Your Name';
       document.getElementById('profileBio').textContent = profile.bio || '';
 
+      // ── Dynamic SEO (public profile pages only) ──
+      if (isPublicProfile) {
+        const displayName = profile.name || profileUsername;
+        const bio = profile.bio || `All links for ${displayName} in one place.`;
+        const pageUrl = `https://conn-delta.vercel.app/u/${profileUsername}`;
+
+        // Title + description
+        document.title = `${displayName} — Conn | All Links`;
+        document.querySelector('meta[name="description"]')?.setAttribute('content', bio);
+
+        // Canonical
+        const canonical = document.getElementById('canonicalTag');
+        if (canonical) canonical.href = pageUrl;
+
+        // Open Graph
+        const ogTitle = document.getElementById('ogTitle');
+        const ogDesc = document.getElementById('ogDesc');
+        const ogUrl = document.getElementById('ogUrl');
+        if (ogTitle) ogTitle.setAttribute('content', `${displayName} — Conn | All Links`);
+        if (ogDesc) ogDesc.setAttribute('content', bio);
+        if (ogUrl) ogUrl.setAttribute('content', pageUrl);
+
+        // Twitter
+        const twTitle = document.getElementById('twTitle');
+        const twDesc = document.getElementById('twDesc');
+        if (twTitle) twTitle.setAttribute('content', `${displayName} — Conn | All Links`);
+        if (twDesc) twDesc.setAttribute('content', bio);
+
+        // JSON-LD Person schema
+        const jsonLd = document.createElement('script');
+        jsonLd.type = 'application/ld+json';
+        jsonLd.textContent = JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Person',
+          name: displayName,
+          description: bio,
+          url: pageUrl,
+          ...(profile.avatar ? { image: profile.avatar } : {}),
+          ...(profile.socials?.twitter ? { sameAs: [profile.socials.twitter] } : {})
+        });
+        document.head.appendChild(jsonLd);
+      }
+
       // Avatar
       const avatarEl = document.getElementById('avatarEl');
       if (profile.avatar) {
@@ -274,7 +316,7 @@
           const clickUrl = isPublicProfile
             ? `/api/u/${profileUsername}/links/${link.id}/click`
             : `/api/links/${link.id}/click`;
-          fetch(clickUrl, { method: 'POST' }).catch(() => {});
+          fetch(clickUrl, { method: 'POST' }).catch(() => { });
         });
 
         container.appendChild(card);

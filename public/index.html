@@ -8,15 +8,24 @@
   <meta name="keywords" content="link in bio, social links, all links at one place, creator portfolio, connect with me, linktree alternative">
   <meta name="robots" content="index, follow">
 
+  <!-- Canonical URL (updated dynamically by JS for /u/:username pages) -->
+  <link rel="canonical" href="https://conn-delta.vercel.app/" id="canonicalTag">
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="profile">
-  <meta property="og:title" content="Conn — All Links at One Place">
-  <meta property="og:description" content="All my links in one place. Connect with me across the web.">
-  
+  <meta property="og:url" content="https://conn-delta.vercel.app/" id="ogUrl">
+  <meta property="og:title" content="Conn — All Links at One Place" id="ogTitle">
+  <meta property="og:description" content="All my links in one place. Connect with me across the web." id="ogDesc">
+  <meta property="og:image" content="https://conn-delta.vercel.app/assets/og-home.jpg" id="ogImage">
+  <meta property="og:site_name" content="Conn">
+
   <!-- Twitter -->
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Conn — All Links at One Place">
-  <meta name="twitter:description" content="All my links in one place. Connect with me across the web.">
+  <meta name="twitter:title" content="Conn — All Links at One Place" id="twTitle">
+  <meta name="twitter:description" content="All my links in one place. Connect with me across the web." id="twDesc">
+  <meta name="twitter:image" content="https://conn-delta.vercel.app/assets/og-home.jpg" id="twImage">
+
+  <!-- JSON-LD: dynamically injected per-user by app.js -->
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   <link rel="stylesheet" href="/css/style.css">
