@@ -67,11 +67,215 @@
         </div>
       </a>
       <nav class="navbar-links">
-        <a href="#features">Features</a>
-        <a href="#themes">Themes</a>
+        <!-- Product Mega Dropdown -->
+        <div class="nav-dropdown" id="navDropdown">
+          <button class="nav-dropdown-trigger" id="navDropdownTrigger">
+            Product
+            <svg class="dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="mega-dropdown" id="megaDropdown">
+            <div class="mega-dropdown-inner">
+              <!-- Category 1: Link in Bio + Tools -->
+              <div class="mega-category">
+                <div class="mega-category-header">
+                  <div class="mega-category-icon" style="--cat-color: #a855f7; --cat-bg: rgba(168,85,247,0.12)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  </div>
+                  <h4>Link in Bio + Tools</h4>
+                </div>
+                <a href="/features/link-in-bio" class="mega-item">
+                  <div class="mega-item-icon" style="color: #c084fc">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">Custom Bio Page</span>
+                    <span class="mega-item-desc">Fully customizable link-in-bio page</span>
+                  </div>
+                </a>
+                <a href="/features/link-in-bio" class="mega-item">
+                  <div class="mega-item-icon" style="color: #f472b6">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">26+ Stunning Themes</span>
+                    <span class="mega-item-desc">Premium themes with animated gradients</span>
+                  </div>
+                </a>
+                <a href="/features/link-in-bio" class="mega-item">
+                  <div class="mega-item-icon" style="color: #22d3ee">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10"/><path d="M7 12h10"/><path d="M7 17h6"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">QR Code Ready</span>
+                    <span class="mega-item-desc">Share your page anywhere with QR codes</span>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Category 2: Manage Social Media -->
+              <div class="mega-category">
+                <div class="mega-category-header">
+                  <div class="mega-category-icon" style="--cat-color: #06b6d4; --cat-bg: rgba(6,182,212,0.12)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                  </div>
+                  <h4>Manage Social Media</h4>
+                </div>
+                <a href="/features/social-media" class="mega-item">
+                  <div class="mega-item-icon" style="color: #38bdf8">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">Social Hub</span>
+                    <span class="mega-item-desc">Connect all your social accounts in one place</span>
+                  </div>
+                </a>
+                <a href="/features/social-media" class="mega-item">
+                  <div class="mega-item-icon" style="color: #4ade80">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">Smart Link Management</span>
+                    <span class="mega-item-desc">Drag, reorder, and toggle links on the fly</span>
+                  </div>
+                </a>
+                <a href="/features/social-media" class="mega-item">
+                  <div class="mega-item-icon" style="color: #fbbf24">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">Instant Publishing</span>
+                    <span class="mega-item-desc">Changes go live instantly, no delay</span>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Category 3: Grow & Engage -->
+              <div class="mega-category">
+                <div class="mega-category-header">
+                  <div class="mega-category-icon" style="--cat-color: #22c55e; --cat-bg: rgba(34,197,94,0.12)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                  </div>
+                  <h4>Grow & Engage Audience</h4>
+                </div>
+                <a href="/features/grow" class="mega-item">
+                  <div class="mega-item-icon" style="color: #4ade80">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">Contact Forms</span>
+                    <span class="mega-item-desc">Collect leads directly from visitors</span>
+                  </div>
+                </a>
+                <a href="/features/grow" class="mega-item">
+                  <div class="mega-item-icon" style="color: #a3e635">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">Audience Insights</span>
+                    <span class="mega-item-desc">Understand who's visiting your page</span>
+                  </div>
+                </a>
+                <a href="/features/grow" class="mega-item">
+                  <div class="mega-item-icon" style="color: #34d399">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">Verified Badge</span>
+                    <span class="mega-item-desc">Build trust with a verified creator badge</span>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Category 4: Monetize -->
+              <div class="mega-category">
+                <div class="mega-category-header">
+                  <div class="mega-category-icon" style="--cat-color: #f97316; --cat-bg: rgba(249,115,22,0.12)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  </div>
+                  <h4>Monetize Your Following</h4>
+                </div>
+                <a href="/features/monetize" class="mega-item">
+                  <div class="mega-item-icon" style="color: #fb923c">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">Product Showcase</span>
+                    <span class="mega-item-desc">Turn your page into a storefront</span>
+                  </div>
+                </a>
+                <a href="/features/monetize" class="mega-item">
+                  <div class="mega-item-icon" style="color: #fbbf24">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">Affiliate Links</span>
+                    <span class="mega-item-desc">Share products & earn commissions</span>
+                  </div>
+                </a>
+                <a href="/features/monetize" class="mega-item">
+                  <div class="mega-item-icon" style="color: #f87171">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">Collect Payments</span>
+                    <span class="mega-item-desc">Accept payments seamlessly via Razorpay</span>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Category 5: Measure Success -->
+              <div class="mega-category">
+                <div class="mega-category-header">
+                  <div class="mega-category-icon" style="--cat-color: #ec4899; --cat-bg: rgba(236,72,153,0.12)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                  </div>
+                  <h4>Measure Your Success</h4>
+                </div>
+                <a href="/features/analytics" class="mega-item">
+                  <div class="mega-item-icon" style="color: #f472b6">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">Click Analytics</span>
+                    <span class="mega-item-desc">Track every click in real-time</span>
+                  </div>
+                </a>
+                <a href="/features/analytics" class="mega-item">
+                  <div class="mega-item-icon" style="color: #a78bfa">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">Top Performing Links</span>
+                    <span class="mega-item-desc">See what's resonating with your audience</span>
+                  </div>
+                </a>
+                <a href="/features/analytics" class="mega-item">
+                  <div class="mega-item-icon" style="color: #fb7185">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                  </div>
+                  <div>
+                    <span class="mega-item-title">Engagement Insights</span>
+                    <span class="mega-item-desc">Data-driven decisions for growth</span>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Dropdown CTA -->
+              <div class="mega-cta">
+                <div class="mega-cta-content">
+                  <span class="mega-cta-badge">✨ New</span>
+                  <h4>8 Premium Gradient Themes</h4>
+                  <p>Aurora Borealis, Cosmic Nebula, Holographic & more — animated mesh gradients you won't find anywhere else.</p>
+                  <a href="#themes" class="mega-cta-btn">Explore Themes →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="#themes">Templates</a>
         <a href="#pricing">Pricing</a>
-        <a href="#stats">Why Conn</a>
-        <a href="#contact">Contact Us</a>
+        <a href="#learn">Resources</a>
+        <a href="#contact">Contact</a>
       </nav>
       <div class="navbar-actions navbar-actions-guest" id="navGuest" style="display:none;">
         <a href="/login" class="btn-nav btn-nav-ghost">Sign In</a>
@@ -92,11 +296,22 @@
     </div>
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
-      <a href="#features">Features</a>
-      <a href="#themes">Themes</a>
+      <!-- Mobile Product Accordion -->
+      <button class="mobile-product-toggle" id="mobileProductToggle">
+        Product
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="mobile-product-panel" id="mobileProductPanel">
+        <a href="/features/link-in-bio">🔗 Link in Bio + Tools</a>
+        <a href="/features/social-media">📱 Manage Social Media</a>
+        <a href="/features/grow">📈 Grow & Engage Audience</a>
+        <a href="/features/monetize">💰 Monetize Your Following</a>
+        <a href="/features/analytics">📊 Measure Your Success</a>
+      </div>
+      <a href="#themes">Templates</a>
       <a href="#pricing">Pricing</a>
-      <a href="#stats">Why Conn</a>
-      <a href="#contact">Contact Us</a>
+      <a href="#learn">Resources</a>
+      <a href="#contact">Contact</a>
       <hr>
       <div class="mobile-guest" id="mobileGuest" style="display:none;">
         <a href="/login">Sign In</a>

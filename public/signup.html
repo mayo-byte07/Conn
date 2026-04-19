@@ -39,6 +39,14 @@
           <input class="form-input" type="text" id="signupName" placeholder="Your name" required>
         </div>
         <div class="form-group">
+          <label class="form-label">Username</label>
+          <div style="position:relative;">
+            <input class="form-input" type="text" id="signupUsername" placeholder="your-username" required style="padding-right:40px;" autocomplete="off">
+            <span id="usernameStatus" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:1.1rem;opacity:0;transition:opacity 0.2s;"></span>
+          </div>
+          <small id="usernameHint" style="color:var(--text-secondary);font-size:0.75rem;margin-top:4px;display:block;">conn.com/u/<span id="usernamePreview">your-username</span></small>
+        </div>
+        <div class="form-group">
           <label class="form-label">Email</label>
           <input class="form-input" type="email" id="signupEmail" placeholder="you@example.com" required>
         </div>

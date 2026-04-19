@@ -5,6 +5,20 @@
 (function () {
   'use strict';
 
+  // ─── Detect View Mode ───
+  // If URL is /u/:username → public profile (fetch from /api/u/:username/*)
+  // If URL is /me → authenticated user's own page (fetch from /api/*)
+  const pathParts = window.location.pathname.split('/').filter(Boolean);
+  const isPublicProfile = pathParts[0] === 'u' && pathParts[1];
+  const profileUsername = isPublicProfile ? pathParts[1] : null;
+
+  function apiUrl(endpoint) {
+    if (isPublicProfile) {
+      return `/api/u/${profileUsername}${endpoint}`;
+    }
+    return `/api${endpoint}`;
+  }
+
   // ─── Social Icons SVGs ───
   const SOCIAL_ICONS = {
     twitter: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
@@ -29,7 +43,15 @@
     'vaporwave': '217, 70, 239',
     'monochrome': '163, 163, 163',
     'galaxy': '129, 140, 248',
-    'emerald-matrix': '16, 185, 129'
+    'emerald-matrix': '16, 185, 129',
+    'aurora-borealis': '52, 211, 153',
+    'cosmic-nebula': '168, 85, 247',
+    'tropical-paradise': '56, 178, 172',
+    'midnight-oil': '99, 102, 241',
+    'cotton-candy': '236, 72, 153',
+    'emerald-aurora': '16, 185, 129',
+    'holographic': '167, 139, 250',
+    'molten-lava': '249, 115, 22'
   };
 
   let currentThemeColor = '168, 85, 247';
@@ -37,7 +59,12 @@
   // ─── Load Settings & Apply Theme ───
   async function loadSettings() {
     try {
-      const res = await fetch('/api/settings');
+      const res = await fetch(apiUrl('/settings'));
+      if (!res.ok) {
+        // If not authenticated for /me, fall back gracefully
+        if (!isPublicProfile) return;
+        throw new Error('Failed to load settings');
+      }
       const settings = await res.json();
 
       // Apply theme
@@ -159,7 +186,15 @@
   // ─── Render Profile ───
   async function renderProfile() {
     try {
-      const res = await fetch('/api/profile');
+      const res = await fetch(apiUrl('/profile'));
+      if (!res.ok) {
+        // If not authenticated for /me, show login prompt
+        if (!isPublicProfile) {
+          document.getElementById('profileName').textContent = 'Sign in to view';
+          return;
+        }
+        throw new Error('Failed to load profile');
+      }
       const profile = await res.json();
 
       document.getElementById('profileName').textContent = profile.name || 'Your Name';
@@ -199,13 +234,20 @@
   // ─── Render Links ───
   async function renderLinks() {
     try {
-      const res = await fetch('/api/links');
+      const res = await fetch(apiUrl('/links'));
+      if (!res.ok) {
+        if (!isPublicProfile) return; // Not logged in for /me
+        throw new Error('Failed to load links');
+      }
       const links = await res.json();
 
       const container = document.getElementById('linksContainer');
       container.innerHTML = '';
 
-      links.filter(l => l.active).forEach((link, i) => {
+      // For authenticated /api/links, filter active; for public, already filtered by server
+      const activeLinks = isPublicProfile ? links : links.filter(l => l.active);
+
+      activeLinks.forEach((link, i) => {
         const card = document.createElement('a');
         card.href = link.url;
         card.target = '_blank';
@@ -226,10 +268,13 @@
           </div>
         `;
 
-        // Track click
+        // Track click — use the correct endpoint based on view mode
         card.addEventListener('click', (e) => {
           addRipple(e, card);
-          fetch(`/api/links/${link.id}/click`, { method: 'POST' }).catch(() => {});
+          const clickUrl = isPublicProfile
+            ? `/api/u/${profileUsername}/links/${link.id}/click`
+            : `/api/links/${link.id}/click`;
+          fetch(clickUrl, { method: 'POST' }).catch(() => {});
         });
 
         container.appendChild(card);

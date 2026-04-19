@@ -1,16 +1,18 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcryptjs');
-const session = require('express-session');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
+const supabase = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || process.env.SESSION_SECRET || 'conn-secret-key-change-in-production';
 
 // Init Razorpay
 const razorpay = new Razorpay({
@@ -21,64 +23,48 @@ const razorpay = new Razorpay({
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
-// Session middleware
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'conn-secret-key-change-in-production',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: false,
-    httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000  // 7 days
-  }
-}));
+// ─── JWT Auth Helpers ───
 
-// Page routes must be defined BEFORE express.static
-// (otherwise express.static auto-serves index.html for /)
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'home.html'));
-});
-
-app.get('/me', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-app.get('/admin', (req, res) => {
-  if (!req.session.userId) {
-    return res.redirect('/login');
-  }
-  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
-});
-
-app.get('/login', (req, res) => {
-  if (req.session.userId) {
-    return res.redirect('/admin');
-  }
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
-});
-
-app.get('/signup', (req, res) => {
-  if (req.session.userId) {
-    return res.redirect('/admin');
-  }
-  res.sendFile(path.join(__dirname, 'public', 'signup.html'));
-});
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Data helpers
-const DATA_DIR = path.join(__dirname, 'data');
-
-function readJSON(file) {
-  const filePath = path.join(DATA_DIR, file);
-  if (!fs.existsSync(filePath)) return file === 'links.json' || file === 'users.json' ? [] : {};
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+function generateToken(user) {
+  return jwt.sign(
+    { userId: user.id, userName: user.name, username: user.username },
+    JWT_SECRET,
+    { expiresIn: '7d' }
+  );
 }
 
-function writeJSON(file, data) {
-  const filePath = path.join(DATA_DIR, file);
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+function setAuthCookie(res, token) {
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL;
+  res.cookie('conn_token', token, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    path: '/'
+  });
+}
+
+function getAuthUser(req) {
+  const token = req.cookies?.conn_token;
+  if (!token) return null;
+  try {
+    return jwt.verify(token, JWT_SECRET);
+  } catch {
+    return null;
+  }
+}
+
+// ─── Auth Middleware ───
+
+function requireAuth(req, res, next) {
+  const user = getAuthUser(req);
+  if (!user) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+  req.auth = user;
+  next();
 }
 
 // ─── Subscription Plan Limits ───
@@ -120,18 +106,187 @@ function getPlanLimits(planId) {
   return limits[planId] || limits.free;
 }
 
-function getUserPlan(req) {
-  if (!req.session.userId) return 'free';
-  const users = readJSON('users.json');
-  const user = users.find(u => u.id === req.session.userId);
-  return user?.subscription?.plan || 'free';
+async function getUserPlan(userId) {
+  if (!userId) return 'free';
+  const { data: user } = await supabase
+    .from('users')
+    .select('subscription_plan')
+    .eq('id', userId)
+    .single();
+  return user?.subscription_plan || 'free';
 }
+
+// ─── Username Helpers ───
+
+function generateUsername(name) {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .substring(0, 30) || 'user';
+}
+
+function isUsernameValid(username) {
+  return /^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/.test(username) || /^[a-z0-9]{3,30}$/.test(username);
+}
+
+async function isUsernameTaken(username) {
+  const { data } = await supabase
+    .from('users')
+    .select('id')
+    .eq('username', username)
+    .maybeSingle();
+  return !!data;
+}
+
+async function ensureUniqueUsername(baseName) {
+  let username = generateUsername(baseName);
+  if (!(await isUsernameTaken(username))) return username;
+  for (let i = 1; i < 1000; i++) {
+    const candidate = `${username}-${i}`;
+    if (!(await isUsernameTaken(candidate))) return candidate;
+  }
+  return `${username}-${Date.now()}`;
+}
+
+// ─── Contact Form Rate Limiter ───
+const contactRateLimits = new Map();
+
+function isContactRateLimited(ip) {
+  const now = Date.now();
+  const windowMs = 60 * 60 * 1000; // 1 hour
+  const maxRequests = 5;
+
+  if (!contactRateLimits.has(ip)) {
+    contactRateLimits.set(ip, []);
+  }
+  const timestamps = contactRateLimits.get(ip).filter(t => now - t < windowMs);
+  contactRateLimits.set(ip, timestamps);
+
+  if (timestamps.length >= maxRequests) return true;
+  timestamps.push(now);
+  return false;
+}
+
+// ─── Init default data for new user ───
+
+async function initUserData(userId, userName) {
+  // Create profile if not exists
+  const { data: existingProfile } = await supabase
+    .from('user_profiles')
+    .select('id')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (!existingProfile) {
+    await supabase.from('user_profiles').insert({
+      user_id: userId,
+      name: userName || 'Your Name',
+      bio: '',
+      avatar: '',
+      socials: {
+        twitter: '', instagram: '', github: '',
+        linkedin: '', youtube: '', tiktok: '', email: ''
+      }
+    });
+  }
+
+  // Create settings if not exists
+  const { data: existingSettings } = await supabase
+    .from('user_settings')
+    .select('id')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (!existingSettings) {
+    await supabase.from('user_settings').insert({
+      user_id: userId,
+      page_title: 'Conn.',
+      meta_description: 'All my links in one place. Connect with me across the web.',
+      show_verified_badge: false,
+      show_footer: true,
+      custom_css: '',
+      selected_theme: 'midnight'
+    });
+  }
+}
+
+// ──────────────────── PAGE ROUTES ────────────────────
+
+// Page routes must be defined BEFORE express.static
+// (otherwise express.static auto-serves index.html for /)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'home.html'));
+});
+
+app.get('/me', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Public profile page by username
+app.get('/u/:username', async (req, res) => {
+  const { data: user } = await supabase
+    .from('users')
+    .select('id')
+    .eq('username', req.params.username.toLowerCase())
+    .maybeSingle();
+
+  if (!user) {
+    return res.status(404).sendFile(path.join(__dirname, 'public', 'home.html'));
+  }
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.get('/admin', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) {
+    return res.redirect('/login');
+  }
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+app.get('/login', (req, res) => {
+  const user = getAuthUser(req);
+  if (user) {
+    return res.redirect('/admin');
+  }
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.get('/signup', (req, res) => {
+  const user = getAuthUser(req);
+  if (user) {
+    return res.redirect('/admin');
+  }
+  res.sendFile(path.join(__dirname, 'public', 'signup.html'));
+});
+
+// Feature pages
+app.get('/features/link-in-bio', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'features', 'link-in-bio.html'));
+});
+app.get('/features/social-media', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'features', 'social-media.html'));
+});
+app.get('/features/grow', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'features', 'grow.html'));
+});
+app.get('/features/monetize', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'features', 'monetize.html'));
+});
+app.get('/features/analytics', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'features', 'analytics.html'));
+});
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 // ──────────────────── AUTH ROUTES ────────────────────
 
 app.post('/api/auth/register', async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, username } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'All fields are required.' });
     }
@@ -139,34 +294,60 @@ app.post('/api/auth/register', async (req, res) => {
       return res.status(400).json({ error: 'Password must be at least 6 characters.' });
     }
 
-    const users = readJSON('users.json');
-    const exists = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    // Username handling
+    let finalUsername;
+    if (username) {
+      finalUsername = username.toLowerCase().trim();
+      if (!isUsernameValid(finalUsername)) {
+        return res.status(400).json({ error: 'Username must be 3-30 characters, lowercase letters, numbers, and hyphens only.' });
+      }
+      if (await isUsernameTaken(finalUsername)) {
+        return res.status(409).json({ error: 'This username is already taken.' });
+      }
+    } else {
+      finalUsername = await ensureUniqueUsername(name);
+    }
+
+    // Check if email exists
+    const { data: exists } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', email.toLowerCase())
+      .maybeSingle();
+
     if (exists) {
       return res.status(409).json({ error: 'An account with this email already exists.' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = {
-      id: uuidv4(),
+    const newUserId = uuidv4();
+
+    const { error: insertError } = await supabase.from('users').insert({
+      id: newUserId,
       name,
       email: email.toLowerCase(),
+      username: finalUsername,
       password: hashedPassword,
-      createdAt: new Date().toISOString(),
-      subscription: {
-        plan: 'free',
-        billing: 'monthly',
-        subscribedAt: new Date().toISOString()
-      }
-    };
+      subscription_plan: 'free',
+      subscription_billing: 'monthly',
+      subscribed_at: new Date().toISOString()
+    });
 
-    users.push(newUser);
-    writeJSON('users.json', users);
+    if (insertError) {
+      console.error('Register insert error:', insertError);
+      return res.status(500).json({ error: 'Server error. Please try again.' });
+    }
 
-    req.session.userId = newUser.id;
-    req.session.userName = newUser.name;
+    // Initialize user data (profile, settings)
+    await initUserData(newUserId, name);
 
-    res.status(201).json({ id: newUser.id, name: newUser.name, email: newUser.email });
+    // Generate JWT and set cookie
+    const token = generateToken({ id: newUserId, name, username: finalUsername });
+    setAuthCookie(res, token);
+
+    res.status(201).json({ id: newUserId, name, email: email.toLowerCase(), username: finalUsername });
   } catch (err) {
+    console.error('Register error:', err);
     res.status(500).json({ error: 'Server error. Please try again.' });
   }
 });
@@ -178,8 +359,12 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(400).json({ error: 'Email and password are required.' });
     }
 
-    const users = readJSON('users.json');
-    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    const { data: user } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email.toLowerCase())
+      .maybeSingle();
+
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
@@ -189,58 +374,130 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
-    req.session.userId = user.id;
-    req.session.userName = user.name;
+    const token = generateToken({ id: user.id, name: user.name, username: user.username });
+    setAuthCookie(res, token);
 
-    res.json({ id: user.id, name: user.name, email: user.email });
+    res.json({ id: user.id, name: user.name, email: user.email, username: user.username });
   } catch (err) {
+    console.error('Login error:', err);
     res.status(500).json({ error: 'Server error. Please try again.' });
   }
 });
 
 app.post('/api/auth/logout', (req, res) => {
-  req.session.destroy(() => {
-    res.json({ success: true });
-  });
+  res.clearCookie('conn_token', { path: '/' });
+  res.json({ success: true });
 });
 
 app.get('/api/auth/check', (req, res) => {
-  if (req.session.userId) {
-    res.json({ authenticated: true, name: req.session.userName });
+  const user = getAuthUser(req);
+  if (user) {
+    res.json({
+      authenticated: true,
+      name: user.userName,
+      username: user.username
+    });
   } else {
     res.json({ authenticated: false });
   }
 });
 
-// ──────────────────── PROFILE ROUTES ────────────────────
-
-app.get('/api/profile', (req, res) => {
-  const profile = readJSON('profile.json');
-  res.json(profile);
+// Check username availability
+app.get('/api/auth/check-username/:username', async (req, res) => {
+  const username = req.params.username.toLowerCase().trim();
+  if (!isUsernameValid(username)) {
+    return res.json({ available: false, reason: 'Invalid format. Use 3-30 lowercase letters, numbers, and hyphens.' });
+  }
+  if (await isUsernameTaken(username)) {
+    return res.json({ available: false, reason: 'This username is already taken.' });
+  }
+  res.json({ available: true });
 });
 
-app.put('/api/profile', (req, res) => {
-  const current = readJSON('profile.json');
-  const updated = { ...current, ...req.body };
-  writeJSON('profile.json', updated);
-  res.json(updated);
+// ──────────────────── PROFILE ROUTES (Authenticated) ────────────────────
+
+app.get('/api/profile', requireAuth, async (req, res) => {
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('user_id', req.auth.userId)
+    .maybeSingle();
+
+  if (!profile) {
+    return res.json({
+      name: 'Your Name', bio: '', avatar: '',
+      socials: { twitter: '', instagram: '', github: '', linkedin: '', youtube: '', tiktok: '', email: '' }
+    });
+  }
+
+  res.json({
+    name: profile.name,
+    bio: profile.bio,
+    avatar: profile.avatar,
+    socials: profile.socials || {}
+  });
 });
 
-// ──────────────────── LINKS ROUTES ────────────────────
+app.put('/api/profile', requireAuth, async (req, res) => {
+  const { data: existing } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('user_id', req.auth.userId)
+    .maybeSingle();
 
-app.get('/api/links', (req, res) => {
-  const links = readJSON('links.json');
-  links.sort((a, b) => a.order - b.order);
-  res.json(links);
+  const updates = {
+    name: req.body.name ?? existing?.name ?? 'Your Name',
+    bio: req.body.bio ?? existing?.bio ?? '',
+    avatar: req.body.avatar ?? existing?.avatar ?? '',
+    socials: req.body.socials ?? existing?.socials ?? {}
+  };
+
+  if (existing) {
+    await supabase.from('user_profiles')
+      .update(updates)
+      .eq('user_id', req.auth.userId);
+  } else {
+    await supabase.from('user_profiles')
+      .insert({ user_id: req.auth.userId, ...updates });
+  }
+
+  res.json(updates);
 });
 
-app.post('/api/links', (req, res) => {
-  const planId = getUserPlan(req);
+// ──────────────────── LINKS ROUTES (Authenticated) ────────────────────
+
+app.get('/api/links', requireAuth, async (req, res) => {
+  const { data: links } = await supabase
+    .from('user_links')
+    .select('*')
+    .eq('user_id', req.auth.userId)
+    .order('display_order', { ascending: true });
+
+  // Map to client-expected format
+  const mapped = (links || []).map(l => ({
+    id: l.id,
+    title: l.title,
+    url: l.url,
+    icon: l.icon,
+    clicks: l.clicks,
+    active: l.active,
+    order: l.display_order,
+    style: l.style
+  }));
+
+  res.json(mapped);
+});
+
+app.post('/api/links', requireAuth, async (req, res) => {
+  const planId = await getUserPlan(req.auth.userId);
   const limits = getPlanLimits(planId);
-  const links = readJSON('links.json');
 
-  // Enforce link limit
-  if (limits.maxLinks !== Infinity && links.length >= limits.maxLinks) {
+  const { count } = await supabase
+    .from('user_links')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', req.auth.userId);
+
+  if (limits.maxLinks !== Infinity && count >= limits.maxLinks) {
     return res.status(403).json({
       error: `Free plan allows up to ${limits.maxLinks} links. Upgrade to Plus for unlimited links.`,
       upgradeRequired: true,
@@ -248,148 +505,334 @@ app.post('/api/links', (req, res) => {
     });
   }
 
-  const newLink = {
-    id: uuidv4(),
+  const newLinkId = uuidv4();
+  const { error } = await supabase.from('user_links').insert({
+    id: newLinkId,
+    user_id: req.auth.userId,
     title: req.body.title || 'New Link',
     url: req.body.url || 'https://',
     icon: req.body.icon || 'link',
     clicks: 0,
     active: true,
-    order: links.length,
+    display_order: count || 0,
     style: req.body.style || 'default'
-  };
-  links.push(newLink);
-  writeJSON('links.json', links);
-  res.status(201).json(newLink);
+  });
+
+  if (error) {
+    console.error('Link insert error:', error);
+    return res.status(500).json({ error: 'Failed to create link.' });
+  }
+
+  res.status(201).json({
+    id: newLinkId,
+    title: req.body.title || 'New Link',
+    url: req.body.url || 'https://',
+    icon: req.body.icon || 'link',
+    clicks: 0,
+    active: true,
+    order: count || 0,
+    style: req.body.style || 'default'
+  });
 });
 
-app.put('/api/links/:id', (req, res) => {
-  const links = readJSON('links.json');
-  const idx = links.findIndex(l => l.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ error: 'Link not found' });
+app.put('/api/links/:id', requireAuth, async (req, res) => {
+  const { data: existing } = await supabase
+    .from('user_links')
+    .select('*')
+    .eq('id', req.params.id)
+    .eq('user_id', req.auth.userId)
+    .maybeSingle();
 
-  links[idx] = { ...links[idx], ...req.body };
-  writeJSON('links.json', links);
-  res.json(links[idx]);
+  if (!existing) return res.status(404).json({ error: 'Link not found' });
+
+  const updates = {};
+  if (req.body.title !== undefined) updates.title = req.body.title;
+  if (req.body.url !== undefined) updates.url = req.body.url;
+  if (req.body.icon !== undefined) updates.icon = req.body.icon;
+  if (req.body.active !== undefined) updates.active = req.body.active;
+  if (req.body.order !== undefined) updates.display_order = req.body.order;
+  if (req.body.style !== undefined) updates.style = req.body.style;
+
+  await supabase.from('user_links')
+    .update(updates)
+    .eq('id', req.params.id)
+    .eq('user_id', req.auth.userId);
+
+  res.json({ ...existing, ...updates, order: updates.display_order ?? existing.display_order });
 });
 
-app.delete('/api/links/:id', (req, res) => {
-  let links = readJSON('links.json');
-  const idx = links.findIndex(l => l.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ error: 'Link not found' });
+app.delete('/api/links/:id', requireAuth, async (req, res) => {
+  const { data: existing } = await supabase
+    .from('user_links')
+    .select('id')
+    .eq('id', req.params.id)
+    .eq('user_id', req.auth.userId)
+    .maybeSingle();
 
-  links.splice(idx, 1);
-  // Reorder
-  links.forEach((link, i) => link.order = i);
-  writeJSON('links.json', links);
+  if (!existing) return res.status(404).json({ error: 'Link not found' });
+
+  await supabase.from('user_links')
+    .delete()
+    .eq('id', req.params.id)
+    .eq('user_id', req.auth.userId);
+
+  // Reorder remaining links
+  const { data: remainingLinks } = await supabase
+    .from('user_links')
+    .select('id')
+    .eq('user_id', req.auth.userId)
+    .order('display_order', { ascending: true });
+
+  if (remainingLinks) {
+    for (let i = 0; i < remainingLinks.length; i++) {
+      await supabase.from('user_links')
+        .update({ display_order: i })
+        .eq('id', remainingLinks[i].id);
+    }
+  }
+
   res.json({ success: true });
 });
 
 // Reorder links
-app.put('/api/links-reorder', (req, res) => {
+app.put('/api/links-reorder', requireAuth, async (req, res) => {
   const { orderedIds } = req.body;
   if (!orderedIds) return res.status(400).json({ error: 'orderedIds required' });
 
-  const links = readJSON('links.json');
-  const reordered = orderedIds.map((id, index) => {
-    const link = links.find(l => l.id === id);
-    if (link) link.order = index;
-    return link;
-  }).filter(Boolean);
+  // Update each link's order
+  for (let i = 0; i < orderedIds.length; i++) {
+    await supabase.from('user_links')
+      .update({ display_order: i })
+      .eq('id', orderedIds[i])
+      .eq('user_id', req.auth.userId);
+  }
 
-  // Add any links not in the orderedIds list
-  links.forEach(link => {
-    if (!orderedIds.includes(link.id)) reordered.push(link);
-  });
+  const { data: links } = await supabase
+    .from('user_links')
+    .select('*')
+    .eq('user_id', req.auth.userId)
+    .order('display_order', { ascending: true });
 
-  writeJSON('links.json', reordered);
-  res.json(reordered);
+  const mapped = (links || []).map(l => ({
+    id: l.id, title: l.title, url: l.url, icon: l.icon,
+    clicks: l.clicks, active: l.active, order: l.display_order, style: l.style
+  }));
+
+  res.json(mapped);
 });
 
-// Track clicks
-app.post('/api/links/:id/click', (req, res) => {
-  const links = readJSON('links.json');
-  const link = links.find(l => l.id === req.params.id);
+// Track clicks (public — find link by ID across all users)
+app.post('/api/links/:id/click', async (req, res) => {
+  const { data: link } = await supabase
+    .from('user_links')
+    .select('id, clicks')
+    .eq('id', req.params.id)
+    .maybeSingle();
+
   if (!link) return res.status(404).json({ error: 'Link not found' });
 
-  link.clicks = (link.clicks || 0) + 1;
-  writeJSON('links.json', links);
-  res.json({ clicks: link.clicks });
+  const newClicks = (link.clicks || 0) + 1;
+  await supabase.from('user_links')
+    .update({ clicks: newClicks })
+    .eq('id', req.params.id);
+
+  res.json({ clicks: newClicks });
 });
 
-// Analytics
-app.get('/api/analytics', (req, res) => {
-  const links = readJSON('links.json');
-  const totalClicks = links.reduce((sum, l) => sum + (l.clicks || 0), 0);
-  const topLinks = [...links].sort((a, b) => (b.clicks || 0) - (a.clicks || 0)).slice(0, 5);
-  res.json({ totalClicks, totalLinks: links.length, topLinks });
+// Analytics (authenticated)
+app.get('/api/analytics', requireAuth, async (req, res) => {
+  const { data: links } = await supabase
+    .from('user_links')
+    .select('*')
+    .eq('user_id', req.auth.userId);
+
+  const allLinks = links || [];
+  const totalClicks = allLinks.reduce((sum, l) => sum + (l.clicks || 0), 0);
+  const topLinks = [...allLinks]
+    .sort((a, b) => (b.clicks || 0) - (a.clicks || 0))
+    .slice(0, 5)
+    .map(l => ({ id: l.id, title: l.title, url: l.url, clicks: l.clicks }));
+
+  res.json({ totalClicks, totalLinks: allLinks.length, topLinks });
+});
+
+// ──────────────────── SETTINGS ROUTES (Authenticated) ────────────────────
+
+app.get('/api/settings', requireAuth, async (req, res) => {
+  const { data: settings } = await supabase
+    .from('user_settings')
+    .select('*')
+    .eq('user_id', req.auth.userId)
+    .maybeSingle();
+
+  if (!settings) {
+    return res.json({
+      pageTitle: 'Conn.',
+      metaDescription: 'All my links in one place. Connect with me across the web.',
+      showVerifiedBadge: false,
+      showFooter: true,
+      customCSS: '',
+      selectedTheme: 'midnight'
+    });
+  }
+
+  // Map DB column names to camelCase for client compatibility
+  res.json({
+    pageTitle: settings.page_title,
+    metaDescription: settings.meta_description,
+    showVerifiedBadge: settings.show_verified_badge,
+    showFooter: settings.show_footer,
+    customCSS: settings.custom_css,
+    selectedTheme: settings.selected_theme
+  });
+});
+
+app.put('/api/settings', requireAuth, async (req, res) => {
+  const planId = await getUserPlan(req.auth.userId);
+  const limits = getPlanLimits(planId);
+
+  const { data: current } = await supabase
+    .from('user_settings')
+    .select('*')
+    .eq('user_id', req.auth.userId)
+    .maybeSingle();
+
+  // Build updates from request (camelCase from client → snake_case for DB)
+  let updates = {
+    page_title: req.body.pageTitle ?? current?.page_title ?? 'Conn.',
+    meta_description: req.body.metaDescription ?? current?.meta_description ?? '',
+    show_verified_badge: req.body.showVerifiedBadge ?? current?.show_verified_badge ?? false,
+    show_footer: req.body.showFooter ?? current?.show_footer ?? true,
+    custom_css: req.body.customCSS ?? current?.custom_css ?? '',
+    selected_theme: req.body.selectedTheme ?? current?.selected_theme ?? 'midnight'
+  };
+
+  // Enforce plan restrictions
+  if (!limits.canHideBranding) updates.show_footer = true;
+  if (!limits.canShowVerifiedBadge) updates.show_verified_badge = false;
+  if (!limits.canUseCustomCSS) updates.custom_css = '';
+  if (!limits.canEditSEO) updates.meta_description = current?.meta_description ?? '';
+  if (!limits.allThemes && updates.selected_theme) {
+    if (!limits.allowedThemes.includes(updates.selected_theme)) {
+      updates.selected_theme = current?.selected_theme ?? 'midnight';
+    }
+  }
+
+  if (current) {
+    await supabase.from('user_settings')
+      .update(updates)
+      .eq('user_id', req.auth.userId);
+  } else {
+    await supabase.from('user_settings')
+      .insert({ user_id: req.auth.userId, ...updates });
+  }
+
+  // Return camelCase for client
+  res.json({
+    pageTitle: updates.page_title,
+    metaDescription: updates.meta_description,
+    showVerifiedBadge: updates.show_verified_badge,
+    showFooter: updates.show_footer,
+    customCSS: updates.custom_css,
+    selectedTheme: updates.selected_theme
+  });
+});
+
+// ──────────────────── PLAN LIMITS ROUTE ────────────────────
+
+app.get('/api/plan-limits', async (req, res) => {
+  const user = getAuthUser(req);
+  const userId = user?.userId;
+  const planId = await getUserPlan(userId);
+  const limits = getPlanLimits(planId);
+
+  let linksUsed = 0;
+  if (userId) {
+    const { count } = await supabase
+      .from('user_links')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId);
+    linksUsed = count || 0;
+  }
+
+  res.json({
+    plan: planId,
+    limits,
+    usage: { linksUsed }
+  });
 });
 
 // ──────────────────── SUBSCRIPTION ROUTES ────────────────────
 
-// Get all available plans
+// Get all available plans (read from local subscriptions.json — this is static config data)
+const fs = require('fs');
+function readSubscriptions() {
+  try {
+    const filePath = path.join(__dirname, 'data', 'subscriptions.json');
+    if (fs.existsSync(filePath)) {
+      return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    }
+  } catch {}
+  return { plans: [] };
+}
+
 app.get('/api/plans', (req, res) => {
-  const data = readJSON('subscriptions.json');
+  const data = readSubscriptions();
   res.json(data.plans || []);
 });
 
 // Get current user's subscription
-app.get('/api/subscription', (req, res) => {
-  if (!req.session.userId) {
-    return res.status(401).json({ error: 'Not authenticated' });
-  }
-  const users = readJSON('users.json');
-  const user = users.find(u => u.id === req.session.userId);
+app.get('/api/subscription', requireAuth, async (req, res) => {
+  const { data: user } = await supabase
+    .from('users')
+    .select('subscription_plan, subscription_billing, subscribed_at')
+    .eq('id', req.auth.userId)
+    .maybeSingle();
+
   if (!user) return res.status(404).json({ error: 'User not found' });
 
-  res.json(user.subscription || { plan: 'free', billing: 'monthly', subscribedAt: null });
+  res.json({
+    plan: user.subscription_plan || 'free',
+    billing: user.subscription_billing || 'monthly',
+    subscribedAt: user.subscribed_at
+  });
 });
 
-// Subscribe / change plan (only for free plan directly)
-app.post('/api/subscribe', (req, res) => {
-  if (!req.session.userId) {
-    return res.status(401).json({ error: 'Not authenticated' });
-  }
+// Subscribe / change plan (only for downgrade to free)
+app.post('/api/subscribe', requireAuth, async (req, res) => {
   const { planId, billing } = req.body;
   if (!planId) return res.status(400).json({ error: 'planId is required' });
 
-  // Without payment, users can only downgrade to free
   if (planId !== 'free') {
     return res.status(400).json({ error: 'Please use the payment flow to upgrade.' });
   }
 
-  const users = readJSON('users.json');
-  const idx = users.findIndex(u => u.id === req.session.userId);
-  if (idx === -1) return res.status(404).json({ error: 'User not found' });
+  const { error } = await supabase.from('users')
+    .update({
+      subscription_plan: planId,
+      subscription_billing: billing || 'monthly',
+      subscribed_at: new Date().toISOString()
+    })
+    .eq('id', req.auth.userId);
 
-  users[idx].subscription = {
-    plan: planId,
-    billing: billing || 'monthly',
-    subscribedAt: new Date().toISOString()
-  };
+  if (error) return res.status(500).json({ error: 'Failed to update subscription.' });
 
-  writeJSON('users.json', users);
-  res.json({ success: true, subscription: users[idx].subscription });
+  res.json({ success: true, subscription: { plan: planId, billing: billing || 'monthly', subscribedAt: new Date().toISOString() } });
 });
 
 // Razorpay: Create Order
-app.post('/api/payment/create-order', async (req, res) => {
-  if (!req.session.userId) {
-    return res.status(401).json({ error: 'Not authenticated' });
-  }
-  
+app.post('/api/payment/create-order', requireAuth, async (req, res) => {
   const { planId, billing } = req.body;
-  
-  const subsData = readJSON('subscriptions.json');
+
+  const subsData = readSubscriptions();
   const plan = (subsData.plans || []).find(p => p.id === planId);
   if (!plan) return res.status(404).json({ error: 'Plan not found' });
-  
+
   let amount = plan.price;
   if (billing === 'yearly' && plan.yearlyPrice !== null) {
     amount = plan.yearlyPrice;
   }
-  
-  // Amount in paise
+
   const amountInPaise = amount * 100;
 
   try {
@@ -398,23 +841,19 @@ app.post('/api/payment/create-order', async (req, res) => {
       currency: plan.currency || 'INR',
       receipt: `rcpt_${uuidv4()}`
     };
-    
+
     const order = await razorpay.orders.create(options);
-    
-    // Save order details to DB
-    const orders = readJSON('orders.json');
-    const newOrder = {
+
+    // Save order to Supabase
+    await supabase.from('orders').insert({
       id: uuidv4(),
-      razorpayOrderId: order.id,
-      userId: req.session.userId,
-      planId,
+      razorpay_order_id: order.id,
+      user_id: req.auth.userId,
+      plan_id: planId,
       billing,
       amount,
-      status: 'created',
-      createdAt: new Date().toISOString()
-    };
-    orders.push(newOrder);
-    writeJSON('orders.json', orders);
+      status: 'created'
+    });
 
     res.json({
       orderId: order.id,
@@ -429,14 +868,9 @@ app.post('/api/payment/create-order', async (req, res) => {
 });
 
 // Razorpay: Verify Payment
-app.post('/api/payment/verify', (req, res) => {
-  if (!req.session.userId) {
-    return res.status(401).json({ error: 'Not authenticated' });
-  }
-
+app.post('/api/payment/verify', requireAuth, async (req, res) => {
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
-  // Verify signature
   const body = razorpay_order_id + "|" + razorpay_payment_id;
   const expectedSignature = crypto
     .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || 'placeholder')
@@ -444,97 +878,200 @@ app.post('/api/payment/verify', (req, res) => {
     .digest('hex');
 
   if (expectedSignature === razorpay_signature) {
-    // Payment successful!
-    const orders = readJSON('orders.json');
-    const orderIdx = orders.findIndex(o => o.razorpayOrderId === razorpay_order_id);
-    
-    if (orderIdx === -1) {
+    // Find the order
+    const { data: order } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('razorpay_order_id', razorpay_order_id)
+      .maybeSingle();
+
+    if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
 
-    const order = orders[orderIdx];
-    order.status = 'paid';
-    order.razorpayPaymentId = razorpay_payment_id;
-    order.paidAt = new Date().toISOString();
-    writeJSON('orders.json', orders);
+    // Update order
+    await supabase.from('orders')
+      .update({
+        status: 'paid',
+        razorpay_payment_id,
+        paid_at: new Date().toISOString()
+      })
+      .eq('razorpay_order_id', razorpay_order_id);
 
     // Upgrade user
-    const users = readJSON('users.json');
-    const userIdx = users.findIndex(u => u.id === order.userId);
-    if (userIdx !== -1) {
-      users[userIdx].subscription = {
-        plan: order.planId,
-        billing: order.billing || 'monthly',
-        subscribedAt: new Date().toISOString()
-      };
-      writeJSON('users.json', users);
-    }
+    await supabase.from('users')
+      .update({
+        subscription_plan: order.plan_id,
+        subscription_billing: order.billing || 'monthly',
+        subscribed_at: new Date().toISOString()
+      })
+      .eq('id', order.user_id);
 
-    res.json({ success: true, message: 'Payment verified successfully', subscription: users[userIdx]?.subscription });
+    res.json({
+      success: true,
+      message: 'Payment verified successfully',
+      subscription: { plan: order.plan_id, billing: order.billing }
+    });
   } else {
-    // Payment verification failed
     res.status(400).json({ error: 'Invalid payment signature' });
   }
 });
 
-// ──────────────────── PLAN LIMITS ROUTE ────────────────────
+// ──────────────────── PUBLIC PROFILE ROUTES ────────────────────
 
-app.get('/api/plan-limits', (req, res) => {
-  const planId = getUserPlan(req);
-  const limits = getPlanLimits(planId);
-  const links = readJSON('links.json');
+// Public profile
+app.get('/api/u/:username/profile', async (req, res) => {
+  const { data: user } = await supabase
+    .from('users')
+    .select('id')
+    .eq('username', req.params.username.toLowerCase())
+    .maybeSingle();
+
+  if (!user) return res.status(404).json({ error: 'User not found' });
+
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('user_id', user.id)
+    .maybeSingle();
+
   res.json({
-    plan: planId,
-    limits,
-    usage: {
-      linksUsed: links.length
-    }
+    name: profile?.name || 'User',
+    bio: profile?.bio || '',
+    avatar: profile?.avatar || '',
+    socials: profile?.socials || {}
   });
 });
 
-// ──────────────────── SETTINGS ROUTES ────────────────────
+// Public links
+app.get('/api/u/:username/links', async (req, res) => {
+  const { data: user } = await supabase
+    .from('users')
+    .select('id')
+    .eq('username', req.params.username.toLowerCase())
+    .maybeSingle();
 
-app.get('/api/settings', (req, res) => {
-  const settings = readJSON('settings.json');
-  res.json(settings);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+
+  const { data: links } = await supabase
+    .from('user_links')
+    .select('id, title, url, icon, style, display_order')
+    .eq('user_id', user.id)
+    .eq('active', true)
+    .order('display_order', { ascending: true });
+
+  const publicLinks = (links || []).map(l => ({
+    id: l.id, title: l.title, url: l.url, icon: l.icon, style: l.style, order: l.display_order
+  }));
+
+  res.json(publicLinks);
 });
 
-app.put('/api/settings', (req, res) => {
-  const planId = getUserPlan(req);
-  const limits = getPlanLimits(planId);
-  const current = readJSON('settings.json');
-  const updated = { ...current, ...req.body };
+// Public settings (theme etc)
+app.get('/api/u/:username/settings', async (req, res) => {
+  const { data: user } = await supabase
+    .from('users')
+    .select('id')
+    .eq('username', req.params.username.toLowerCase())
+    .maybeSingle();
 
-  // Enforce plan restrictions on settings
-  if (!limits.canHideBranding) {
-    updated.showFooter = true;  // force branding on for free
-  }
-  if (!limits.canShowVerifiedBadge) {
-    updated.showVerifiedBadge = false;  // no verified badge on free
-  }
-  if (!limits.canUseCustomCSS) {
-    updated.customCSS = '';  // strip custom CSS for free
-  }
-  if (!limits.canEditSEO) {
-    updated.metaDescription = current.metaDescription;  // keep old SEO, don't allow edit
-  }
-  // Enforce theme restriction
-  if (!limits.allThemes && updated.selectedTheme) {
-    if (!limits.allowedThemes.includes(updated.selectedTheme)) {
-      updated.selectedTheme = current.selectedTheme;  // revert to current theme
-    }
-  }
+  if (!user) return res.status(404).json({ error: 'User not found' });
 
-  writeJSON('settings.json', updated);
-  res.json(updated);
+  const { data: settings } = await supabase
+    .from('user_settings')
+    .select('*')
+    .eq('user_id', user.id)
+    .maybeSingle();
+
+  res.json({
+    pageTitle: settings?.page_title || 'Conn.',
+    selectedTheme: settings?.selected_theme || 'midnight',
+    showVerifiedBadge: settings?.show_verified_badge || false,
+    showFooter: settings?.show_footer !== false,
+    customCSS: settings?.custom_css || ''
+  });
 });
 
+// Track clicks on public profile
+app.post('/api/u/:username/links/:id/click', async (req, res) => {
+  const { data: user } = await supabase
+    .from('users')
+    .select('id')
+    .eq('username', req.params.username.toLowerCase())
+    .maybeSingle();
 
-app.listen(PORT, () => {
-  console.log(`\n  ✨ Conn is running!`);
-  console.log(`  🏠 Landing page:  http://localhost:${PORT}`);
-  console.log(`  🌐 Profile page:  http://localhost:${PORT}/me`);
-  console.log(`  ⚙️  Admin panel:  http://localhost:${PORT}/admin`);
-  console.log(`  🔐 Login:         http://localhost:${PORT}/login`);
-  console.log(`  📡 API:           http://localhost:${PORT}/api\n`);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+
+  const { data: link } = await supabase
+    .from('user_links')
+    .select('id, clicks')
+    .eq('id', req.params.id)
+    .eq('user_id', user.id)
+    .maybeSingle();
+
+  if (!link) return res.status(404).json({ error: 'Link not found' });
+
+  const newClicks = (link.clicks || 0) + 1;
+  await supabase.from('user_links')
+    .update({ clicks: newClicks })
+    .eq('id', req.params.id);
+
+  res.json({ clicks: newClicks });
 });
+
+// ──────────────────── CONTACT FORM ROUTE ────────────────────
+
+app.post('/api/contact', async (req, res) => {
+  const { name, email, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: 'All fields are required.' });
+  }
+
+  if (name.length > 100 || email.length > 200 || message.length > 5000) {
+    return res.status(400).json({ error: 'Input too long.' });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: 'Invalid email address.' });
+  }
+
+  const clientIP = req.ip || req.connection?.remoteAddress || 'unknown';
+  if (isContactRateLimited(clientIP)) {
+    return res.status(429).json({ error: 'Too many messages. Please try again later.' });
+  }
+
+  const { error } = await supabase.from('contacts').insert({
+    id: uuidv4(),
+    name: name.trim(),
+    email: email.trim().toLowerCase(),
+    message: message.trim(),
+    ip: clientIP
+  });
+
+  if (error) {
+    console.error('Contact insert error:', error);
+    return res.status(500).json({ error: 'Failed to send message.' });
+  }
+
+  res.status(201).json({ success: true, message: 'Message sent successfully!' });
+});
+
+// ──────────────────── START SERVER ────────────────────
+
+// Only start listener when not running on Vercel (Vercel uses serverless, not a listener)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`\n  ✨ Conn is running!`);
+    console.log(`  🏠 Landing page:  http://localhost:${PORT}`);
+    console.log(`  🌐 Profile page:  http://localhost:${PORT}/me`);
+    console.log(`  👤 Public pages:  http://localhost:${PORT}/u/<username>`);
+    console.log(`  ⚙️  Admin panel:  http://localhost:${PORT}/admin`);
+    console.log(`  🔐 Login:         http://localhost:${PORT}/login`);
+    console.log(`  📡 API:           http://localhost:${PORT}/api\n`);
+  });
+}
+
+// Export for Vercel serverless
+module.exports = app;

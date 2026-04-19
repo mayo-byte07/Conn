@@ -646,3 +646,420 @@ body.theme-sunset-mesh .bg-gradient {
     #f97316 !important;
   opacity: 1 !important;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   GRADIENT THEMES — Premium Animated Backgrounds
+   Unique to Conn · Nothing like Linktree
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Gradient Theme Animated Background Keyframes ── */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes meshFloat {
+  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  25% { transform: translate(5%, -3%) rotate(1deg) scale(1.02); }
+  50% { transform: translate(-3%, 5%) rotate(-1deg) scale(0.98); }
+  75% { transform: translate(3%, 2%) rotate(0.5deg) scale(1.01); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+/* ══════ 19. AURORA BOREALIS ══════ */
+body.theme-aurora-borealis {
+  --bg-primary: #020b18;
+  --bg-secondary: #041428;
+  --text-primary: #e8f4ff;
+  --text-secondary: #8ec8f0;
+  --accent: #34d399;
+  --accent-light: #6ee7b7;
+  --accent-dark: #059669;
+  --accent2: #818cf8;
+  --accent2-light: #a5b4fc;
+
+  --link-bg: rgba(52, 211, 153, 0.08);
+  --link-bg-hover: rgba(52, 211, 153, 0.14);
+  --link-border: 1px solid rgba(52, 211, 153, 0.15);
+  --link-border-hover-color: rgba(52, 211, 153, 0.35);
+  --link-color: #e8f4ff;
+  --link-radius: 16px;
+  --link-shadow: 0 2px 12px rgba(52, 211, 153, 0.08);
+  --link-shadow-hover: 0 8px 32px rgba(52, 211, 153, 0.18);
+  --link-transform-hover: translateY(-3px) scale(1.01);
+
+  --accent-glow: rgba(52, 211, 153, 0.15);
+  --accent-glow-strong: rgba(52, 211, 153, 0.3);
+  --border: rgba(52, 211, 153, 0.1);
+  --border-hover: rgba(52, 211, 153, 0.2);
+  --border-accent: rgba(52, 211, 153, 0.35);
+  --shadow-glow: 0 0 30px rgba(52, 211, 153, 0.15);
+  --shadow-glow-strong: 0 0 60px rgba(52, 211, 153, 0.25);
+  --bg-card: rgba(52, 211, 153, 0.04);
+  --bg-card-hover: rgba(52, 211, 153, 0.08);
+  --bg-glass: rgba(52, 211, 153, 0.05);
+  --bg-glass-hover: rgba(52, 211, 153, 0.10);
+}
+body.theme-aurora-borealis .bg-gradient {
+  background:
+    radial-gradient(ellipse 120% 80% at 20% -20%, rgba(52, 211, 153, 0.35), transparent 60%),
+    radial-gradient(ellipse 100% 60% at 80% 20%, rgba(129, 140, 248, 0.25), transparent 50%),
+    radial-gradient(ellipse 80% 50% at 50% 80%, rgba(6, 182, 212, 0.15), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 10% 60%, rgba(167, 139, 250, 0.1), transparent 40%) !important;
+  opacity: 1 !important;
+  animation: meshFloat 20s ease-in-out infinite;
+}
+body.theme-aurora-borealis .floating-orb,
+body.theme-aurora-borealis .bg-noise { display: none; }
+body.theme-aurora-borealis .avatar-glow {
+  background: conic-gradient(from 0deg, #34d399, #818cf8, #06b6d4, #34d399);
+}
+
+/* ══════ 20. COSMIC NEBULA ══════ */
+body.theme-cosmic-nebula {
+  --bg-primary: #0a0015;
+  --bg-secondary: #120022;
+  --text-primary: #f5e6ff;
+  --text-secondary: #c9a0f0;
+  --accent: #a855f7;
+  --accent-light: #c084fc;
+  --accent-dark: #7c3aed;
+  --accent2: #f43f5e;
+  --accent2-light: #fb7185;
+
+  --link-bg: rgba(168, 85, 247, 0.08);
+  --link-bg-hover: rgba(168, 85, 247, 0.14);
+  --link-border: 1px solid rgba(168, 85, 247, 0.15);
+  --link-border-hover-color: rgba(244, 63, 94, 0.35);
+  --link-color: #f5e6ff;
+  --link-radius: 16px;
+  --link-shadow: 0 2px 12px rgba(168, 85, 247, 0.08);
+  --link-shadow-hover: 0 8px 32px rgba(168, 85, 247, 0.2);
+  --link-transform-hover: translateY(-3px) scale(1.01);
+
+  --accent-glow: rgba(168, 85, 247, 0.15);
+  --accent-glow-strong: rgba(168, 85, 247, 0.3);
+  --border: rgba(168, 85, 247, 0.1);
+  --border-hover: rgba(168, 85, 247, 0.2);
+  --border-accent: rgba(168, 85, 247, 0.35);
+  --shadow-glow: 0 0 30px rgba(168, 85, 247, 0.15);
+  --shadow-glow-strong: 0 0 60px rgba(168, 85, 247, 0.25);
+  --bg-card: rgba(168, 85, 247, 0.04);
+  --bg-card-hover: rgba(168, 85, 247, 0.08);
+  --bg-glass: rgba(168, 85, 247, 0.05);
+  --bg-glass-hover: rgba(168, 85, 247, 0.10);
+}
+body.theme-cosmic-nebula .bg-gradient {
+  background:
+    radial-gradient(ellipse 100% 70% at 30% 10%, rgba(168, 85, 247, 0.4), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 70% 30%, rgba(244, 63, 94, 0.3), transparent 50%),
+    radial-gradient(ellipse 90% 50% at 40% 90%, rgba(139, 92, 246, 0.2), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 90% 70%, rgba(236, 72, 153, 0.15), transparent 40%) !important;
+  opacity: 1 !important;
+  animation: meshFloat 25s ease-in-out infinite;
+}
+body.theme-cosmic-nebula .floating-orb,
+body.theme-cosmic-nebula .bg-noise { display: none; }
+body.theme-cosmic-nebula .avatar-glow {
+  background: conic-gradient(from 0deg, #a855f7, #f43f5e, #ec4899, #a855f7);
+}
+
+/* ══════ 21. TROPICAL PARADISE ══════ */
+body.theme-tropical-paradise {
+  --bg-primary: #001a1a;
+  --bg-secondary: #002828;
+  --text-primary: #e0fff8;
+  --text-secondary: #81e6d9;
+  --accent: #38b2ac;
+  --accent-light: #4fd1c5;
+  --accent-dark: #2c7a7b;
+  --accent2: #f6ad55;
+  --accent2-light: #fbd38d;
+
+  --link-bg: rgba(56, 178, 172, 0.08);
+  --link-bg-hover: rgba(56, 178, 172, 0.14);
+  --link-border: 1px solid rgba(56, 178, 172, 0.15);
+  --link-border-hover-color: rgba(246, 173, 85, 0.35);
+  --link-color: #e0fff8;
+  --link-radius: 20px;
+  --link-shadow: 0 2px 12px rgba(56, 178, 172, 0.08);
+  --link-shadow-hover: 0 8px 32px rgba(56, 178, 172, 0.18);
+  --link-transform-hover: translateY(-3px) scale(1.01);
+
+  --accent-glow: rgba(56, 178, 172, 0.15);
+  --accent-glow-strong: rgba(56, 178, 172, 0.3);
+  --border: rgba(56, 178, 172, 0.1);
+  --border-hover: rgba(56, 178, 172, 0.2);
+  --border-accent: rgba(56, 178, 172, 0.35);
+  --shadow-glow: 0 0 30px rgba(56, 178, 172, 0.15);
+  --shadow-glow-strong: 0 0 60px rgba(56, 178, 172, 0.25);
+  --bg-card: rgba(56, 178, 172, 0.04);
+  --bg-card-hover: rgba(56, 178, 172, 0.08);
+  --bg-glass: rgba(56, 178, 172, 0.05);
+  --bg-glass-hover: rgba(56, 178, 172, 0.10);
+}
+body.theme-tropical-paradise .bg-gradient {
+  background:
+    radial-gradient(ellipse 100% 80% at 0% 0%, rgba(56, 178, 172, 0.35), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 100% 30%, rgba(246, 173, 85, 0.3), transparent 50%),
+    radial-gradient(ellipse 100% 50% at 50% 100%, rgba(72, 187, 120, 0.2), transparent 50%),
+    radial-gradient(ellipse 40% 40% at 80% 80%, rgba(237, 137, 54, 0.12), transparent 40%) !important;
+  opacity: 1 !important;
+  animation: meshFloat 22s ease-in-out infinite;
+}
+body.theme-tropical-paradise .floating-orb,
+body.theme-tropical-paradise .bg-noise { display: none; }
+body.theme-tropical-paradise .avatar-glow {
+  background: conic-gradient(from 0deg, #38b2ac, #f6ad55, #48bb78, #38b2ac);
+}
+
+/* ══════ 22. MIDNIGHT OIL ══════ */
+body.theme-midnight-oil {
+  --bg-primary: #0c0c1d;
+  --bg-secondary: #141430;
+  --text-primary: #eeeeff;
+  --text-secondary: #a5a5c0;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --accent-dark: #4f46e5;
+  --accent2: #fb923c;
+  --accent2-light: #fdba74;
+
+  --link-bg: rgba(99, 102, 241, 0.08);
+  --link-bg-hover: rgba(99, 102, 241, 0.14);
+  --link-border: 1px solid rgba(99, 102, 241, 0.15);
+  --link-border-hover-color: rgba(251, 146, 60, 0.35);
+  --link-color: #eeeeff;
+  --link-radius: 14px;
+  --link-shadow: 0 2px 12px rgba(99, 102, 241, 0.08);
+  --link-shadow-hover: 0 8px 32px rgba(99, 102, 241, 0.2);
+  --link-transform-hover: translateY(-3px) scale(1.01);
+
+  --accent-glow: rgba(99, 102, 241, 0.15);
+  --accent-glow-strong: rgba(99, 102, 241, 0.3);
+  --border: rgba(99, 102, 241, 0.1);
+  --border-hover: rgba(99, 102, 241, 0.2);
+  --border-accent: rgba(99, 102, 241, 0.35);
+  --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.15);
+  --shadow-glow-strong: 0 0 60px rgba(99, 102, 241, 0.25);
+  --bg-card: rgba(99, 102, 241, 0.04);
+  --bg-card-hover: rgba(99, 102, 241, 0.08);
+  --bg-glass: rgba(99, 102, 241, 0.05);
+  --bg-glass-hover: rgba(99, 102, 241, 0.10);
+}
+body.theme-midnight-oil .bg-gradient {
+  background:
+    radial-gradient(ellipse 100% 70% at 50% 0%, rgba(99, 102, 241, 0.3), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 0% 50%, rgba(251, 146, 60, 0.2), transparent 50%),
+    radial-gradient(ellipse 90% 50% at 100% 80%, rgba(79, 70, 229, 0.2), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 50% 50%, rgba(255, 186, 116, 0.08), transparent 40%) !important;
+  opacity: 1 !important;
+  animation: meshFloat 18s ease-in-out infinite;
+}
+body.theme-midnight-oil .floating-orb,
+body.theme-midnight-oil .bg-noise { display: none; }
+body.theme-midnight-oil .avatar-glow {
+  background: conic-gradient(from 0deg, #6366f1, #fb923c, #4f46e5, #6366f1);
+}
+
+/* ══════ 23. COTTON CANDY ══════ */
+body.theme-cotton-candy {
+  --bg-primary: #fdf2f8;
+  --bg-secondary: #fce7f3;
+  --text-primary: #831843;
+  --text-secondary: #9d174d;
+  --accent: #ec4899;
+  --accent-light: #f472b6;
+  --accent-dark: #db2777;
+  --accent2: #8b5cf6;
+  --accent2-light: #a78bfa;
+
+  --link-bg: #ffffff;
+  --link-bg-hover: #fff5fa;
+  --link-border: 1px solid rgba(236, 72, 153, 0.2);
+  --link-border-hover-color: rgba(236, 72, 153, 0.4);
+  --link-color: #831843;
+  --link-radius: 9999px;
+  --link-shadow: 0 4px 15px rgba(236, 72, 153, 0.1);
+  --link-shadow-hover: 0 8px 30px rgba(236, 72, 153, 0.18);
+  --link-transform-hover: translateY(-3px) scale(1.02);
+
+  --accent-glow: rgba(236, 72, 153, 0.1);
+  --accent-glow-strong: rgba(236, 72, 153, 0.2);
+  --border: rgba(236, 72, 153, 0.12);
+  --border-hover: rgba(236, 72, 153, 0.25);
+  --border-accent: rgba(236, 72, 153, 0.35);
+  --shadow-glow: 0 0 25px rgba(236, 72, 153, 0.12);
+  --shadow-glow-strong: 0 0 50px rgba(236, 72, 153, 0.2);
+  --bg-card: rgba(236, 72, 153, 0.04);
+  --bg-card-hover: rgba(236, 72, 153, 0.08);
+  --bg-glass: rgba(236, 72, 153, 0.05);
+  --bg-glass-hover: rgba(236, 72, 153, 0.10);
+}
+body.theme-cotton-candy .bg-gradient {
+  background:
+    radial-gradient(ellipse 120% 80% at 0% 0%, rgba(236, 72, 153, 0.25), transparent 55%),
+    radial-gradient(ellipse 100% 70% at 100% 20%, rgba(139, 92, 246, 0.2), transparent 50%),
+    radial-gradient(ellipse 80% 60% at 30% 100%, rgba(244, 114, 182, 0.15), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(167, 139, 250, 0.1), transparent 40%) !important;
+  opacity: 1 !important;
+  animation: meshFloat 24s ease-in-out infinite;
+}
+body.theme-cotton-candy .floating-orb,
+body.theme-cotton-candy .bg-noise { display: none; }
+body.theme-cotton-candy .avatar-glow {
+  background: conic-gradient(from 0deg, #ec4899, #8b5cf6, #f472b6, #ec4899);
+}
+
+/* ══════ 24. EMERALD AURORA ══════ */
+body.theme-emerald-aurora {
+  --bg-primary: #021a12;
+  --bg-secondary: #03281c;
+  --text-primary: #d1fae5;
+  --text-secondary: #6ee7b7;
+  --accent: #10b981;
+  --accent-light: #34d399;
+  --accent-dark: #059669;
+  --accent2: #06b6d4;
+  --accent2-light: #22d3ee;
+
+  --link-bg: rgba(16, 185, 129, 0.08);
+  --link-bg-hover: rgba(16, 185, 129, 0.14);
+  --link-border: 1px solid rgba(16, 185, 129, 0.15);
+  --link-border-hover-color: rgba(6, 182, 212, 0.35);
+  --link-color: #d1fae5;
+  --link-radius: 16px;
+  --link-shadow: 0 2px 12px rgba(16, 185, 129, 0.08);
+  --link-shadow-hover: 0 8px 32px rgba(16, 185, 129, 0.2);
+  --link-transform-hover: translateY(-3px) scale(1.01);
+
+  --accent-glow: rgba(16, 185, 129, 0.15);
+  --accent-glow-strong: rgba(16, 185, 129, 0.3);
+  --border: rgba(16, 185, 129, 0.1);
+  --border-hover: rgba(16, 185, 129, 0.2);
+  --border-accent: rgba(16, 185, 129, 0.35);
+  --shadow-glow: 0 0 30px rgba(16, 185, 129, 0.15);
+  --shadow-glow-strong: 0 0 60px rgba(16, 185, 129, 0.25);
+  --bg-card: rgba(16, 185, 129, 0.04);
+  --bg-card-hover: rgba(16, 185, 129, 0.08);
+  --bg-glass: rgba(16, 185, 129, 0.05);
+  --bg-glass-hover: rgba(16, 185, 129, 0.10);
+}
+body.theme-emerald-aurora .bg-gradient {
+  background:
+    radial-gradient(ellipse 100% 80% at 10% 0%, rgba(16, 185, 129, 0.4), transparent 55%),
+    radial-gradient(ellipse 90% 60% at 90% 20%, rgba(6, 182, 212, 0.3), transparent 50%),
+    radial-gradient(ellipse 80% 50% at 50% 90%, rgba(52, 211, 153, 0.2), transparent 50%),
+    radial-gradient(ellipse 50% 40% at 30% 60%, rgba(34, 211, 238, 0.1), transparent 40%) !important;
+  opacity: 1 !important;
+  animation: meshFloat 20s ease-in-out infinite;
+}
+body.theme-emerald-aurora .floating-orb,
+body.theme-emerald-aurora .bg-noise { display: none; }
+body.theme-emerald-aurora .avatar-glow {
+  background: conic-gradient(from 0deg, #10b981, #06b6d4, #34d399, #10b981);
+}
+
+/* ══════ 25. HOLOGRAPHIC ══════ */
+body.theme-holographic {
+  --bg-primary: #0a0a12;
+  --bg-secondary: #12121f;
+  --text-primary: #f0f0ff;
+  --text-secondary: #b8b8e0;
+  --accent: #a78bfa;
+  --accent-light: #c4b5fd;
+  --accent-dark: #7c3aed;
+  --accent2: #22d3ee;
+  --accent2-light: #67e8f9;
+
+  --link-bg: rgba(167, 139, 250, 0.06);
+  --link-bg-hover: rgba(167, 139, 250, 0.12);
+  --link-border: 1px solid rgba(167, 139, 250, 0.12);
+  --link-border-hover-color: rgba(34, 211, 238, 0.3);
+  --link-color: #f0f0ff;
+  --link-radius: 16px;
+  --link-shadow: 0 2px 12px rgba(167, 139, 250, 0.06);
+  --link-shadow-hover: 0 8px 32px rgba(167, 139, 250, 0.15), 0 0 20px rgba(34, 211, 238, 0.1);
+  --link-transform-hover: translateY(-3px) scale(1.01);
+
+  --accent-glow: rgba(167, 139, 250, 0.15);
+  --accent-glow-strong: rgba(167, 139, 250, 0.3);
+  --border: rgba(167, 139, 250, 0.1);
+  --border-hover: rgba(167, 139, 250, 0.2);
+  --border-accent: rgba(167, 139, 250, 0.35);
+  --shadow-glow: 0 0 30px rgba(167, 139, 250, 0.15);
+  --shadow-glow-strong: 0 0 60px rgba(167, 139, 250, 0.25);
+  --bg-card: rgba(167, 139, 250, 0.04);
+  --bg-card-hover: rgba(167, 139, 250, 0.08);
+  --bg-glass: rgba(167, 139, 250, 0.05);
+  --bg-glass-hover: rgba(167, 139, 250, 0.10);
+}
+body.theme-holographic .bg-gradient {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(167, 139, 250, 0.35), transparent 50%),
+    radial-gradient(ellipse 70% 50% at 80% 20%, rgba(34, 211, 238, 0.3), transparent 45%),
+    radial-gradient(ellipse 90% 60% at 50% 80%, rgba(244, 114, 182, 0.2), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 10% 70%, rgba(251, 191, 36, 0.12), transparent 40%),
+    radial-gradient(ellipse 50% 30% at 90% 60%, rgba(52, 211, 153, 0.1), transparent 35%) !important;
+  opacity: 1 !important;
+  animation: meshFloat 15s ease-in-out infinite;
+}
+body.theme-holographic .floating-orb,
+body.theme-holographic .bg-noise { display: none; }
+body.theme-holographic .avatar-glow {
+  background: conic-gradient(from 0deg, #a78bfa, #22d3ee, #f472b6, #fbbf24, #34d399, #a78bfa);
+}
+
+/* ══════ 26. MOLTEN LAVA ══════ */
+body.theme-molten-lava {
+  --bg-primary: #120800;
+  --bg-secondary: #1c0e02;
+  --text-primary: #fff5eb;
+  --text-secondary: #fdba74;
+  --accent: #f97316;
+  --accent-light: #fb923c;
+  --accent-dark: #ea580c;
+  --accent2: #ef4444;
+  --accent2-light: #f87171;
+
+  --link-bg: rgba(249, 115, 22, 0.08);
+  --link-bg-hover: rgba(249, 115, 22, 0.14);
+  --link-border: 1px solid rgba(249, 115, 22, 0.15);
+  --link-border-hover-color: rgba(239, 68, 68, 0.35);
+  --link-color: #fff5eb;
+  --link-radius: 14px;
+  --link-shadow: 0 2px 12px rgba(249, 115, 22, 0.08);
+  --link-shadow-hover: 0 8px 32px rgba(249, 115, 22, 0.22);
+  --link-transform-hover: translateY(-3px) scale(1.01);
+
+  --accent-glow: rgba(249, 115, 22, 0.15);
+  --accent-glow-strong: rgba(249, 115, 22, 0.3);
+  --border: rgba(249, 115, 22, 0.1);
+  --border-hover: rgba(249, 115, 22, 0.2);
+  --border-accent: rgba(249, 115, 22, 0.35);
+  --shadow-glow: 0 0 30px rgba(249, 115, 22, 0.15);
+  --shadow-glow-strong: 0 0 60px rgba(249, 115, 22, 0.25);
+  --bg-card: rgba(249, 115, 22, 0.04);
+  --bg-card-hover: rgba(249, 115, 22, 0.08);
+  --bg-glass: rgba(249, 115, 22, 0.05);
+  --bg-glass-hover: rgba(249, 115, 22, 0.10);
+}
+body.theme-molten-lava .bg-gradient {
+  background:
+    radial-gradient(ellipse 100% 80% at 50% 100%, rgba(249, 115, 22, 0.45), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 20% 60%, rgba(239, 68, 68, 0.35), transparent 50%),
+    radial-gradient(ellipse 90% 50% at 80% 40%, rgba(251, 191, 36, 0.2), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 40% 20%, rgba(234, 88, 12, 0.15), transparent 40%) !important;
+  opacity: 1 !important;
+  animation: meshFloat 18s ease-in-out infinite;
+}
+body.theme-molten-lava .floating-orb,
+body.theme-molten-lava .bg-noise { display: none; }
+body.theme-molten-lava .avatar-glow {
+  background: conic-gradient(from 0deg, #f97316, #ef4444, #fbbf24, #f97316);
+}

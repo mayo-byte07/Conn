@@ -99,6 +99,8 @@
       const y = window.scrollY;
       navbar.classList.toggle('scrolled', y > 50);
       lastY = y;
+      // Close mega dropdown on scroll
+      closeMegaDropdown();
     });
 
     // Mobile menu
@@ -110,6 +112,110 @@
     menu.querySelectorAll('a').forEach(a => {
       a.addEventListener('click', () => menu.classList.remove('open'));
     });
+
+    // Mobile product accordion
+    const mobileProductToggle = document.getElementById('mobileProductToggle');
+    const mobileProductPanel = document.getElementById('mobileProductPanel');
+    if (mobileProductToggle && mobileProductPanel) {
+      mobileProductToggle.addEventListener('click', () => {
+        mobileProductToggle.classList.toggle('open');
+        mobileProductPanel.classList.toggle('open');
+      });
+      // Close accordion when a link inside is clicked
+      mobileProductPanel.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          menu.classList.remove('open');
+          mobileProductToggle.classList.remove('open');
+          mobileProductPanel.classList.remove('open');
+        });
+      });
+    }
+  }
+
+  // ─── Mega Dropdown Logic ───
+  function initMegaDropdown() {
+    const dropdown = document.getElementById('navDropdown');
+    const trigger = document.getElementById('navDropdownTrigger');
+    const megaPanel = document.getElementById('megaDropdown');
+    if (!dropdown || !trigger || !megaPanel) return;
+
+    let hoverTimeout = null;
+    let isOpen = false;
+
+    function openMegaDropdown() {
+      clearTimeout(hoverTimeout);
+      dropdown.classList.add('open');
+      isOpen = true;
+    }
+
+    function closeMegaDropdownDelayed(delay) {
+      clearTimeout(hoverTimeout);
+      hoverTimeout = setTimeout(() => {
+        dropdown.classList.remove('open');
+        isOpen = false;
+      }, delay || 200);
+    }
+
+    // Desktop: hover with delay
+    dropdown.addEventListener('mouseenter', () => {
+      if (window.innerWidth > 768) openMegaDropdown();
+    });
+
+    dropdown.addEventListener('mouseleave', () => {
+      if (window.innerWidth > 768) closeMegaDropdownDelayed(250);
+    });
+
+    megaPanel.addEventListener('mouseenter', () => {
+      if (window.innerWidth > 768) {
+        clearTimeout(hoverTimeout);
+      }
+    });
+
+    megaPanel.addEventListener('mouseleave', () => {
+      if (window.innerWidth > 768) closeMegaDropdownDelayed(250);
+    });
+
+    // Click toggle (works on both desktop and as fallback)
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (isOpen) {
+        dropdown.classList.remove('open');
+        isOpen = false;
+      } else {
+        openMegaDropdown();
+      }
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (isOpen && !dropdown.contains(e.target) && !megaPanel.contains(e.target)) {
+        dropdown.classList.remove('open');
+        isOpen = false;
+      }
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        dropdown.classList.remove('open');
+        isOpen = false;
+      }
+    });
+
+    // Close on link click inside mega dropdown
+    megaPanel.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        dropdown.classList.remove('open');
+        isOpen = false;
+      });
+    });
+  }
+
+  // Global close function (used by scroll handler)
+  function closeMegaDropdown() {
+    const dropdown = document.getElementById('navDropdown');
+    if (dropdown) dropdown.classList.remove('open');
   }
 
   // ─── Counter Animation ───
@@ -163,16 +269,50 @@
   function initContactForm() {
     const form = document.getElementById('contactForm');
     if (!form) return;
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      form.style.display = 'none';
-      document.getElementById('contactSuccess').style.display = 'block';
-      // Reset after 4s so they can send another
-      setTimeout(() => {
-        form.reset();
-        form.style.display = 'flex';
-        document.getElementById('contactSuccess').style.display = 'none';
-      }, 4000);
+      const btn = form.querySelector('button[type="submit"]');
+      const originalHTML = btn.innerHTML;
+
+      const name = document.getElementById('contactName').value.trim();
+      const email = document.getElementById('contactEmail').value.trim();
+      const message = document.getElementById('contactMessage').value.trim();
+
+      if (!name || !email || !message) return;
+
+      btn.disabled = true;
+      btn.innerHTML = '<span>Sending…</span>';
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, message })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          form.style.display = 'none';
+          document.getElementById('contactSuccess').style.display = 'block';
+          // Reset after 5s so they can send another
+          setTimeout(() => {
+            form.reset();
+            form.style.display = 'flex';
+            document.getElementById('contactSuccess').style.display = 'none';
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+          }, 5000);
+        } else {
+          alert(data.error || 'Failed to send message. Please try again.');
+          btn.disabled = false;
+          btn.innerHTML = originalHTML;
+        }
+      } catch (err) {
+        alert('Network error. Please try again.');
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+      }
     });
   }
 
@@ -444,6 +584,7 @@
     initParticles();
     initScrollReveal();
     initNavbar();
+    initMegaDropdown();
     initCounters();
     initSmoothScroll();
     initContactForm();

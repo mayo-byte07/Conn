@@ -29,6 +29,15 @@
     { id: 'wavy-purple',    name: 'Wavy Purple',     tag: 'Playful',  bg: 'radial-gradient(circle at top left, #a78bfa 0%, #7c3aed 100%)', colors: ['#ffffff','#ede9fe','#8b5cf6'] },
     { id: 'retro-shadow',   name: 'Retro Shadow',    tag: 'Brutalist',bg: '#e8e1cc',                                              colors: ['#171717','#ffffff','#fcfcfc'] },
     { id: 'sunset-mesh',    name: 'Sunset Mesh',     tag: 'Vibrant',  bg: 'radial-gradient(circle at top left, #10b981 0%, #ef4444 100%)', colors: ['#ffffff','#ffffff','#f1f5f9'] },
+    // ── Gradient Themes ──
+    { id: 'aurora-borealis',    name: 'Aurora Borealis',    tag: 'Gradient',   bg: 'linear-gradient(135deg, #020b18 0%, #0a3d2e 30%, #1a1a5e 70%, #020b18 100%)', colors: ['#34d399','#818cf8','#06b6d4'] },
+    { id: 'cosmic-nebula',      name: 'Cosmic Nebula',      tag: 'Gradient',   bg: 'linear-gradient(135deg, #0a0015 0%, #3d1566 30%, #661535 70%, #0a0015 100%)', colors: ['#a855f7','#f43f5e','#ec4899'] },
+    { id: 'tropical-paradise',  name: 'Tropical Paradise',  tag: 'Gradient',   bg: 'linear-gradient(135deg, #001a1a 0%, #0a4040 30%, #3d2e0a 70%, #001a1a 100%)', colors: ['#38b2ac','#f6ad55','#48bb78'] },
+    { id: 'midnight-oil',       name: 'Midnight Oil',       tag: 'Gradient',   bg: 'linear-gradient(135deg, #0c0c1d 0%, #1a1a5e 30%, #3d1e0a 70%, #0c0c1d 100%)', colors: ['#6366f1','#fb923c','#4f46e5'] },
+    { id: 'cotton-candy',       name: 'Cotton Candy',       tag: 'Gradient',   bg: 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 30%, #ede9fe 70%, #fdf2f8 100%)', colors: ['#ec4899','#8b5cf6','#f472b6'] },
+    { id: 'emerald-aurora',     name: 'Emerald Aurora',     tag: 'Gradient',   bg: 'linear-gradient(135deg, #021a12 0%, #0a4030 30%, #0a2e40 70%, #021a12 100%)', colors: ['#10b981','#06b6d4','#34d399'] },
+    { id: 'holographic',        name: 'Holographic',        tag: 'Gradient',   bg: 'linear-gradient(135deg, #0a0a12 0%, #2d1b69 25%, #0a3d4d 50%, #3d1035 75%, #0a0a12 100%)', colors: ['#a78bfa','#22d3ee','#f472b6'] },
+    { id: 'molten-lava',        name: 'Molten Lava',        tag: 'Gradient',   bg: 'linear-gradient(135deg, #120800 0%, #4d1a00 30%, #4d0a0a 70%, #120800 100%)', colors: ['#f97316','#ef4444','#fbbf24'] },
   ];
 
   // ─── Navigation ───

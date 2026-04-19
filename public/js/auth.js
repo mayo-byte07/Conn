@@ -62,6 +62,63 @@
     });
   }
 
+  // ─── Username Availability Check ───
+  let usernameCheckTimer = null;
+  let lastCheckedUsername = '';
+
+  function initUsernameCheck() {
+    const input = document.getElementById('signupUsername');
+    const status = document.getElementById('usernameStatus');
+    const preview = document.getElementById('usernamePreview');
+    if (!input || !status) return;
+
+    input.addEventListener('input', () => {
+      const raw = input.value.toLowerCase().replace(/[^a-z0-9-]/g, '').replace(/--+/g, '-');
+      input.value = raw;
+
+      // Update preview
+      if (preview) {
+        preview.textContent = raw || 'your-username';
+      }
+
+      // Clear previous timer
+      if (usernameCheckTimer) clearTimeout(usernameCheckTimer);
+
+      if (raw.length < 3) {
+        status.style.opacity = '0';
+        status.textContent = '';
+        return;
+      }
+
+      // Debounce the check
+      usernameCheckTimer = setTimeout(async () => {
+        if (raw === lastCheckedUsername) return;
+        lastCheckedUsername = raw;
+
+        try {
+          const res = await fetch(`/api/auth/check-username/${encodeURIComponent(raw)}`);
+          const data = await res.json();
+
+          if (input.value.toLowerCase() !== raw) return; // Input changed since we started
+
+          if (data.available) {
+            status.textContent = '✓';
+            status.style.color = '#4ade80';
+            status.style.opacity = '1';
+            input.style.borderColor = 'rgba(74, 222, 128, 0.5)';
+          } else {
+            status.textContent = '✗';
+            status.style.color = '#f87171';
+            status.style.opacity = '1';
+            input.style.borderColor = 'rgba(248, 113, 113, 0.5)';
+          }
+        } catch (err) {
+          status.style.opacity = '0';
+        }
+      }, 400);
+    });
+  }
+
   // ─── Signup ───
   function initSignup() {
     const form = document.getElementById('signupForm');
@@ -72,6 +129,7 @@
       hideError();
 
       const name = document.getElementById('signupName').value.trim();
+      const username = document.getElementById('signupUsername')?.value.trim().toLowerCase() || '';
       const email = document.getElementById('signupEmail').value.trim();
       const password = document.getElementById('signupPassword').value;
       const confirm = document.getElementById('signupConfirm').value;
@@ -79,6 +137,11 @@
 
       if (!name || !email || !password || !confirm) {
         showError('Please fill in all fields.');
+        return;
+      }
+
+      if (username && username.length < 3) {
+        showError('Username must be at least 3 characters.');
         return;
       }
 
@@ -99,7 +162,7 @@
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password })
+          body: JSON.stringify({ name, username, email, password })
         });
 
         const data = await res.json();
@@ -123,5 +186,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     initLogin();
     initSignup();
+    initUsernameCheck();
   });
 })();
