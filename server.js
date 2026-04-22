@@ -226,6 +226,10 @@ app.get('/features/analytics', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'features', 'analytics.html'));
 });
 
+app.get('/team', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'team.html'));
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ──────────────────── AUTH ROUTES ────────────────────
