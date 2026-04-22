@@ -70,21 +70,6 @@ Pixel-perfect on every screen size. Designed for the mobile creators your audien
 | **Hosting** | Vercel |
 | **Analytics** | Custom click tracking |
 
----
-
-## 💎 Subscription Plans
-
-| Feature | Free | Plus ₹50/mo | Pro ₹399/mo |
-|---|:---:|:---:|:---:|
-| Link-in-bio page | ✅ | ✅ | ✅ |
-| Links | Up to 5 | Unlimited | Unlimited |
-| Themes | 3 | All 26+ | All 26+ |
-| Analytics | Basic | Advanced | Advanced |
-| Remove branding | ❌ | ✅ | ✅ |
-| Verified badge | ❌ | ✅ | ✅ |
-| Custom CSS | ❌ | ✅ | ✅ |
-| SEO tools | ❌ | ❌ | ✅ |
-| Custom domain | ❌ | ❌ | ✅ |
 
 ---
 
