@@ -107,8 +107,6 @@ Create a `.env` file in the root:
 SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_SERVICE_KEY=your-service-role-key
 JWT_SECRET=your-random-secret-min-32-chars
-RAZORPAY_KEY_ID=your-razorpay-key-id
-RAZORPAY_KEY_SECRET=your-razorpay-key-secret
 ```
 
 > 💡 Generate a secure JWT secret: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
