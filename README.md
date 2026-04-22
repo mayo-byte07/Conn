@@ -15,8 +15,6 @@
 
 <br/>
 
-![Conn Hero](https://conn-delta.vercel.app/assets/og-home.jpg)
-
 </div>
 
 ---
