@@ -466,35 +466,73 @@ input, textarea, select {
 .link-card:nth-child(7) { animation-delay: 0.85s; }
 .link-card:nth-child(8) { animation-delay: 0.95s; }
 
-/* ─── Footer ─── */
+/* ─── Footer (legacy, kept for compatibility) ─── */
 .page-footer {
   margin-top: 48px;
   text-align: center;
-  animation: fadeInUp 0.8s var(--ease-out) 1s both;
 }
 
-.footer-brand {
+/* ─── Fixed Conn Branding Badge ─── */
+.conn-badge {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  padding: 8px 16px;
+  padding: 7px 13px 7px 10px;
   border-radius: var(--radius-full);
-  background: var(--bg-glass);
-  border: 1px solid var(--border);
-  transition: all var(--duration-normal) var(--ease-out);
+  background: rgba(10, 10, 10, 0.55);
+  backdrop-filter: blur(12px) saturate(1.5);
+  -webkit-backdrop-filter: blur(12px) saturate(1.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.75);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(168, 85, 247, 0.08);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: badgeFadeIn 0.6s 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.footer-brand:hover {
-  color: var(--text-secondary);
-  border-color: var(--border-hover);
+.conn-badge svg {
+  width: 13px;
+  height: 13px;
+  opacity: 0.8;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.footer-brand svg {
-  width: 14px;
-  height: 14px;
+.conn-badge-dot {
+  color: #a855f7;
 }
+
+.conn-badge:hover {
+  background: rgba(20, 10, 35, 0.75);
+  border-color: rgba(168, 85, 247, 0.4);
+  color: #fff;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(168, 85, 247, 0.2);
+  transform: translateY(-2px);
+}
+
+.conn-badge:hover svg {
+  opacity: 1;
+  color: #a855f7;
+}
+
+@keyframes badgeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 
 /* ─── Keyframes ─── */
 @keyframes fadeInUp {
