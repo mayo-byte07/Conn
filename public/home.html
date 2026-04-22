@@ -32,20 +32,8 @@
     "offers": [
       {
         "@type": "Offer",
-        "name": "Free Plan",
+        "name": "Free",
         "price": "0",
-        "priceCurrency": "INR"
-      },
-      {
-        "@type": "Offer",
-        "name": "Plus Plan",
-        "price": "50",
-        "priceCurrency": "INR"
-      },
-      {
-        "@type": "Offer",
-        "name": "Professional Plan",
-        "price": "399",
         "priceCurrency": "INR"
       }
     ],
@@ -332,7 +320,6 @@
           </div>
         </div>
         <a href="#themes">Templates</a>
-        <a href="#pricing">Pricing</a>
         <a href="#learn">Resources</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -368,7 +355,6 @@
         <a href="/features/analytics">📊 Measure Your Success</a>
       </div>
       <a href="#themes">Templates</a>
-      <a href="#pricing">Pricing</a>
       <a href="#learn">Resources</a>
       <a href="#contact">Contact</a>
       <hr>
@@ -514,190 +500,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════ PRICING ══════ -->
-  <section class="section pricing-section" id="pricing">
-    <div class="section-inner">
-      <div class="section-header animate-on-scroll">
-        <span class="section-tag">Pricing</span>
-        <h2 class="section-title">Simple, <span class="gradient-text">transparent pricing.</span></h2>
-        <p class="section-desc">Start free, upgrade when you're ready. No hidden fees, no surprises.</p>
-      </div>
-
-      <!-- Billing Toggle -->
-      <div class="billing-toggle animate-on-scroll">
-        <span class="billing-label" id="billingMonthlyLabel">Monthly</span>
-        <button class="toggle-switch" id="billingToggle" aria-label="Toggle billing period">
-          <span class="toggle-knob"></span>
-        </button>
-        <span class="billing-label" id="billingYearlyLabel">
-          Yearly
-          <span class="save-badge">Save ₹100</span>
-        </span>
-      </div>
-
-      <div class="pricing-grid">
-        <!-- FREE -->
-        <div class="pricing-card animate-on-scroll" style="--delay: 0s">
-          <div class="pricing-card-header">
-            <div class="plan-icon plan-icon-free">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-              </svg>
-            </div>
-            <h3 class="plan-name">Free</h3>
-            <p class="plan-desc">Get started with the essentials</p>
-          </div>
-          <div class="pricing-card-price">
-            <span class="price-currency">₹</span>
-            <span class="price-amount">0</span>
-            <span class="price-interval">/forever</span>
-          </div>
-          <ul class="plan-features">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Basic link-in-bio page</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>3 themes available</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Up to 5 links</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Basic analytics</li>
-            <li class="feature-disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>Conn branding shown</li>
-          </ul>
-          <a href="/signup" class="pricing-cta pricing-cta-ghost" id="btnLandingFree">Get Started Free</a>
-        </div>
-
-        <!-- PLUS — Popular -->
-        <div class="pricing-card pricing-card-popular animate-on-scroll" style="--delay: 0.1s">
-          <div class="popular-badge">✨ Most Popular</div>
-          <div class="pricing-card-header">
-            <div class="plan-icon plan-icon-plus">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="16" />
-                <line x1="8" y1="12" x2="16" y2="12" />
-              </svg>
-            </div>
-            <h3 class="plan-name">Plus</h3>
-            <p class="plan-desc">Perfect for growing creators</p>
-          </div>
-          <div class="pricing-card-price">
-            <span class="price-currency">₹</span>
-            <span class="price-amount" id="plusPrice">50</span>
-            <span class="price-interval" id="plusInterval">/month</span>
-          </div>
-          <div class="yearly-note" id="yearlyNote" style="display: none;">
-            <span>₹500 billed annually</span>
-            <span class="yearly-savings">Save ₹100/yr</span>
-          </div>
-          <ul class="plan-features">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Everything in Free</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>All 12+ themes</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Unlimited links</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Advanced analytics</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Remove Conn branding</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Custom backgrounds</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Priority support</li>
-          </ul>
-          <a href="/signup" class="pricing-cta pricing-cta-primary" id="btnLandingPlus">Upgrade to Plus</a>
-        </div>
-
-        <!-- PROFESSIONAL -->
-        <div class="pricing-card animate-on-scroll" style="--delay: 0.2s">
-          <div class="pricing-card-header">
-            <div class="plan-icon plan-icon-pro">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <path
-                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-            </div>
-            <h3 class="plan-name">Professional</h3>
-            <p class="plan-desc">For serious creators & businesses</p>
-          </div>
-          <div class="pricing-card-price">
-            <span class="price-currency">₹</span>
-            <span class="price-amount" id="proPrice">399</span>
-            <span class="price-interval" id="proInterval">/month</span>
-          </div>
-          <div class="yearly-note" id="proYearlyNote" style="display: none;">
-            <span>₹4000 billed annually</span>
-            <span class="yearly-savings">Save ₹788/yr</span>
-          </div>
-          <ul class="plan-features">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Everything in Plus</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Custom domain support</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>SEO optimization tools</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Detailed click analytics</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Scheduling & automation</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Team collaboration</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Dedicated support</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>Early access to features</li>
-          </ul>
-          <a href="/signup" class="pricing-cta pricing-cta-ghost" id="btnLandingPro">Go Professional</a>
         </div>
       </div>
     </div>
@@ -1312,7 +1114,7 @@
           <h4>Product</h4>
           <a href="#features">Features</a>
           <a href="#themes">Themes</a>
-          <a href="#pricing">Pricing</a>
+          
           <a href="/me">Demo</a>
         </div>
         <div>
