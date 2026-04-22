@@ -6,7 +6,6 @@ const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const supabase = require('./db');
 
@@ -14,11 +13,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || process.env.SESSION_SECRET || 'conn-secret-key-change-in-production';
 
-// Init Razorpay
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || 'placeholder',
-  key_secret: process.env.RAZORPAY_KEY_SECRET || 'placeholder',
-});
 
 // Middleware
 app.use(cors());
@@ -67,54 +61,6 @@ function requireAuth(req, res, next) {
   next();
 }
 
-// ─── Subscription Plan Limits ───
-const FREE_THEMES = ['midnight', 'monochrome', 'arctic-frost'];
-
-function getPlanLimits(planId) {
-  const limits = {
-    free: {
-      maxLinks: 5,
-      allThemes: false,
-      allowedThemes: FREE_THEMES,
-      canHideBranding: false,
-      canShowVerifiedBadge: false,
-      canUseCustomCSS: false,
-      canEditSEO: false,
-      fullAnalytics: false
-    },
-    plus: {
-      maxLinks: Infinity,
-      allThemes: true,
-      allowedThemes: null,
-      canHideBranding: true,
-      canShowVerifiedBadge: true,
-      canUseCustomCSS: true,
-      canEditSEO: false,
-      fullAnalytics: true
-    },
-    professional: {
-      maxLinks: Infinity,
-      allThemes: true,
-      allowedThemes: null,
-      canHideBranding: true,
-      canShowVerifiedBadge: true,
-      canUseCustomCSS: true,
-      canEditSEO: true,
-      fullAnalytics: true
-    }
-  };
-  return limits[planId] || limits.free;
-}
-
-async function getUserPlan(userId) {
-  if (!userId) return 'free';
-  const { data: user } = await supabase
-    .from('users')
-    .select('subscription_plan')
-    .eq('id', userId)
-    .single();
-  return user?.subscription_plan || 'free';
-}
 
 // ─── Username Helpers ───
 
@@ -489,21 +435,10 @@ app.get('/api/links', requireAuth, async (req, res) => {
 });
 
 app.post('/api/links', requireAuth, async (req, res) => {
-  const planId = await getUserPlan(req.auth.userId);
-  const limits = getPlanLimits(planId);
-
   const { count } = await supabase
     .from('user_links')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', req.auth.userId);
-
-  if (limits.maxLinks !== Infinity && count >= limits.maxLinks) {
-    return res.status(403).json({
-      error: `Free plan allows up to ${limits.maxLinks} links. Upgrade to Plus for unlimited links.`,
-      upgradeRequired: true,
-      currentPlan: planId
-    });
-  }
 
   const newLinkId = uuidv4();
   const { error } = await supabase.from('user_links').insert({
@@ -688,9 +623,6 @@ app.get('/api/settings', requireAuth, async (req, res) => {
 });
 
 app.put('/api/settings', requireAuth, async (req, res) => {
-  const planId = await getUserPlan(req.auth.userId);
-  const limits = getPlanLimits(planId);
-
   const { data: current } = await supabase
     .from('user_settings')
     .select('*')
@@ -698,7 +630,7 @@ app.put('/api/settings', requireAuth, async (req, res) => {
     .maybeSingle();
 
   // Build updates from request (camelCase from client → snake_case for DB)
-  let updates = {
+  const updates = {
     page_title: req.body.pageTitle ?? current?.page_title ?? 'Conn.',
     meta_description: req.body.metaDescription ?? current?.meta_description ?? '',
     show_verified_badge: req.body.showVerifiedBadge ?? current?.show_verified_badge ?? false,
@@ -706,17 +638,6 @@ app.put('/api/settings', requireAuth, async (req, res) => {
     custom_css: req.body.customCSS ?? current?.custom_css ?? '',
     selected_theme: req.body.selectedTheme ?? current?.selected_theme ?? 'midnight'
   };
-
-  // Enforce plan restrictions
-  if (!limits.canHideBranding) updates.show_footer = true;
-  if (!limits.canShowVerifiedBadge) updates.show_verified_badge = false;
-  if (!limits.canUseCustomCSS) updates.custom_css = '';
-  if (!limits.canEditSEO) updates.meta_description = current?.meta_description ?? '';
-  if (!limits.allThemes && updates.selected_theme) {
-    if (!limits.allowedThemes.includes(updates.selected_theme)) {
-      updates.selected_theme = current?.selected_theme ?? 'midnight';
-    }
-  }
 
   if (current) {
     await supabase.from('user_settings')
@@ -738,184 +659,7 @@ app.put('/api/settings', requireAuth, async (req, res) => {
   });
 });
 
-// ──────────────────── PLAN LIMITS ROUTE ────────────────────
 
-app.get('/api/plan-limits', async (req, res) => {
-  const user = getAuthUser(req);
-  const userId = user?.userId;
-  const planId = await getUserPlan(userId);
-  const limits = getPlanLimits(planId);
-
-  let linksUsed = 0;
-  if (userId) {
-    const { count } = await supabase
-      .from('user_links')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId);
-    linksUsed = count || 0;
-  }
-
-  res.json({
-    plan: planId,
-    limits,
-    usage: { linksUsed }
-  });
-});
-
-// ──────────────────── SUBSCRIPTION ROUTES ────────────────────
-
-// Get all available plans (read from local subscriptions.json — this is static config data)
-const fs = require('fs');
-function readSubscriptions() {
-  try {
-    const filePath = path.join(__dirname, 'data', 'subscriptions.json');
-    if (fs.existsSync(filePath)) {
-      return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    }
-  } catch {}
-  return { plans: [] };
-}
-
-app.get('/api/plans', (req, res) => {
-  const data = readSubscriptions();
-  res.json(data.plans || []);
-});
-
-// Get current user's subscription
-app.get('/api/subscription', requireAuth, async (req, res) => {
-  const { data: user } = await supabase
-    .from('users')
-    .select('subscription_plan, subscription_billing, subscribed_at')
-    .eq('id', req.auth.userId)
-    .maybeSingle();
-
-  if (!user) return res.status(404).json({ error: 'User not found' });
-
-  res.json({
-    plan: user.subscription_plan || 'free',
-    billing: user.subscription_billing || 'monthly',
-    subscribedAt: user.subscribed_at
-  });
-});
-
-// Subscribe / change plan (only for downgrade to free)
-app.post('/api/subscribe', requireAuth, async (req, res) => {
-  const { planId, billing } = req.body;
-  if (!planId) return res.status(400).json({ error: 'planId is required' });
-
-  if (planId !== 'free') {
-    return res.status(400).json({ error: 'Please use the payment flow to upgrade.' });
-  }
-
-  const { error } = await supabase.from('users')
-    .update({
-      subscription_plan: planId,
-      subscription_billing: billing || 'monthly',
-      subscribed_at: new Date().toISOString()
-    })
-    .eq('id', req.auth.userId);
-
-  if (error) return res.status(500).json({ error: 'Failed to update subscription.' });
-
-  res.json({ success: true, subscription: { plan: planId, billing: billing || 'monthly', subscribedAt: new Date().toISOString() } });
-});
-
-// Razorpay: Create Order
-app.post('/api/payment/create-order', requireAuth, async (req, res) => {
-  const { planId, billing } = req.body;
-
-  const subsData = readSubscriptions();
-  const plan = (subsData.plans || []).find(p => p.id === planId);
-  if (!plan) return res.status(404).json({ error: 'Plan not found' });
-
-  let amount = plan.price;
-  if (billing === 'yearly' && plan.yearlyPrice !== null) {
-    amount = plan.yearlyPrice;
-  }
-
-  const amountInPaise = amount * 100;
-
-  try {
-    const options = {
-      amount: amountInPaise,
-      currency: plan.currency || 'INR',
-      receipt: `rcpt_${uuidv4()}`
-    };
-
-    const order = await razorpay.orders.create(options);
-
-    // Save order to Supabase
-    await supabase.from('orders').insert({
-      id: uuidv4(),
-      razorpay_order_id: order.id,
-      user_id: req.auth.userId,
-      plan_id: planId,
-      billing,
-      amount,
-      status: 'created'
-    });
-
-    res.json({
-      orderId: order.id,
-      amount: order.amount,
-      currency: order.currency,
-      key: process.env.RAZORPAY_KEY_ID
-    });
-  } catch (err) {
-    console.error('Error creating Razorpay order:', err);
-    res.status(500).json({ error: 'Failed to create payment order' });
-  }
-});
-
-// Razorpay: Verify Payment
-app.post('/api/payment/verify', requireAuth, async (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-
-  const body = razorpay_order_id + "|" + razorpay_payment_id;
-  const expectedSignature = crypto
-    .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || 'placeholder')
-    .update(body.toString())
-    .digest('hex');
-
-  if (expectedSignature === razorpay_signature) {
-    // Find the order
-    const { data: order } = await supabase
-      .from('orders')
-      .select('*')
-      .eq('razorpay_order_id', razorpay_order_id)
-      .maybeSingle();
-
-    if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
-    }
-
-    // Update order
-    await supabase.from('orders')
-      .update({
-        status: 'paid',
-        razorpay_payment_id,
-        paid_at: new Date().toISOString()
-      })
-      .eq('razorpay_order_id', razorpay_order_id);
-
-    // Upgrade user
-    await supabase.from('users')
-      .update({
-        subscription_plan: order.plan_id,
-        subscription_billing: order.billing || 'monthly',
-        subscribed_at: new Date().toISOString()
-      })
-      .eq('id', order.user_id);
-
-    res.json({
-      success: true,
-      message: 'Payment verified successfully',
-      subscription: { plan: order.plan_id, billing: order.billing }
-    });
-  } else {
-    res.status(400).json({ error: 'Invalid payment signature' });
-  }
-});
 
 // ──────────────────── PUBLIC PROFILE ROUTES ────────────────────
 

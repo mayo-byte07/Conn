@@ -7,7 +7,6 @@
 
   let currentEditId = null;
   let selectedTheme = 'midnight';
-  let planData = { plan: 'free', limits: {}, usage: {} };
 
   // ─── Theme Definitions ───
   const THEMES = [
@@ -97,8 +96,6 @@
 
   function renderAdminLinks(links) {
     const list = document.getElementById('adminLinksList');
-    const maxLinks = planData.limits.maxLinks;
-    const isLimited = maxLinks && maxLinks !== Infinity;
 
     // Show link count badge
     const headerActions = document.querySelector('#sectionLinks .admin-header-actions');
@@ -108,40 +105,7 @@
       badge.className = 'link-count-badge';
       headerActions.insertBefore(badge, headerActions.firstChild);
     }
-    badge.textContent = isLimited ? `${links.length}/${maxLinks} links` : `${links.length} links`;
-    badge.classList.toggle('at-limit', isLimited && links.length >= maxLinks);
-
-    // Disable add button if at limit
-    const addBtn = document.getElementById('addLinkBtn');
-    if (isLimited && links.length >= maxLinks) {
-      addBtn.classList.add('btn-disabled');
-      addBtn.title = 'Upgrade to Plus for unlimited links';
-    } else {
-      addBtn.classList.remove('btn-disabled');
-      addBtn.title = '';
-    }
-
-    // Show upgrade banner for free users at limit
-    let banner = document.querySelector('#sectionLinks .upgrade-banner');
-    if (isLimited && links.length >= maxLinks) {
-      if (!banner) {
-        banner = document.createElement('div');
-        banner.className = 'upgrade-banner';
-        banner.innerHTML = `
-          <div class="upgrade-banner-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="upgrade-banner-text">
-            <h4>Link limit reached</h4>
-            <p>Free plan supports up to ${maxLinks} links. Upgrade to Plus for unlimited links.</p>
-          </div>
-          <a href="#" onclick="window.adminApp.upgrade('plus', 'monthly'); return false;" class="btn-upgrade">Upgrade →</a>
-        `;
-        list.parentNode.insertBefore(banner, list);
-      }
-    } else if (banner) {
-      banner.remove();
-    }
+    badge.textContent = `${links.length} links`;
 
     if (links.length === 0) {
       list.innerHTML = `
@@ -262,14 +226,6 @@
   }
 
   document.getElementById('addLinkBtn').addEventListener('click', () => {
-    const maxLinks = planData.limits.maxLinks;
-    if (maxLinks && maxLinks !== Infinity) {
-      const links = document.querySelectorAll('#adminLinksList .admin-link-item');
-      if (links.length >= maxLinks) {
-        showToast(`Free plan allows only ${maxLinks} links. Upgrade to Plus!`, 'error');
-        return;
-      }
-    }
     openModal('Add Link');
   });
   document.getElementById('modalClose').addEventListener('click', closeModal);
@@ -365,15 +321,10 @@
 
   function renderThemePicker() {
     const grid = document.getElementById('themePickerGrid');
-    const allThemes = planData.limits.allThemes;
-    const allowedThemes = planData.limits.allowedThemes || [];
-    const lockIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
 
     grid.innerHTML = THEMES.map(theme => {
-      const isLocked = !allThemes && !allowedThemes.includes(theme.id);
       return `
-      <div class="theme-pick-card ${theme.id === selectedTheme ? 'selected' : ''} ${isLocked ? 'locked' : ''}" data-theme="${theme.id}" ${!isLocked ? `onclick="window.adminApp.selectTheme('${theme.id}')"` : ''}>
-        ${isLocked ? `<div class="theme-lock-badge">${lockIcon}</div>` : ''}
+      <div class="theme-pick-card ${theme.id === selectedTheme ? 'selected' : ''}" data-theme="${theme.id}" onclick="window.adminApp.selectTheme('${theme.id}')">
         <div class="theme-pick-swatch" style="background: ${theme.bg}">
           <div class="mini-mock">
             <div class="mini-mock-avatar" style="background: linear-gradient(135deg, ${theme.colors[0]}, ${theme.colors[1]})"></div>
@@ -386,33 +337,13 @@
         </div>
         <div class="theme-pick-info">
           <span class="theme-pick-name">${theme.name}</span>
-          <span class="theme-pick-tag">${isLocked ? '🔒 Plus' : theme.tag}</span>
+          <span class="theme-pick-tag">${theme.tag}</span>
         </div>
         <div class="theme-pick-colors">
           ${theme.colors.map(c => `<div class="theme-pick-dot" style="background:${c}"></div>`).join('')}
         </div>
       </div>
     `;}).join('');
-
-    // Show upgrade banner if themes are limited
-    if (!allThemes) {
-      let banner = document.querySelector('#sectionThemes .upgrade-banner');
-      if (!banner) {
-        banner = document.createElement('div');
-        banner.className = 'upgrade-banner';
-        banner.innerHTML = `
-          <div class="upgrade-banner-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          </div>
-          <div class="upgrade-banner-text">
-            <h4>Unlock all 12+ themes</h4>
-            <p>Free plan includes 3 themes. Upgrade to Plus to access all themes.</p>
-          </div>
-          <a href="#" onclick="window.adminApp.upgrade('plus', 'monthly'); return false;" class="btn-upgrade">Upgrade →</a>
-        `;
-        grid.parentNode.insertBefore(banner, grid);
-      }
-    }
   }
 
   // Save theme
@@ -441,58 +372,8 @@
       document.getElementById('settingVerifiedBadge').checked = settings.showVerifiedBadge !== false;
       document.getElementById('settingShowFooter').checked = settings.showFooter !== false;
       document.getElementById('settingCustomCSS').value = settings.customCSS || '';
-
-      // Apply plan-based locks
-      applySettingsLocks();
     } catch (err) {
       showToast('Failed to load settings', 'error');
-    }
-  }
-
-  function applySettingsLocks() {
-    const limits = planData.limits;
-    const lockIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
-
-    // Lock Visibility card (branding + verified badge) for free
-    const visibilityCard = document.querySelector('#sectionSettings .settings-grid')?.closest('.section-card');
-    if (visibilityCard && !limits.canHideBranding) {
-      visibilityCard.classList.add('locked');
-      if (!visibilityCard.querySelector('.lock-overlay')) {
-        const overlay = document.createElement('div');
-        overlay.className = 'lock-overlay';
-        overlay.innerHTML = `${lockIcon}<span>Upgrade to unlock branding & badge controls</span><button onclick="window.adminApp.upgrade('plus', 'monthly')" class="btn-upgrade" style="border:none; cursor:pointer;">Upgrade to Plus →</button>`;
-        visibilityCard.appendChild(overlay);
-      }
-    }
-
-    // Lock Custom CSS card for free
-    const cssCard = document.getElementById('settingCustomCSS')?.closest('.section-card');
-    if (cssCard && !limits.canUseCustomCSS) {
-      cssCard.classList.add('locked');
-      if (!cssCard.querySelector('.lock-overlay')) {
-        const overlay = document.createElement('div');
-        overlay.className = 'lock-overlay';
-        overlay.innerHTML = `${lockIcon}<span>Custom CSS requires Plus or higher</span><button onclick="window.adminApp.upgrade('plus', 'monthly')" class="btn-upgrade" style="border:none; cursor:pointer;">Upgrade to Plus →</button>`;
-        cssCard.appendChild(overlay);
-      }
-    }
-
-    // Lock SEO meta description for free & plus
-    const seoInput = document.getElementById('settingMetaDesc');
-    if (seoInput && !limits.canEditSEO) {
-      const seoGroup = seoInput.closest('.form-group');
-      if (seoGroup) {
-        seoInput.disabled = true;
-        seoInput.style.opacity = '0.4';
-        let seoLabel = seoGroup.querySelector('.seo-lock-note');
-        if (!seoLabel) {
-          seoLabel = document.createElement('span');
-          seoLabel.className = 'seo-lock-note';
-          seoLabel.style.cssText = 'display:inline-flex;align-items:center;gap:4px;font-size:0.72rem;color:#fbbf24;margin-left:8px;';
-          seoLabel.textContent = '🔒 Pro only';
-          seoGroup.querySelector('.form-label')?.appendChild(seoLabel);
-        }
-      }
     }
   }
 
@@ -546,30 +427,6 @@
             <p>Analytics will appear once your links get clicks.</p>
           </div>`;
       }
-
-      // Lock advanced analytics for free users
-      if (!planData.limits.fullAnalytics) {
-        const section = document.getElementById('sectionAnalytics');
-        if (!section.querySelector('.upgrade-banner')) {
-          const banner = document.createElement('div');
-          banner.className = 'upgrade-banner';
-          banner.innerHTML = `
-            <div class="upgrade-banner-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-            </div>
-            <div class="upgrade-banner-text">
-              <h4>Unlock full analytics</h4>
-              <p>Free plan shows total clicks only. Upgrade to Plus for top links, averages, and more.</p>
-            </div>
-            <a href="#" onclick="window.adminApp.upgrade('plus', 'monthly'); return false;" class="btn-upgrade">Upgrade →</a>
-          `;
-          section.querySelector('.admin-header').after(banner);
-        }
-
-        // Blur the extra stat cards and top links
-        section.classList.add('analytics-locked');
-      }
-
     } catch (err) {
       showToast('Failed to load analytics', 'error');
     }
@@ -613,57 +470,6 @@
       document.querySelectorAll('.theme-pick-card').forEach(card => {
         card.classList.toggle('selected', card.dataset.theme === themeId);
       });
-    },
-
-    async upgrade(planId, billing = 'monthly') {
-      try {
-        // Create order
-        const orderRes = await fetch('/api/payment/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ planId, billing })
-        });
-        const orderData = await orderRes.json();
-        if (orderData.error) { showToast(orderData.error, 'error'); return; }
-
-        // Open Razorpay
-        const options = {
-          key: orderData.key,
-          amount: orderData.amount,
-          currency: orderData.currency,
-          name: 'Conn',
-          description: `Upgrade to ${planId.charAt(0).toUpperCase() + planId.slice(1)} Plan`,
-          order_id: orderData.orderId,
-          handler: async function (response) {
-            const verifyRes = await fetch('/api/payment/verify', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature
-              })
-            });
-            const verifyData = await verifyRes.json();
-            if (verifyData.success) {
-              showToast('Payment successful! Reloading...');
-              setTimeout(() => window.location.reload(), 1500);
-            } else {
-              showToast('Payment verification failed.', 'error');
-            }
-          },
-          theme: { color: '#a855f7' }
-        };
-
-        const rzp = new window.Razorpay(options);
-        rzp.on('payment.failed', function (response) {
-          showToast('Payment failed: ' + response.error.description, 'error');
-        });
-        rzp.open();
-      } catch (err) {
-        console.error('Checkout error:', err);
-        showToast('Error initializing checkout', 'error');
-      }
     }
   };
 
@@ -713,36 +519,9 @@
     }
   });
 
-  // ─── Fetch Plan Limits ───
-  async function fetchPlanLimits() {
-    try {
-      const res = await fetch('/api/plan-limits');
-      planData = await res.json();
-      // Handle Infinity coming as null from JSON
-      if (planData.limits.maxLinks === null) planData.limits.maxLinks = Infinity;
-    } catch (err) {
-      planData = { plan: 'free', limits: { maxLinks: 5, allThemes: false, allowedThemes: ['midnight','monochrome','arctic-frost'], canHideBranding: false, canShowVerifiedBadge: false, canUseCustomCSS: false, canEditSEO: false, fullAnalytics: false }, usage: { linksUsed: 0 } };
-    }
-    renderPlanBadge();
-  }
-
-  function renderPlanBadge() {
-    const sidebar = document.querySelector('.sidebar-nav');
-    let badge = document.querySelector('.sidebar-plan-badge');
-    if (!badge) {
-      badge = document.createElement('div');
-      badge.className = 'sidebar-plan-badge';
-      sidebar.parentNode.insertBefore(badge, sidebar);
-    }
-    const names = { free: 'Free Plan', plus: 'Plus Plan', professional: 'Pro Plan' };
-    badge.textContent = names[planData.plan] || 'Free Plan';
-    badge.className = `sidebar-plan-badge plan-${planData.plan}`;
-  }
-
   // ─── Init ───
   document.addEventListener('DOMContentLoaded', async () => {
     checkAuth();
-    await fetchPlanLimits();
     loadLinks();
     loadProfile();
   });
