@@ -524,5 +524,48 @@
     checkAuth();
     loadLinks();
     loadProfile();
+    initPublicUrl();
   });
+
+  // ─── Public URL Bar ───
+  async function initPublicUrl() {
+    try {
+      const res = await fetch('/api/auth/check');
+      const data = await res.json();
+      if (!data.authenticated || !data.username) return;
+
+      const username = data.username;
+      const host = window.location.hostname === 'localhost'
+        ? `${window.location.host}`
+        : window.location.host;
+      const publicUrl = `${window.location.protocol}//${host}/u/${username}`;
+      const displayUrl = `${host}/u/${username}`;
+
+      // Populate text
+      const urlText = document.getElementById('publicUrlText');
+      if (urlText) urlText.textContent = displayUrl;
+
+      // Update "View My Page" link
+      const viewMyPage = document.getElementById('viewMyPageLink');
+      if (viewMyPage) viewMyPage.href = publicUrl;
+
+      // Copy button
+      const copyBtn = document.getElementById('copyPublicUrl');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(publicUrl).then(() => {
+            copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+            copyBtn.style.color = '#4ade80';
+            showToast('Link copied!');
+            setTimeout(() => {
+              copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+              copyBtn.style.color = '';
+            }, 2000);
+          });
+        });
+      }
+    } catch (err) {
+      // fail silently
+    }
+  }
 })();

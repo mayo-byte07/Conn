@@ -99,6 +99,57 @@
   border-top: 1px solid var(--border);
 }
 
+/* ─── Public URL Bar ─── */
+.sidebar-public-url {
+  background: rgba(168, 85, 247, 0.06);
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+.sidebar-url-label {
+  display: block;
+  font-size: 0.65rem;
+  color: #a855f7;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.sidebar-url-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sidebar-url-text {
+  flex: 1;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Outfit', monospace;
+}
+.sidebar-url-copy {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a855f7;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.sidebar-url-copy:hover {
+  background: rgba(168, 85, 247, 0.25);
+  border-color: rgba(168, 85, 247, 0.4);
+}
+.sidebar-url-copy svg { width: 12px; height: 12px; }
+
+
 .sidebar-footer a {
   display: flex;
   align-items: center;
