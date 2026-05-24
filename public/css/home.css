@@ -923,15 +923,11 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   overflow: hidden;
-  cursor: pointer;
+  cursor: default;
   transition: all var(--duration-normal) var(--ease-out);
 }
 
-.theme-preview-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-glow);
-}
+
 
 .theme-swatch {
   height: 100px;
