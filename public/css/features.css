@@ -199,17 +199,27 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  align-items: center;
 }
 
 .feat-section-list li {
   display: flex;
   align-items: flex-start;
+  justify-content: center;
   gap: 12px;
   font-size: 0.92rem;
   color: var(--text-secondary);
   line-height: 1.5;
+  text-align: center;
 }
 
+.feat-cta-buttons {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
 .feat-section-list li svg {
   width: 20px;
   height: 20px;
@@ -519,6 +529,7 @@
   display: flex;
   gap: 14px;
   justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
 }
 

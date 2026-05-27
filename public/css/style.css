@@ -467,11 +467,21 @@ input, textarea, select {
 .link-card:nth-child(8) { animation-delay: 0.95s; }
 
 /* ─── Footer (legacy, kept for compatibility) ─── */
+/* ─── Footer (legacy, kept for compatibility) ─── */
 .page-footer {
+  width: 100%;
   margin-top: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
 }
-
+.page-footer p,
+.page-footer span,
+.page-footer a {
+  text-align: center;
+  width: 100%;
+}
 /* ─── Fixed Conn Branding Badge ─── */
 .conn-badge {
   position: fixed;
