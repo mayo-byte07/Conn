@@ -8,10 +8,19 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
 const supabase = require('./db');
+const { OAuth2Client } = require('google-auth-library');
 const rateLimit = require('express-rate-limit');
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || process.env.SESSION_SECRET || 'conn-secret-key-change-in-production';
+if (!process.env.JWT_SECRET) {
+  console.error('');
+  console.error('  ⚠️  FATAL: JWT_SECRET environment variable is required.');
+  console.error('  Generate a secure secret with:');
+  console.error('    node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"');
+  console.error('');
+  process.exit(1);
+}
+const JWT_SECRET = process.env.JWT_SECRET;
 
 
 //LOGIN limiter
@@ -44,6 +53,17 @@ const usernameCheckLimiter = rateLimit({
   legacyHeaders: false,
   message: {
     error: 'Too many requests. Please slow down.'
+  }
+});
+
+//GOOGLE AUTH limiter
+const googleAuthLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: 'Too many Google auth attempts. Please try again later.'
   }
 });
 
@@ -465,6 +485,117 @@ app.get('/api/auth/check-username/:username', usernameCheckLimiter, async (req, 
     return res.json({ available: false, reason: 'This username is already taken.' });
   }
   res.json({ available: true });
+});
+
+// ─── Google OAuth ───
+
+app.get('/api/auth/google-client-id', (req, res) => {
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  if (!clientId) {
+    return res.json({ clientId: null });
+  }
+  res.json({ clientId });
+});
+
+app.post('/api/auth/google', googleAuthLimiter, async (req, res) => {
+  try {
+    const { credential, access_token } = req.body;
+    let payload;
+
+    if (credential) {
+      // Verify Google ID token
+      const ticket = await googleClient.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID
+      });
+      payload = ticket.getPayload();
+    } else if (access_token) {
+      // Fetch user info using access token
+      const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${access_token}` }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user profile');
+      }
+      payload = await response.json();
+    } else {
+      return res.status(400).json({ error: 'Google credential or access token is required.' });
+    }
+
+    if (!payload || !payload.email) {
+      return res.status(401).json({ error: 'Invalid Google token.' });
+    }
+
+    if (!payload.email_verified) {
+      return res.status(401).json({ error: 'Google email not verified.' });
+    }
+
+    const email = payload.email.toLowerCase();
+    const name = payload.name || email.split('@')[0];
+
+    // Check if user exists
+    const { data: existingUser } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .maybeSingle();
+
+    let user;
+
+    if (existingUser) {
+      // Existing user — login
+      user = existingUser;
+    } else {
+      // New user — register
+      const newUserId = uuidv4();
+      const username = await ensureUniqueUsername(name);
+
+      // Generate an unguessable random password for Google-only users
+      const randomPassword = crypto.randomBytes(64).toString('hex');
+      const hashedRandomPassword = await bcrypt.hash(randomPassword, 10);
+
+      const { error: insertError } = await supabase.from('users').insert({
+        id: newUserId,
+        name,
+        email,
+        username,
+        password: hashedRandomPassword,
+        subscription_plan: 'free',
+        subscription_billing: 'monthly',
+        subscribed_at: new Date().toISOString()
+      });
+
+      if (insertError) {
+        console.error('Google auth insert error:', insertError);
+        return res.status(500).json({ error: 'Failed to create account.' });
+      }
+
+      await initUserData(newUserId, name);
+
+      user = { id: newUserId, name, email, username };
+    }
+
+    // Generate JWT and set cookie
+    const token = generateToken({
+      id: user.id,
+      name: user.name,
+      username: user.username
+    });
+    setAuthCookie(res, token);
+
+    res.json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      username: user.username
+    });
+  } catch (err) {
+    console.error('Google auth error:', err);
+    if (err.message?.includes('Token used too late') || err.message?.includes('Invalid token')) {
+      return res.status(401).json({ error: 'Google token expired. Please try again.' });
+    }
+    res.status(500).json({ error: 'Google authentication failed.' });
+  }
 });
 
 // ──────────────────── PROFILE ROUTES (Authenticated) ────────────────────

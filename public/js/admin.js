@@ -862,10 +862,33 @@
       document.getElementById('settingVerifiedBadge').checked = settings.showVerifiedBadge !== false;
       document.getElementById('settingShowFooter').checked = settings.showFooter !== false;
       document.getElementById('settingCustomCSS').value = settings.customCSS || '';
+      // Initialize character counter on load
+      updateMetaDescCounter();
     } catch (err) {
       showToast('Failed to load settings', 'error');
     }
   }
+
+  // ═══════════ CHARACTER COUNTER FOR META DESCRIPTION ═══════════
+  function updateMetaDescCounter() {
+    const textarea = document.getElementById('settingMetaDesc');
+    const counter = document.getElementById('metaDescCounter');
+    const charCount = counter.querySelector('.char-count');
+    const length = textarea.value.length;
+    const maxLength = 160;
+
+    charCount.textContent = length;
+    
+    // Add warning class when exceeding max length
+    if (length > maxLength) {
+      counter.classList.add('warning');
+    } else {
+      counter.classList.remove('warning');
+    }
+  }
+
+  // Add real-time listener to meta description textarea
+  document.getElementById('settingMetaDesc').addEventListener('input', updateMetaDescCounter);
 
   document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
     const data = {

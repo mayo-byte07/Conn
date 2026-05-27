@@ -511,6 +511,29 @@ textarea.form-input {
   min-height: 80px;
 }
 
+/* ─── Character Counter ─── */
+.char-counter {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.char-counter .char-count {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.char-counter.warning {
+  color: var(--text-danger, #ef4444);
+}
+
+.char-counter.warning .char-count {
+  color: var(--text-danger, #ef4444);
+  font-weight: 700;
+}
+
 /* ─── Modal ─── */
 .modal-overlay {
   position: fixed;
