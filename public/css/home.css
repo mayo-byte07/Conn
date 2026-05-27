@@ -1491,9 +1491,23 @@
 .use-case-card {
   display: flex;
   align-items: center;
-  gap: 60px;
-  padding: 0 2rem;
+  gap: 30px;
+  padding: 1rem;
   border-radius: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+
+  .use-case-card,
+  .use-case-card.reverse {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .use-case-content {
+    width: 100%;
+  }
 }
 
 .use-case-card.reverse {
