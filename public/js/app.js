@@ -15,6 +15,10 @@
     if (isPublicProfile) {
       return `/api/u/${profileUsername}${endpoint}`;
     }
+    // For /me route, add grouped=true parameter for links endpoint
+    if (endpoint === '/links') {
+      return `/api${endpoint}?grouped=true`;
+    }
     return `/api${endpoint}`;
   }
 
@@ -273,57 +277,93 @@
     }
   }
 
-  // ─── Render Links ───
+  // ─── Render Links (with Categories) ───
   async function renderLinks() {
     try {
       const res = await fetch(apiUrl('/links'));
       if (!res.ok) {
-        if (!isPublicProfile) return; // Not logged in for /me
+        if (!isPublicProfile) return;
         throw new Error('Failed to load links');
       }
-      const links = await res.json();
+      const data = await res.json();
 
       const container = document.getElementById('linksContainer');
       container.innerHTML = '';
 
-      // For authenticated /api/links, filter active; for public, already filtered by server
-      const activeLinks = isPublicProfile ? links : links.filter(l => l.active);
+      // Handle grouped response format
+      const grouped = data.grouped || [];
+      
+      if (grouped.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); margin-top: 2rem;">No links yet</p>';
+        return;
+      }
 
-      activeLinks.forEach((link, i) => {
-        const card = document.createElement('a');
-        card.href = link.url;
-        card.target = '_blank';
-        card.rel = 'noopener noreferrer';
-        card.className = 'link-card' + (link.style === 'featured' ? ' featured' : '');
-        card.style.animationDelay = `${0.25 + i * 0.1}s`;
+      let animationDelay = 0.25;
 
-        card.innerHTML = `
-          <div class="link-card-icon">${link.title.match(/^\p{Emoji}/u)?.[0] || '🔗'}</div>
-          <div class="link-card-content">
-            <div class="link-card-title">${escapeHtml(link.title.replace(/^\p{Emoji}\s*/u, ''))}</div>
-          </div>
-          <div class="link-card-arrow">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"/>
-              <polyline points="12 5 19 12 12 19"/>
+      // Render each category with its links
+      grouped.forEach(category => {
+        const categorySection = document.createElement('div');
+        categorySection.className = 'category-section';
+        if (category.collapsed_by_default) {
+          categorySection.classList.add('collapsed');
+        }
+        
+        categorySection.innerHTML = `
+          <div class="category-header" onclick="this.parentElement.classList.toggle('collapsed')">
+            <span class="category-header-icon" style="color: ${category.color}">${category.icon}</span>
+            <span class="category-header-name">${escapeHtml(category.name)}</span>
+            <span class="category-header-count">${category.links.length}</span>
+            <svg class="category-header-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
             </svg>
           </div>
+          <div class="category-links"></div>
         `;
 
-        // Track click — use the correct endpoint based on view mode
-        card.addEventListener('click', (e) => {
-          addRipple(e, card);
-          const clickUrl = isPublicProfile
-            ? `/api/u/${profileUsername}/links/${link.id}/click`
-            : `/api/links/${link.id}/click`;
-          fetch(clickUrl, { method: 'POST' }).catch(() => { });
+        const linksContainer = categorySection.querySelector('.category-links');
+        category.links.forEach(link => {
+          const card = createLinkCard(link, animationDelay);
+          linksContainer.appendChild(card);
+          animationDelay += 0.1;
         });
 
-        container.appendChild(card);
+        container.appendChild(categorySection);
       });
     } catch (err) {
       console.error('Failed to load links:', err);
     }
+  }
+
+  function createLinkCard(link, delay) {
+    const card = document.createElement('a');
+    card.href = link.url;
+    card.target = '_blank';
+    card.rel = 'noopener noreferrer';
+    card.className = 'link-card' + (link.style === 'featured' ? ' featured' : '');
+    card.style.animationDelay = `${delay}s`;
+
+    card.innerHTML = `
+      <div class="link-card-icon">${link.title.match(/^\p{Emoji}/u)?.[0] || '🔗'}</div>
+      <div class="link-card-content">
+        <div class="link-card-title">${escapeHtml(link.title.replace(/^\p{Emoji}\s*/u, ''))}</div>
+      </div>
+      <div class="link-card-arrow">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </div>
+    `;
+
+    card.addEventListener('click', (e) => {
+      addRipple(e, card);
+      const clickUrl = isPublicProfile
+        ? `/api/u/${profileUsername}/links/${link.id}/click`
+        : `/api/links/${link.id}/click`;
+      fetch(clickUrl, { method: 'POST' }).catch(() => { });
+    });
+
+    return card;
   }
 
   // ─── Utility ───

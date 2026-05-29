@@ -27,7 +27,21 @@ CREATE TABLE IF NOT EXISTS user_profiles (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 3. User links
+-- 3. Link Categories (user-scoped)
+CREATE TABLE IF NOT EXISTS link_categories (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  icon TEXT DEFAULT 'folder',
+  color TEXT DEFAULT '#a855f7',
+  category_order INTEGER DEFAULT 0,
+  collapsed_by_default BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  -- Prevent duplicate category names per user (case-insensitive)
+  CONSTRAINT uq_link_categories_user_name UNIQUE (user_id, name)
+);
+
+-- 4. User links
 CREATE TABLE IF NOT EXISTS user_links (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -38,11 +52,14 @@ CREATE TABLE IF NOT EXISTS user_links (
   active BOOLEAN DEFAULT true,
   display_order INTEGER DEFAULT 0,
   style TEXT DEFAULT 'default',
+  -- Nullable category assignment (NULL = Uncategorized)
+  category_id UUID NULL REFERENCES link_categories(id) ON DELETE SET NULL,
   scheduled_start TIMESTAMPTZ NULL,
   scheduled_end TIMESTAMPTZ NULL,
   is_scheduled BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
 
 -- 4. User settings
 CREATE TABLE IF NOT EXISTS user_settings (
@@ -83,7 +100,11 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 
 -- 7. Indexes for performance
+CREATE INDEX IF NOT EXISTS idx_link_categories_user_id ON link_categories(user_id);
+CREATE INDEX IF NOT EXISTS idx_link_categories_user_order ON link_categories(user_id, category_order);
+CREATE INDEX IF NOT EXISTS idx_user_links_category_id ON user_links(user_id, category_id);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 CREATE INDEX IF NOT EXISTS idx_user_links_user_id ON user_links(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_profiles_user_id ON user_profiles(user_id);
@@ -106,9 +127,11 @@ WHERE is_scheduled = TRUE;
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_links ENABLE ROW LEVEL SECURITY;
+ALTER TABLE link_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contacts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+
 
 -- Allow service_role full access (backend server uses this key)
 -- No RLS policies needed since service_role bypasses RLS by default.

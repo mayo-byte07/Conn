@@ -923,14 +923,14 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   overflow: hidden;
-  cursor: pointer;
+  cursor: default;
   transition: all var(--duration-normal) var(--ease-out);
 }
 
 .theme-preview-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-glow);
+  border-color: var(--border);
+  transform: none;
+  box-shadow: none;
 }
 
 .theme-swatch {
@@ -1492,6 +1492,8 @@
   display: flex;
   align-items: center;
   gap: 60px;
+  padding: 0 2rem;
+  border-radius: 1rem;
 }
 
 .use-case-card.reverse {
@@ -1586,6 +1588,7 @@
   width: 100%;
   max-width: 320px;
   text-align: center;
+  margin: 2.5rem 0;
 }
 
 .earnings-header {
@@ -1823,16 +1826,19 @@
 }
 
 .faq-answer {
-  max-height: 0;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s ease-in-out;
   overflow: hidden;
-  transition: max-height 0.4s var(--ease-out);
 }
 
 .faq-item.open .faq-answer {
-  max-height: 400px;
+  grid-template-rows: 1fr;
 }
 
 .faq-answer p {
+  min-height: 0;
+  margin: 0;
   padding: 0 24px 24px;
   color: var(--text-secondary);
   line-height: 1.6;
@@ -1938,7 +1944,7 @@
 
   .navbar-links,
   .navbar-actions {
-    display: none;
+    display: none !important;
   }
 
   .mobile-menu-btn {
