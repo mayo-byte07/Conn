@@ -73,7 +73,15 @@
   --link-shadow-hover: var(--shadow-glow);
   --link-transform-hover: translateY(-2px) scale(1.01);
 }
+::selection {
+  background: var(--accent);
+  color: var(--text-primary);
+}
 
+::-moz-selection {
+  background: var(--accent);
+  color: var(--text-primary);
+}
 /* ─── Reset & Base ─── */
 *, *::before, *::after {
   margin: 0;
