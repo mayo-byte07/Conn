@@ -1060,3 +1060,21 @@
     }
   }
 })();
+const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+// Show button when scrolling down
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 300) {
+    scrollTopBtn.classList.add("show");
+  } else {
+    scrollTopBtn.classList.remove("show");
+  }
+});
+
+// Scroll to top when clicked
+scrollTopBtn.addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+});

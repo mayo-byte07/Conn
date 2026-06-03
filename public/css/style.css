@@ -629,3 +629,50 @@ input, textarea, select {
     padding: 14px 16px;
   }
 }
+/* Scroll To Top */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 90px; /* Above Conn badge */
+  right: 20px;
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  color: var(--text-primary);
+  cursor: pointer;
+  z-index: 999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+
+  transition: all 0.3s ease;
+
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+}
+
+.scroll-top-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.scroll-top-btn.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-top-btn:hover {
+  transform: translateY(-4px);
+  background: rgba(255,255,255,0.18);
+}
