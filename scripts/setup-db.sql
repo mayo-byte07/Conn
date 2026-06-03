@@ -137,12 +137,3 @@ ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 -- No RLS policies needed since service_role bypasses RLS by default.
 
 SELECT 'All tables created successfully!' AS status;
-
-
-CREATE TABLE IF NOT EXISTS comments (
-    id BIGSERIAL PRIMARY KEY,
-    username TEXT NOT NULL,
-    visitor_name TEXT NOT NULL,
-    content TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
-);

@@ -145,13 +145,13 @@
   font-family: var(--font-body);
   border: none;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   gap: 8px;
   transition: all var(--duration-normal) var(--ease-out);
   box-shadow: 0 4px 20px rgba(168, 85, 247, 0.25);
   margin-top: 4px;
+  .btn-loader {
+  display: none;
+}
 }
 
 .auth-submit:hover {

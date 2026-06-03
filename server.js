@@ -456,7 +456,11 @@ app.post('/api/auth/register', registerLimiter, async (req, res) => {
     const token = generateToken({ id: newUserId, name, username: finalUsername });
     setAuthCookie(res, token);
 
-    res.status(201).json({ id: newUserId, name, email: email.toLowerCase(), username: finalUsername });
+    return res.status(201).json({ 
+  message: "Registration successful", 
+  name, 
+  username: finalUsername 
+});
   } catch (err) {
     console.error('Register error:', err);
     res.status(500).json({ error: 'Server error. Please try again.' });
@@ -488,7 +492,7 @@ app.post('/api/auth/login', loginLimiter, async (req, res) => {
     const token = generateToken({ id: user.id, name: user.name, username: user.username });
     setAuthCookie(res, token);
 
-    res.json({ id: user.id, name: user.name, email: user.email, username: user.username });
+    return res.json({ message: "Login successful", name: user.name, username: user.username });
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ error: 'Server error. Please try again.' });
@@ -1516,58 +1520,6 @@ app.get('/api/u/:username/settings', async (req, res) => {
     showFooter: settings?.show_footer !== false,
     customCSS: settings?.custom_css || ''
   });
-});
-
-// Get comments for a profile
-app.get('/api/u/:username/comments', async (req, res) => {
-    try {
-        const { username } = req.params;
-
-        const { data, error } = await supabase
-            .from('comments')
-            .select('*')
-            .eq('username', username)
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        res.json(data);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Failed to fetch comments' });
-    }
-});
-
-// Add comment
-app.post('/api/u/:username/comments', async (req, res) => {
-    try {
-        const { username } = req.params;
-        const { visitor_name, content } = req.body;
-
-        if (!visitor_name || !content) {
-            return res.status(400).json({
-                error: 'All fields required'
-            });
-        }
-
-        const { data, error } = await supabase
-            .from('comments')
-            .insert([
-                {
-                    username,
-                    visitor_name,
-                    content
-                }
-            ])
-            .select();
-
-        if (error) throw error;
-
-        res.json(data[0]);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Failed to add comment' });
-    }
 });
 
 // Track clicks on public profile

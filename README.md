@@ -2,7 +2,7 @@
 
 <img src="https://img.shields.io/badge/Conn-Link%20in%20Bio%20Platform-a855f7?style=for-the-badge&logo=lightning&logoColor=white" alt="Conn" />
 
-# ⚡ Conn.
+# ⚡ Conn
 
 ### The premium link-in-bio platform for modern creators.
 
