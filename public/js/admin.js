@@ -460,6 +460,7 @@
       if (target === 'links') loadLinks();
       if (target === 'categories') loadCategories();
       if (target === 'themes') loadThemes();
+      if (target === 'subscription') loadSubscription();
       if (target === 'settings') loadSettingsData();
     });
   });
@@ -1151,6 +1152,166 @@
     }
   }
 
+  // ═══════════ SUBSCRIPTION ═══════════
+
+  async function loadSubscription() {
+    const container = document.getElementById('subscriptionContainer');
+    try {
+      // Fetch plan definitions + current subscription
+      const [plansRes, subRes, authRes] = await Promise.all([
+        fetch('/api/plans/pricing'),
+        fetch('/api/subscription'),
+        fetch('/api/auth/check')
+      ]);
+
+      if (!plansRes.ok || !subRes.ok || !authRes.ok) {
+        throw new Error('Failed to load subscription data');
+      }
+
+      const plans = await plansRes.json();
+      const sub = await subRes.json();
+      const auth = await authRes.json();
+
+      const currentPlan = sub.plan || 'free';
+      const billing = sub.billing || 'monthly';
+      const showYearly = billing === 'yearly';
+
+      // Plan details map for display
+      const planDetails = {
+        free: { name: 'Free', icon: '⚡', color: '#6b7280', gradient: '135deg, #6b7280, #9ca3af' },
+        plus: { name: 'Plus', icon: '🎤', color: '#a855f7', gradient: '135deg, #7c3aed, #a855f7' },
+        professional: { name: 'Professional', icon: '🛡️', color: '#06b6d4', gradient: '135deg, #0891b2, #06b6d4' }
+      };
+
+      const pd = planDetails[currentPlan];
+      const priceKey = showYearly ? 'yearly' : 'monthly';
+      const currentPrice = plans[currentPlan]?.[priceKey] || 0;
+      const intervalLabel = showYearly ? '/year' : '/month';
+
+      container.innerHTML = `
+        <div class="section-card">
+          <div class="section-card-header" style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:48px; height:48px; border-radius:12px; background:linear-gradient(${pd.gradient}); display:flex; align-items:center; justify-content:center; font-size:24px;">
+                ${pd.icon}
+              </div>
+              <div>
+                <h2 class="section-card-title" style="margin:0;">${pd.name} Plan</h2>
+                <p style="margin:2px 0 0; color:var(--text-secondary); font-size:0.85rem;">
+                  ${currentPlan === 'free' ? 'No subscription needed' : '₹' + currentPrice + intervalLabel + ' · ' + (showYearly ? 'Yearly' : 'Monthly')}
+                </p>
+              </div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              ${currentPlan !== 'free' ? `<button class="btn btn-outline btn-sm" onclick="window.adminApp.manageSubscription()">Manage</button>` : ''}
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card" style="margin-top:16px;">
+          <div class="section-card-header">
+            <h2 class="section-card-title">Plan Features</h2>
+          </div>
+          <div style="display:grid; gap:8px;">
+            ${renderFeatureRow('Unlimited Links & Custom Bio Page', true, true, true)}
+            ${renderFeatureRow('Social Links Integration', true, true, true)}
+            ${renderFeatureRow('QR Code on Profile', true, true, true)}
+            ${renderFeatureRow('18 Themes', true, true, true)}
+            ${renderFeatureRow('Basic Analytics', true, true, true)}
+            ${renderFeatureRow('Link Scheduling', false, true, true)}
+            ${renderFeatureRow('Verified Badge on Profile', false, true, true)}
+            ${renderFeatureRow('Custom CSS', false, true, true)}
+            ${renderFeatureRow('26+ Themes (incl. Premium)', false, true, true)}
+            ${renderFeatureRow('Advanced Analytics', false, true, true)}
+            ${renderFeatureRow('Custom Domain', false, false, true)}
+            ${renderFeatureRow('Monetization Tools', false, false, true)}
+            ${renderFeatureRow('Team Collaboration', false, false, true)}
+            ${renderFeatureRow('Priority Support', false, false, true)}
+            ${renderFeatureRow('Advanced Customization', false, false, true)}
+          </div>
+        </div>
+
+        <div class="section-card" style="margin-top:16px;">
+          <div class="section-card-header" style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:space-between;">
+            <div>
+              <h2 class="section-card-title">Available Plans</h2>
+              <p style="margin:2px 0 0; color:var(--text-secondary); font-size:0.85rem;">Compare and upgrade your plan</p>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-top:16px;">
+            ${renderPlanCard('free', '⚡', 'Free', plans.free, currentPlan, billing)}
+            ${renderPlanCard('plus', '🎤', 'Plus', plans.plus, currentPlan, billing)}
+            ${renderPlanCard('professional', '🛡️', 'Professional', plans.professional, currentPlan, billing)}
+          </div>
+        </div>
+      `;
+    } catch (err) {
+      console.error('Load subscription error:', err);
+      container.innerHTML = `<div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <h3>Failed to load subscription info</h3>
+        <p>Please refresh and try again.</p>
+      </div>`;
+    }
+  }
+
+  function renderFeatureRow(label, free, plus, pro) {
+    const icon = (ok) => ok
+      ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+      : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+    return `
+      <div style="display:grid; grid-template-columns:1fr 48px 48px 48px; align-items:center; gap:8px; padding:6px 8px; border-radius:8px; background:var(--bg-secondary); font-size:0.85rem;">
+        <span style="color:var(--text-primary);">${label}</span>
+        <span style="text-align:center; display:flex; justify-content:center;">${icon(free)}</span>
+        <span style="text-align:center; display:flex; justify-content:center;">${icon(plus)}</span>
+        <span style="text-align:center; display:flex; justify-content:center;">${icon(pro)}</span>
+      </div>
+    `;
+  }
+
+  function renderPlanCard(planId, icon, name, pricing, currentPlan, billing) {
+    const isCurrent = currentPlan === planId;
+    const showYearly = billing === 'yearly';
+    const price = pricing?.[showYearly ? 'yearly' : 'monthly'] || 0;
+    const interval = showYearly ? '/year' : '/month';
+
+    const gradients = { free: 'linear-gradient(135deg, #4b5563, #6b7280)', plus: 'linear-gradient(135deg, #7c3aed, #a855f7)', professional: 'linear-gradient(135deg, #0891b2, #06b6d4)' };
+
+    if (isCurrent) {
+      return `
+        <div style="border:2px solid var(--accent); border-radius:12px; padding:20px; background:var(--bg-secondary); position:relative;">
+          <div style="position:absolute; top:-1px; right:16px; background:var(--accent); color:#fff; font-size:0.7rem; font-weight:600; padding:3px 10px; border-radius:0 0 8px 8px;">CURRENT</div>
+          <div style="font-size:28px; margin-bottom:8px;">${icon}</div>
+          <div style="font-weight:600; font-size:1.1rem;">${name}</div>
+          <div style="font-size:1.3rem; font-weight:700; margin:8px 0 4px;">₹${price}<span style="font-size:0.75rem; font-weight:400; color:var(--text-secondary);">${interval}</span></div>
+          <button class="btn btn-primary" style="width:100%; margin-top:12px;" disabled>Current Plan</button>
+        </div>
+      `;
+    }
+
+    if (planId === 'free') {
+      return `
+        <div style="border:1px solid var(--border); border-radius:12px; padding:20px; background:var(--bg-secondary);">
+          <div style="font-size:28px; margin-bottom:8px;">${icon}</div>
+          <div style="font-weight:600; font-size:1.1rem;">${name}</div>
+          <div style="font-size:1.3rem; font-weight:700; margin:8px 0 4px;">Free<span style="font-size:0.75rem; font-weight:400; color:var(--text-secondary);"></span></div>
+          <button class="btn btn-outline btn-sm" style="width:100%; margin-top:12px;" onclick="window.adminApp.downgradeToFree()">Downgrade</button>
+        </div>
+      `;
+    }
+
+    const popular = planId === 'plus';
+    return `
+      <div style="border:1px solid ${popular ? 'var(--accent)' : 'var(--border)'}; border-radius:12px; padding:20px; background:var(--bg-secondary); position:relative;">
+        ${popular ? '<div style="position:absolute; top:-1px; right:16px; background:var(--accent); color:#fff; font-size:0.7rem; font-weight:600; padding:3px 10px; border-radius:0 0 8px 8px;">MOST POPULAR</div>' : ''}
+        <div style="font-size:28px; margin-bottom:8px;">${icon}</div>
+        <div style="font-weight:600; font-size:1.1rem;">${name}</div>
+        <div style="font-size:1.3rem; font-weight:700; margin:8px 0 4px;">₹${price}<span style="font-size:0.75rem; font-weight:400; color:var(--text-secondary);">${interval}</span></div>
+        <button class="btn btn-primary" style="width:100%; margin-top:12px;" onclick="window.adminApp.upgrade('${planId}', '${billing}')">Upgrade to ${name}</button>
+      </div>
+    `;
+  }
+
   // ═══════════ GLOBAL ACTIONS ═══════════
 
   window.adminApp = {
@@ -1189,6 +1350,82 @@
       document.querySelectorAll('.theme-pick-card').forEach(card => {
         card.classList.toggle('selected', card.dataset.theme === themeId);
       });
+    },
+
+    async upgrade(planId, billing) {
+      try {
+        const res = await fetch('/api/payment/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ planId, billing })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'Failed to create order', 'error');
+          return;
+        }
+
+        // Open Razorpay checkout
+        const options = {
+          key: data.key,
+          order_id: data.orderId,
+          amount: data.amount,
+          currency: data.currency,
+          name: 'Conn',
+          description: `${planId.charAt(0).toUpperCase() + planId.slice(1)} Plan - ${billing}`,
+          handler: async (response) => {
+            const verifyRes = await fetch('/api/payment/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              })
+            });
+            const verifyData = await verifyRes.json();
+            if (verifyData.success) {
+              showToast(`Upgraded to ${planId.charAt(0).toUpperCase() + planId.slice(1)}!`);
+              loadSubscription();
+            } else {
+              showToast('Payment verification failed', 'error');
+            }
+          },
+          modal: { ondismiss: () => showToast('Payment cancelled', 'warning') }
+        };
+        const rzp = new Razorpay(options);
+        rzp.open();
+      } catch (err) {
+        showToast('Failed to process upgrade', 'error');
+      }
+    },
+
+    async downgradeToFree() {
+      const confirmed = await showConfirmModal(
+        'Downgrade to Free',
+        'Are you sure you want to downgrade to the Free plan? Your premium features will no longer be available.'
+      );
+      if (!confirmed) return;
+      try {
+        const res = await fetch('/api/subscription', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan: 'free', billing: 'monthly' })
+        });
+        if (res.ok) {
+          showToast('Downgraded to Free plan');
+          loadSubscription();
+        } else {
+          showToast('Failed to downgrade', 'error');
+        }
+      } catch (err) {
+        showToast('Failed to downgrade', 'error');
+      }
+    },
+
+    manageSubscription() {
+      const section = document.getElementById('sectionSubscription');
+      if (section) section.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -1250,6 +1487,7 @@
     loadLinks();
     loadProfile();
     loadCategories();
+    loadSubscription();
     initPublicUrl();
     setupKeyboardShortcuts();
   });

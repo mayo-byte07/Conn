@@ -322,8 +322,9 @@
             </div>
           </div>
         </div>
-        <a href="#themes">Templates</a>
-        <a href="#learn">Resources</a>
+          <a href="#themes">Templates</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#learn">Resources</a>
         <a href="#contact">Contact</a>
         <a href="/team">Team</a>
         <button class="theme-toggle-btn" aria-label="Switch to light mode" title="Switch to light mode">
@@ -883,6 +884,199 @@
         <div class="stat-block animate-on-scroll">
           <div class="stat-number" data-target="50">0</div>
           <div class="stat-label-text">ms Load Time</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ PRICING SECTION ══════ -->
+  <section class="section pricing-section" id="pricing">
+    <div class="section-inner">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag">Pricing</span>
+        <h2 class="section-title">Choose your <span class="gradient-text">plan.</span></h2>
+        <p class="section-desc">Start for free, upgrade when you need more power. All plans include unlimited links.</p>
+      </div>
+
+      <!-- Billing Toggle -->
+      <div class="billing-toggle animate-on-scroll">
+        <span class="billing-label active" id="billingMonthlyLabel">Monthly</span>
+        <div class="toggle-switch" id="billingToggle" role="button" tabindex="0" aria-label="Toggle billing">
+          <div class="toggle-knob"></div>
+        </div>
+        <span class="billing-label" id="billingYearlyLabel">Yearly <span class="save-badge">Save 17%</span></span>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Free Plan -->
+        <div class="pricing-card animate-on-scroll" style="--delay: 0s">
+          <div class="pricing-card-header">
+            <div class="plan-icon plan-icon-free">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+            </div>
+            <div class="plan-name">Free</div>
+            <div class="plan-desc">Perfect for getting started</div>
+          </div>
+          <div class="pricing-card-price">
+            <span class="price-currency">₹</span>
+            <span class="price-amount" id="freePrice">0</span>
+            <span class="price-interval" id="freeInterval">/forever</span>
+          </div>
+          <ul class="plan-features">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Unlimited Links
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              18 Stunning Themes
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Basic Analytics
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Custom Bio Page
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Social Links
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              QR Code Ready
+            </li>
+            <li class="feature-disabled">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Premium Themes
+            </li>
+            <li class="feature-disabled">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Custom CSS
+            </li>
+            <li class="feature-disabled">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Verified Badge
+            </li>
+          </ul>
+          <a href="/signup" class="pricing-cta pricing-cta-ghost">Get Started Free</a>
+        </div>
+
+        <!-- Plus Plan (Popular) -->
+        <div class="pricing-card pricing-card-popular animate-on-scroll" style="--delay: 0.1s">
+          <div class="popular-badge">Most Popular</div>
+          <div class="pricing-card-header">
+            <div class="plan-icon plan-icon-plus">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+              </svg>
+            </div>
+            <div class="plan-name">Plus</div>
+            <div class="plan-desc">For creators who want more</div>
+          </div>
+          <div class="pricing-card-price">
+            <span class="price-currency">₹</span>
+            <span class="price-amount" id="plusPrice">50</span>
+            <span class="price-interval" id="plusInterval">/month</span>
+          </div>
+          <div class="yearly-note" id="yearlyNote" style="display:none;">
+            <span class="yearly-savings">Save ₹100</span>
+            <span>₹600 value — pay just ₹500</span>
+          </div>
+          <ul class="plan-features">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Everything in Free
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              26+ Themes (incl. Premium)
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Advanced Analytics
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Custom CSS
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Verified Badge
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Link Scheduling
+            </li>
+            <li class="feature-disabled">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Custom Domain
+            </li>
+            <li class="feature-disabled">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Monetization Tools
+            </li>
+            <li class="feature-disabled">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Priority Support
+            </li>
+          </ul>
+          <button class="pricing-cta pricing-cta-primary" id="btnLandingPlus">Subscribe to Plus</button>
+        </div>
+
+        <!-- Professional Plan -->
+        <div class="pricing-card animate-on-scroll" style="--delay: 0.2s">
+          <div class="pricing-card-header">
+            <div class="plan-icon plan-icon-pro">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <div class="plan-name">Professional</div>
+            <div class="plan-desc">For pros and businesses</div>
+          </div>
+          <div class="pricing-card-price">
+            <span class="price-currency">₹</span>
+            <span class="price-amount" id="proPrice">399</span>
+            <span class="price-interval" id="proInterval">/month</span>
+          </div>
+          <div class="yearly-note" id="proYearlyNote" style="display:none;">
+            <span class="yearly-savings">Save ₹788</span>
+            <span>₹4,788 value — pay just ₹4,000</span>
+          </div>
+          <ul class="plan-features">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Everything in Plus
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Custom Domain
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Monetization Tools
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Team Collaboration
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Priority Support
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Advanced Customization
+            </li>
+          </ul>
+          <button class="pricing-cta pricing-cta-primary" id="btnLandingPro">Subscribe to Pro</button>
         </div>
       </div>
     </div>
