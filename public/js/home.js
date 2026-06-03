@@ -616,4 +616,12 @@ scrollTopBtn.addEventListener("click", () => {
     top: 0,
     behavior: "smooth"
   });
+
+// Scroll to Top
+const scrollTopBtn = document.getElementById('scrollTopBtn');
+window.addEventListener('scroll', () => {
+  scrollTopBtn.classList.toggle('visible', window.scrollY > 300);
+});
+scrollTopBtn.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 });

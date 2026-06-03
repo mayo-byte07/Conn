@@ -381,6 +381,9 @@
 .mega-item:hover .mega-item-title {
   color: var(--accent-light);
 }
+[data-theme="light"] .mega-item:hover .mega-item-title {
+  color: #111111 !important; 
+}
 
 /* Dropdown CTA Banner */
 .mega-cta {
@@ -923,14 +926,14 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   overflow: hidden;
-  cursor: pointer;
+  cursor: default;
   transition: all var(--duration-normal) var(--ease-out);
 }
 
 .theme-preview-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-glow);
+  border-color: var(--border);
+  transform: none;
+  box-shadow: none;
 }
 
 .theme-swatch {
@@ -1441,6 +1444,11 @@
   display: flex;
   gap: 60px;
   margin-bottom: 32px;
+  justify-content: center;
+}
+
+.footer-links-grid > div {
+  text-align: center;
 }
 
 .footer-links-grid h4 {
@@ -1492,6 +1500,8 @@
   display: flex;
   align-items: center;
   gap: 60px;
+  padding: 0 2rem;
+  border-radius: 1rem;
 }
 
 .use-case-card.reverse {
@@ -1586,6 +1596,7 @@
   width: 100%;
   max-width: 320px;
   text-align: center;
+  margin: 2.5rem 0;
 }
 
 .earnings-header {
@@ -1823,16 +1834,19 @@
 }
 
 .faq-answer {
-  max-height: 0;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s ease-in-out;
   overflow: hidden;
-  transition: max-height 0.4s var(--ease-out);
 }
 
 .faq-item.open .faq-answer {
-  max-height: 400px;
+  grid-template-rows: 1fr;
 }
 
 .faq-answer p {
+  min-height: 0;
+  margin: 0;
   padding: 0 24px 24px;
   color: var(--text-secondary);
   line-height: 1.6;
@@ -1938,7 +1952,7 @@
 
   .navbar-links,
   .navbar-actions {
-    display: none;
+    display: none !important;
   }
 
   .mobile-menu-btn {
@@ -2060,3 +2074,33 @@
     transform: translateY(0);
   }
 }
+#scrollTopBtn {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent, #a855f7);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 9999;
+  box-shadow: 0 4px 20px rgba(168,85,247,0.5);
+}
+#scrollTopBtn.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+#scrollTopBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(168,85,247,0.7);
+}
+#scrollTopBtn svg { stroke: #fff; }
