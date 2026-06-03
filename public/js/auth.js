@@ -119,6 +119,58 @@
     });
   }
 
+  // ─── Copy Profile Link ───
+  function initCopyProfileBtn() {
+    const btn = document.getElementById('copyProfileBtn');
+    const preview = document.getElementById('usernamePreview');
+    if (!btn || !preview) return;
+
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+
+      // Get the username from the preview
+      const username = preview.textContent;
+      if (!username || username === 'your-username') {
+        showError('Please enter a username first.');
+        return;
+      }
+
+      // Construct the profile URL using current origin
+      const profileUrl = `${window.location.origin}/u/${username}`;
+
+      try {
+        // Try using the modern Clipboard API
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(profileUrl);
+        } else {
+          // Fallback for older browsers
+          const textarea = document.createElement('textarea');
+          textarea.value = profileUrl;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+        }
+
+        // Show "Copied!" feedback
+        const originalText = btn.textContent;
+        const originalBg = btn.style.background;
+        btn.textContent = 'Copied!';
+        btn.style.background = '#4ade80';
+
+        // Revert after 2 seconds
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = originalBg;
+        }, 2000);
+      } catch (err) {
+        showError('Failed to copy. Please try again.');
+      }
+    });
+  }
+
   // ─── Signup ───
   function initSignup() {
     const form = document.getElementById('signupForm');
@@ -342,5 +394,6 @@
     initSignup();
     initUsernameCheck();
     initGoogleAuth();
+    initCopyProfileBtn();
   });
 })();

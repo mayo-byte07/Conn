@@ -2018,3 +2018,144 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* ================= COMMENTS SECTION ================= */
+
+.comments-section {
+  width: 100%;
+  max-width: 720px;
+  margin: 50px auto;
+  padding: 24px;
+  border-radius: 24px;
+
+  background: rgba(20, 20, 35, 0.55);
+
+  border: 1px solid rgba(168, 85, 247, 0.35);
+
+  box-shadow:
+    0 0 30px rgba(168, 85, 247, 0.12),
+    0 0 60px rgba(139, 92, 246, 0.08);
+
+  backdrop-filter: blur(16px);
+}
+
+.comments-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 22px;
+  color: #c084fc;
+  font-weight: 700;
+}
+
+.comments-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.comments-section input,
+.comments-section textarea {
+  width: 100%;
+  padding: 14px 16px;
+
+  border-radius: 16px;
+
+  border: 1px solid rgba(168, 85, 247, 0.35);
+
+  background: rgba(255, 255, 255, 0.05);
+
+  color: white;
+
+  outline: none;
+
+  transition: all 0.25s ease;
+}
+
+.comments-section input::placeholder,
+.comments-section textarea::placeholder {
+  color: rgba(255,255,255,0.55);
+}
+
+.comments-section input:focus,
+.comments-section textarea:focus {
+  border-color: #c084fc;
+
+  box-shadow:
+    0 0 0 4px rgba(192, 132, 252, 0.15),
+    0 0 20px rgba(168, 85, 247, 0.18);
+}
+
+.comments-section textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.comments-section button {
+  padding: 14px;
+
+  border: none;
+  border-radius: 16px;
+
+  background: linear-gradient(
+    135deg,
+    #7c3aed,
+    #a855f7
+  );
+
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.comments-section button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 24px rgba(168, 85, 247, 0.28);
+}
+
+/* COMMENT CARDS */
+
+.comment-card {
+  padding: 18px;
+  margin-bottom: 18px;
+
+  border-radius: 18px;
+
+  background: rgba(255,255,255,0.04);
+
+  border: 1px solid rgba(168, 85, 247, 0.22);
+
+  backdrop-filter: blur(12px);
+
+  transition: all 0.25s ease;
+}
+
+.comment-card:hover {
+  transform: translateY(-2px);
+
+  border-color: rgba(192, 132, 252, 0.5);
+
+  box-shadow:
+    0 8px 22px rgba(168, 85, 247, 0.12);
+}
+
+.comment-card h4 {
+  color: #d8b4fe;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.comment-card p {
+  color: rgba(255,255,255,0.88);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.comment-card small {
+  color: rgba(255,255,255,0.45);
+}

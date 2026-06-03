@@ -629,3 +629,36 @@ input, textarea, select {
     padding: 14px 16px;
   }
 }
+
+.comments-section {
+    margin-top: 40px;
+    width: 100%;
+}
+
+.comments-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.comments-section input,
+.comments-section textarea {
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+}
+
+.comments-section button {
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.comment-card {
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    background: rgba(255,255,255,0.08);
+}

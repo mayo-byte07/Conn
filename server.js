@@ -30,10 +30,35 @@ if (RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET) {
   razorpay = new Razorpay({ key_id: RAZORPAY_KEY_ID, key_secret: RAZORPAY_KEY_SECRET });
 }
 
-// Pricing (amounts in rupees, converted to paise * 100 in create-order)
+// Pricing plans definition (amounts in rupees)
 const PLANS = {
+  free: { monthly: 0, yearly: 0 },
   plus: { monthly: 50, yearly: 500 },
   professional: { monthly: 399, yearly: 4000 }
+};
+
+const PLAN_FEATURES = {
+  free: {
+    name: 'Free',
+    desc: 'Perfect for getting started',
+    features: [
+      { name: 'Unlimited Links', free: true, plus: true, pro: true },
+      { name: '18 Themes', free: true, plus: true, pro: true },
+      { name: 'Basic Analytics', free: true, plus: true, pro: true },
+      { name: 'Custom Bio Page', free: true, plus: true, pro: true },
+      { name: 'Social Links', free: true, plus: true, pro: true },
+      { name: 'QR Code Ready', free: true, plus: true, pro: true },
+      { name: '8 Premium Gradient Themes', free: false, plus: true, pro: true },
+      { name: 'Custom CSS', free: false, plus: true, pro: true },
+      { name: 'Verified Badge', free: false, plus: true, pro: true },
+      { name: 'Link Scheduling', free: false, plus: true, pro: true },
+      { name: 'Advanced Analytics', free: false, plus: true, pro: true },
+      { name: 'Priority Support', free: false, plus: false, pro: true },
+      { name: 'Custom Domain', free: false, plus: false, pro: true },
+      { name: 'Monetization Tools', free: false, plus: false, pro: true },
+      { name: 'Team Collaboration', free: false, plus: false, pro: true }
+    ]
+  }
 };
 
 //LOGIN limiter
@@ -475,13 +500,23 @@ app.post('/api/auth/logout', (req, res) => {
   res.json({ success: true });
 });
 
-app.get('/api/auth/check', (req, res) => {
+app.get('/api/auth/check', async (req, res) => {
   const user = getAuthUser(req);
   if (user) {
+    let subscriptionPlan = 'free';
+    try {
+      const { data: dbUser } = await supabase
+        .from('users')
+        .select('subscription_plan')
+        .eq('id', user.userId)
+        .maybeSingle();
+      if (dbUser) subscriptionPlan = dbUser.subscription_plan || 'free';
+    } catch {}
     res.json({
       authenticated: true,
       name: user.userName,
-      username: user.username
+      username: user.username,
+      subscriptionPlan
     });
   } else {
     res.json({ authenticated: false });
@@ -661,18 +696,228 @@ app.put('/api/profile', requireAuth, async (req, res) => {
   res.json(updates);
 });
 
+// ──────────────────── CATEGORIES ROUTES (Authenticated) ────────────────────
+
+app.get('/api/categories', requireAuth, async (req, res) => {
+  try {
+    const { data: categories, error } = await supabase
+      .from('link_categories')
+      .select(`
+        id, 
+        name, 
+        icon, 
+        color, 
+        category_order, 
+        collapsed_by_default
+      `)
+      .eq('user_id', req.auth.userId)
+      .order('category_order', { ascending: true });
+
+    if (error) throw error;
+
+    // Count links for each category
+    const categoriesWithCount = await Promise.all((categories || []).map(async (cat) => {
+      const { count } = await supabase
+        .from('user_links')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', req.auth.userId)
+        .eq('category_id', cat.id);
+
+      return {
+        ...cat,
+        link_count: count || 0
+      };
+    }));
+
+    res.json(categoriesWithCount);
+  } catch (err) {
+    console.error('GET /api/categories error:', err);
+    res.status(500).json({ error: 'Failed to load categories' });
+  }
+});
+
+app.post('/api/categories', requireAuth, async (req, res) => {
+  try {
+    const name = (req.body?.name ?? '').toString().trim();
+    const icon = (req.body?.icon ?? '📁').toString().trim();
+    const color = (req.body?.color ?? '#a855f7').toString().trim();
+    const collapsed_by_default = !!req.body?.collapsed_by_default;
+
+    if (!name) return res.status(400).json({ error: 'Category name is required' });
+
+    // Get next order
+    const { count } = await supabase
+      .from('link_categories')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', req.auth.userId);
+
+    const nextOrder = count || 0;
+
+    const { data, error } = await supabase
+      .from('link_categories')
+      .insert({
+        user_id: req.auth.userId,
+        name,
+        icon,
+        color,
+        category_order: nextOrder,
+        collapsed_by_default
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    res.status(201).json({ ...data, link_count: 0 });
+  } catch (err) {
+    console.error('POST /api/categories error:', err);
+    res.status(500).json({ error: 'Failed to create category' });
+  }
+});
+
+app.put('/api/categories/:id', requireAuth, async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+    const updates = {};
+    
+    if (req.body?.name !== undefined) updates.name = req.body.name?.toString().trim() || '';
+    if (req.body?.icon !== undefined) updates.icon = req.body.icon?.toString().trim();
+    if (req.body?.color !== undefined) updates.color = req.body.color?.toString().trim();
+    if (req.body?.collapsed_by_default !== undefined) updates.collapsed_by_default = !!req.body.collapsed_by_default;
+
+    if (Object.keys(updates).length === 0) return res.status(400).json({ error: 'No fields to update' });
+    if (updates.name !== undefined && !updates.name) return res.status(400).json({ error: 'Category name is required' });
+
+    // Verify ownership
+    const { data: existing } = await supabase
+      .from('link_categories')
+      .select('id')
+      .eq('id', categoryId)
+      .eq('user_id', req.auth.userId)
+      .single();
+
+    if (!existing) return res.status(404).json({ error: 'Category not found' });
+
+    const { data, error } = await supabase
+      .from('link_categories')
+      .update(updates)
+      .eq('id', categoryId)
+      .eq('user_id', req.auth.userId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    res.json(data);
+  } catch (err) {
+    console.error('PUT /api/categories/:id error:', err);
+    res.status(500).json({ error: 'Failed to update category' });
+  }
+});
+
+app.delete('/api/categories/:id', requireAuth, async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+
+    // Verify ownership
+    const { data: existing } = await supabase
+      .from('link_categories')
+      .select('id')
+      .eq('id', categoryId)
+      .eq('user_id', req.auth.userId)
+      .single();
+
+    if (!existing) return res.status(404).json({ error: 'Category not found' });
+
+    // Uncategorize links
+    await supabase
+      .from('user_links')
+      .update({ category_id: null })
+      .eq('user_id', req.auth.userId)
+      .eq('category_id', categoryId);
+
+    // Delete category
+    const { error } = await supabase
+      .from('link_categories')
+      .delete()
+      .eq('id', categoryId)
+      .eq('user_id', req.auth.userId);
+
+    if (error) throw error;
+
+    // Reorder remaining
+    const { data: remaining } = await supabase
+      .from('link_categories')
+      .select('id')
+      .eq('user_id', req.auth.userId)
+      .order('category_order', { ascending: true });
+
+    if (remaining && remaining.length) {
+      for (let i = 0; i < remaining.length; i++) {
+        await supabase
+          .from('link_categories')
+          .update({ category_order: i })
+          .eq('id', remaining[i].id)
+          .eq('user_id', req.auth.userId);
+      }
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error('DELETE /api/categories/:id error:', err);
+    res.status(500).json({ error: 'Failed to delete category' });
+  }
+});
+
+app.put('/api/categories/reorder', requireAuth, async (req, res) => {
+  try {
+    const { orderedCategoryIds } = req.body;
+    if (!Array.isArray(orderedCategoryIds)) return res.status(400).json({ error: 'orderedCategoryIds required' });
+
+    for (let i = 0; i < orderedCategoryIds.length; i++) {
+      await supabase
+        .from('link_categories')
+        .update({ category_order: i })
+        .eq('id', orderedCategoryIds[i])
+        .eq('user_id', req.auth.userId);
+    }
+
+    const { data: categories, error } = await supabase
+      .from('link_categories')
+      .select('*')
+      .eq('user_id', req.auth.userId)
+      .order('category_order', { ascending: true });
+
+    if (error) throw error;
+    res.json(categories || []);
+  } catch (err) {
+    console.error('PUT /api/categories/reorder error:', err);
+    res.status(500).json({ error: 'Failed to reorder categories' });
+  }
+});
+
 // ──────────────────── LINKS ROUTES (Authenticated) ────────────────────
 
 app.get('/api/links', requireAuth, async (req, res) => {
+  // Check if this is for admin panel (needs flat array) or public view (needs grouped)
+  const grouped = req.query.grouped === 'true';
+  
+  // Fetch categories
+  const { data: categories } = await supabase
+    .from('link_categories')
+    .select('id, name, icon, color, category_order, collapsed_by_default')
+    .eq('user_id', req.auth.userId)
+    .order('category_order', { ascending: true });
+
+  // Fetch links
   const { data: links } = await supabase
     .from('user_links')
     .select('*')
     .eq('user_id', req.auth.userId)
     .order('display_order', { ascending: true });
 
-  // Map to client-expected format with scheduling info
-  const mapped = (links || []).map(l => {
-    const now = new Date();
+  const now = new Date();
+
+  // Map links with schedule status
+  const mappedLinks = (links || []).map(l => {
     let scheduleStatus = 'none';
     
     if (l.is_scheduled) {
@@ -680,11 +925,11 @@ app.get('/api/links', requireAuth, async (req, res) => {
       const endDate = l.scheduled_end ? new Date(l.scheduled_end) : null;
       
       if (startDate && now < startDate) {
-        scheduleStatus = 'pending'; // Not started yet
+        scheduleStatus = 'pending';
       } else if (endDate && now > endDate) {
-        scheduleStatus = 'expired'; // Past end date
+        scheduleStatus = 'expired';
       } else {
-        scheduleStatus = 'active'; // Currently within schedule
+        scheduleStatus = 'active';
       }
     }
 
@@ -697,6 +942,7 @@ app.get('/api/links', requireAuth, async (req, res) => {
       active: l.active,
       order: l.display_order,
       style: l.style,
+      category_id: l.category_id || null,
       is_scheduled: l.is_scheduled || false,
       scheduled_start: l.scheduled_start,
       scheduled_end: l.scheduled_end,
@@ -704,8 +950,67 @@ app.get('/api/links', requireAuth, async (req, res) => {
     };
   });
 
-  res.json(mapped);
+  // If not grouped, return flat array for admin panel
+  if (!grouped) {
+    return res.json(mappedLinks);
+  }
+
+  // Group links by category for public view
+  const groupedData = [];
+
+  // Add categories with their links
+  for (const cat of categories || []) {
+    const categoryLinks = mappedLinks
+      .filter(l => l.category_id === cat.id)
+      .map(l => ({
+        id: l.id,
+        title: l.title,
+        url: l.url,
+        icon: l.icon,
+        style: l.style,
+        order: l.order
+      }));
+
+    if (categoryLinks.length > 0) {
+      groupedData.push({
+        id: cat.id,
+        name: cat.name,
+        icon: cat.icon,
+        color: cat.color,
+        order: cat.category_order,
+        collapsed_by_default: cat.collapsed_by_default,
+        links: categoryLinks
+      });
+    }
+  }
+
+  // Add uncategorized links
+  const uncategorizedLinks = mappedLinks
+    .filter(l => !l.category_id)
+    .map(l => ({
+      id: l.id,
+      title: l.title,
+      url: l.url,
+      icon: l.icon,
+      style: l.style,
+      order: l.order
+    }));
+
+  if (uncategorizedLinks.length > 0) {
+    groupedData.push({
+      id: null,
+      name: 'Links',
+      icon: '🔗',
+      color: '#a855f7',
+      order: 9999,
+      collapsed_by_default: false,
+      links: uncategorizedLinks
+    });
+  }
+
+  res.json({ grouped: groupedData });
 });
+
 
 app.post('/api/links', requireAuth, async (req, res) => {
   const { count } = await supabase
@@ -722,6 +1027,10 @@ app.post('/api/links', requireAuth, async (req, res) => {
     return res.status(400).json({ error: 'End date must be after start date.' });
   }
 
+  // Handle category assignment
+  let categoryId = req.body.category_id ?? null;
+  if (categoryId === 'uncategorized' || categoryId === '') categoryId = null;
+
   const newLinkId = uuidv4();
   const { error } = await supabase.from('user_links').insert({
     id: newLinkId,
@@ -733,6 +1042,7 @@ app.post('/api/links', requireAuth, async (req, res) => {
     active: true,
     display_order: count || 0,
     style: req.body.style || 'default',
+    category_id: categoryId,
     is_scheduled: isScheduled,
     scheduled_start: scheduledStart ? scheduledStart.toISOString() : null,
     scheduled_end: scheduledEnd ? scheduledEnd.toISOString() : null
@@ -752,6 +1062,7 @@ app.post('/api/links', requireAuth, async (req, res) => {
     active: true,
     order: count || 0,
     style: req.body.style || 'default',
+    category_id: categoryId,
     is_scheduled: isScheduled,
     scheduled_start: scheduledStart ? scheduledStart.toISOString() : null,
     scheduled_end: scheduledEnd ? scheduledEnd.toISOString() : null
@@ -863,6 +1174,13 @@ app.put('/api/links/:id', requireAuth, async (req, res) => {
   if (req.body.active !== undefined) updates.active = req.body.active;
   if (req.body.order !== undefined) updates.display_order = req.body.order;
   if (req.body.style !== undefined) updates.style = req.body.style;
+
+  // Handle category assignment
+  if (req.body.category_id !== undefined) {
+    let categoryId = req.body.category_id;
+    if (categoryId === 'uncategorized' || categoryId === '') categoryId = null;
+    updates.category_id = categoryId;
+  }
 
   // Handle scheduling updates
   if (req.body.is_scheduled !== undefined) updates.is_scheduled = req.body.is_scheduled;
@@ -1089,38 +1407,90 @@ app.get('/api/u/:username/links', async (req, res) => {
 
   if (!user) return res.status(404).json({ error: 'User not found' });
 
+  // Fetch categories
+  const { data: categories } = await supabase
+    .from('link_categories')
+    .select('id, name, icon, color, category_order, collapsed_by_default')
+    .eq('user_id', user.id)
+    .order('category_order', { ascending: true });
+
+  // Fetch links with category_id
   const { data: links } = await supabase
     .from('user_links')
-    .select('id, title, url, icon, style, display_order, is_scheduled, scheduled_start, scheduled_end')
+    .select('id, title, url, icon, style, display_order, category_id, is_scheduled, scheduled_start, scheduled_end')
     .eq('user_id', user.id)
     .eq('active', true)
     .order('display_order', { ascending: true });
 
   // Filter out scheduled links that are not currently active
   const now = new Date();
-  const publicLinks = (links || [])
-    .filter(l => {
-      if (!l.is_scheduled) return true;
-      
-      const startDate = l.scheduled_start ? new Date(l.scheduled_start) : null;
-      const endDate = l.scheduled_end ? new Date(l.scheduled_end) : null;
-      
-      // Check if link is within its scheduled time window
-      if (startDate && now < startDate) return false; // Not started yet
-      if (endDate && now > endDate) return false; // Already expired
-      
-      return true;
-    })
+  const activeLinks = (links || []).filter(l => {
+    if (!l.is_scheduled) return true;
+    
+    const startDate = l.scheduled_start ? new Date(l.scheduled_start) : null;
+    const endDate = l.scheduled_end ? new Date(l.scheduled_end) : null;
+    
+    // Check if link is within its scheduled time window
+    if (startDate && now < startDate) return false; // Not started yet
+    if (endDate && now > endDate) return false; // Already expired
+    
+    return true;
+  });
+
+  // Group links by category
+  const grouped = [];
+
+  // Add categories with their links
+  for (const cat of categories || []) {
+    const categoryLinks = activeLinks
+      .filter(l => l.category_id === cat.id)
+      .map(l => ({
+        id: l.id,
+        title: l.title,
+        url: l.url,
+        icon: l.icon,
+        style: l.style,
+        order: l.display_order
+      }));
+
+    if (categoryLinks.length > 0) {
+      grouped.push({
+        id: cat.id,
+        name: cat.name,
+        icon: cat.icon,
+        color: cat.color,
+        order: cat.category_order,
+        collapsed_by_default: cat.collapsed_by_default,
+        links: categoryLinks
+      });
+    }
+  }
+
+  // Add uncategorized links
+  const uncategorizedLinks = activeLinks
+    .filter(l => !l.category_id)
     .map(l => ({
-      id: l.id, 
-      title: l.title, 
-      url: l.url, 
-      icon: l.icon, 
-      style: l.style, 
+      id: l.id,
+      title: l.title,
+      url: l.url,
+      icon: l.icon,
+      style: l.style,
       order: l.display_order
     }));
 
-  res.json(publicLinks);
+  if (uncategorizedLinks.length > 0) {
+    grouped.push({
+      id: null,
+      name: 'Links',
+      icon: '🔗',
+      color: '#a855f7',
+      order: 9999,
+      collapsed_by_default: false,
+      links: uncategorizedLinks
+    });
+  }
+
+  res.json({ grouped });
 });
 
 // Public settings (theme etc)
@@ -1146,6 +1516,58 @@ app.get('/api/u/:username/settings', async (req, res) => {
     showFooter: settings?.show_footer !== false,
     customCSS: settings?.custom_css || ''
   });
+});
+
+// Get comments for a profile
+app.get('/api/u/:username/comments', async (req, res) => {
+    try {
+        const { username } = req.params;
+
+        const { data, error } = await supabase
+            .from('comments')
+            .select('*')
+            .eq('username', username)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        res.json(data);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch comments' });
+    }
+});
+
+// Add comment
+app.post('/api/u/:username/comments', async (req, res) => {
+    try {
+        const { username } = req.params;
+        const { visitor_name, content } = req.body;
+
+        if (!visitor_name || !content) {
+            return res.status(400).json({
+                error: 'All fields required'
+            });
+        }
+
+        const { data, error } = await supabase
+            .from('comments')
+            .insert([
+                {
+                    username,
+                    visitor_name,
+                    content
+                }
+            ])
+            .select();
+
+        if (error) throw error;
+
+        res.json(data[0]);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to add comment' });
+    }
 });
 
 // Track clicks on public profile
@@ -1214,7 +1636,80 @@ app.post('/api/contact', async (req, res) => {
   res.status(201).json({ success: true, message: 'Message sent successfully!' });
 });
 
-// ─── Payment Routes ───
+// ──────────────────── SUBSCRIPTION & PAYMENT ROUTES ────────────────────
+
+// GET /api/plans — Return all plans with features and pricing
+app.get('/api/plans', (req, res) => {
+  res.json(PLAN_FEATURES.free.features.map(f => ({
+    name: f.name,
+    free: f.free,
+    plus: f.plus,
+    pro: f.pro
+  })));
+});
+
+// GET /api/plans/pricing — Return pricing amounts
+app.get('/api/plans/pricing', (req, res) => {
+  res.json(PLANS);
+});
+
+// PUT /api/subscription — Update user's plan (for downgrade)
+app.put('/api/subscription', requireAuth, async (req, res) => {
+  try {
+    const { plan, billing } = req.body;
+
+    if (!plan || !['free', 'plus', 'professional'].includes(plan)) {
+      return res.status(400).json({ error: 'Invalid plan.' });
+    }
+
+    if (!billing || !['monthly', 'yearly'].includes(billing)) {
+      return res.status(400).json({ error: 'Invalid billing cycle.' });
+    }
+
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({
+        subscription_plan: plan,
+        subscription_billing: billing,
+        subscribed_at: plan === 'free' ? null : new Date().toISOString()
+      })
+      .eq('id', req.auth.userId);
+
+    if (updateError) {
+      console.error('Subscription update error:', updateError);
+      return res.status(500).json({ error: 'Failed to update subscription.' });
+    }
+
+    res.json({ success: true, plan, billing });
+  } catch (err) {
+    console.error('Update subscription error:', err);
+    res.status(500).json({ error: 'Failed to update subscription.' });
+  }
+});
+
+// GET /api/subscription — Return current user's plan (authenticated)
+app.get('/api/subscription', requireAuth, async (req, res) => {
+  try {
+    const { data: user } = await supabase
+      .from('users')
+      .select('subscription_plan, subscription_billing, subscribed_at')
+      .eq('id', req.auth.userId)
+      .maybeSingle();
+
+    if (!user) {
+      return res.json({ plan: 'free', billing: 'monthly', subscribedAt: null });
+    }
+
+    res.json({
+      plan: user.subscription_plan || 'free',
+      billing: user.subscription_billing || 'monthly',
+      subscribedAt: user.subscribed_at
+    });
+  } catch (err) {
+    console.error('Get subscription error:', err);
+    res.status(500).json({ error: 'Failed to get subscription info.' });
+  }
+});
 
 // POST /api/payment/create-order — Create Razorpay order
 app.post('/api/payment/create-order', requireAuth, async (req, res) => {
@@ -1225,16 +1720,16 @@ app.post('/api/payment/create-order', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'planId and billing are required.' });
     }
 
-    if (!PLANS[planId]) {
+    if (!PLANS[planId] || planId === 'free') {
       return res.status(400).json({ error: 'Invalid plan. Choose plus or professional.' });
     }
 
     if (!['monthly', 'yearly'].includes(billing)) {
-      return res.status(400).json({ error: 'Invalid billing cycle. Choose monthly or yearly.' });
+      return res.status(400).json({ error: 'Invalid billing cycle.' });
     }
 
     if (!razorpay) {
-      return res.status(500).json({ error: 'Payment not configured. RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET must be set.' });
+      return res.status(500).json({ error: 'Payment not configured. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.' });
     }
 
     const amountInRupees = PLANS[planId][billing];
@@ -1292,10 +1787,10 @@ app.post('/api/payment/verify', requireAuth, async (req, res) => {
         billing = order.notes.billing || 'monthly';
       }
     } catch {
-      // fall back to defaults if we can't fetch the order
+      // fall back to defaults
     }
 
-    // Update user's subscription in the database
+    // Update user's subscription
     const { error: updateError } = await supabase
       .from('users')
       .update({
@@ -1310,7 +1805,7 @@ app.post('/api/payment/verify', requireAuth, async (req, res) => {
       return res.status(500).json({ success: false, error: 'Failed to update subscription.' });
     }
 
-    res.json({ success: true });
+    res.json({ success: true, plan: planId, billing });
   } catch (err) {
     console.error('Payment verification error:', err);
     res.status(500).json({ success: false, error: 'Payment verification failed.' });
