@@ -10,6 +10,7 @@ const crypto = require('crypto');
 const supabase = require('./db');
 const { OAuth2Client } = require('google-auth-library');
 const rateLimit = require('express-rate-limit');
+const Razorpay = require('razorpay');
 const app = express();
 const PORT = process.env.PORT || 3000;
 if (!process.env.JWT_SECRET) {
@@ -21,7 +22,44 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 const JWT_SECRET = process.env.JWT_SECRET;
+const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID;
+const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
 
+let razorpay;
+if (RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET) {
+  razorpay = new Razorpay({ key_id: RAZORPAY_KEY_ID, key_secret: RAZORPAY_KEY_SECRET });
+}
+
+// Pricing plans definition (amounts in rupees)
+const PLANS = {
+  free: { monthly: 0, yearly: 0 },
+  plus: { monthly: 50, yearly: 500 },
+  professional: { monthly: 399, yearly: 4000 }
+};
+
+const PLAN_FEATURES = {
+  free: {
+    name: 'Free',
+    desc: 'Perfect for getting started',
+    features: [
+      { name: 'Unlimited Links', free: true, plus: true, pro: true },
+      { name: '18 Themes', free: true, plus: true, pro: true },
+      { name: 'Basic Analytics', free: true, plus: true, pro: true },
+      { name: 'Custom Bio Page', free: true, plus: true, pro: true },
+      { name: 'Social Links', free: true, plus: true, pro: true },
+      { name: 'QR Code Ready', free: true, plus: true, pro: true },
+      { name: '8 Premium Gradient Themes', free: false, plus: true, pro: true },
+      { name: 'Custom CSS', free: false, plus: true, pro: true },
+      { name: 'Verified Badge', free: false, plus: true, pro: true },
+      { name: 'Link Scheduling', free: false, plus: true, pro: true },
+      { name: 'Advanced Analytics', free: false, plus: true, pro: true },
+      { name: 'Priority Support', free: false, plus: false, pro: true },
+      { name: 'Custom Domain', free: false, plus: false, pro: true },
+      { name: 'Monetization Tools', free: false, plus: false, pro: true },
+      { name: 'Team Collaboration', free: false, plus: false, pro: true }
+    ]
+  }
+};
 
 //LOGIN limiter
 const loginLimiter = rateLimit({
@@ -466,13 +504,23 @@ app.post('/api/auth/logout', (req, res) => {
   res.json({ success: true });
 });
 
-app.get('/api/auth/check', (req, res) => {
+app.get('/api/auth/check', async (req, res) => {
   const user = getAuthUser(req);
   if (user) {
+    let subscriptionPlan = 'free';
+    try {
+      const { data: dbUser } = await supabase
+        .from('users')
+        .select('subscription_plan')
+        .eq('id', user.userId)
+        .maybeSingle();
+      if (dbUser) subscriptionPlan = dbUser.subscription_plan || 'free';
+    } catch {}
     res.json({
       authenticated: true,
       name: user.userName,
-      username: user.username
+      username: user.username,
+      subscriptionPlan
     });
   } else {
     res.json({ authenticated: false });
@@ -1588,6 +1636,182 @@ app.post('/api/contact', async (req, res) => {
   }
 
   res.status(201).json({ success: true, message: 'Message sent successfully!' });
+});
+
+// ──────────────────── SUBSCRIPTION & PAYMENT ROUTES ────────────────────
+
+// GET /api/plans — Return all plans with features and pricing
+app.get('/api/plans', (req, res) => {
+  res.json(PLAN_FEATURES.free.features.map(f => ({
+    name: f.name,
+    free: f.free,
+    plus: f.plus,
+    pro: f.pro
+  })));
+});
+
+// GET /api/plans/pricing — Return pricing amounts
+app.get('/api/plans/pricing', (req, res) => {
+  res.json(PLANS);
+});
+
+// PUT /api/subscription — Update user's plan (for downgrade)
+app.put('/api/subscription', requireAuth, async (req, res) => {
+  try {
+    const { plan, billing } = req.body;
+
+    if (!plan || !['free', 'plus', 'professional'].includes(plan)) {
+      return res.status(400).json({ error: 'Invalid plan.' });
+    }
+
+    if (!billing || !['monthly', 'yearly'].includes(billing)) {
+      return res.status(400).json({ error: 'Invalid billing cycle.' });
+    }
+
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({
+        subscription_plan: plan,
+        subscription_billing: billing,
+        subscribed_at: plan === 'free' ? null : new Date().toISOString()
+      })
+      .eq('id', req.auth.userId);
+
+    if (updateError) {
+      console.error('Subscription update error:', updateError);
+      return res.status(500).json({ error: 'Failed to update subscription.' });
+    }
+
+    res.json({ success: true, plan, billing });
+  } catch (err) {
+    console.error('Update subscription error:', err);
+    res.status(500).json({ error: 'Failed to update subscription.' });
+  }
+});
+
+// GET /api/subscription — Return current user's plan (authenticated)
+app.get('/api/subscription', requireAuth, async (req, res) => {
+  try {
+    const { data: user } = await supabase
+      .from('users')
+      .select('subscription_plan, subscription_billing, subscribed_at')
+      .eq('id', req.auth.userId)
+      .maybeSingle();
+
+    if (!user) {
+      return res.json({ plan: 'free', billing: 'monthly', subscribedAt: null });
+    }
+
+    res.json({
+      plan: user.subscription_plan || 'free',
+      billing: user.subscription_billing || 'monthly',
+      subscribedAt: user.subscribed_at
+    });
+  } catch (err) {
+    console.error('Get subscription error:', err);
+    res.status(500).json({ error: 'Failed to get subscription info.' });
+  }
+});
+
+// POST /api/payment/create-order — Create Razorpay order
+app.post('/api/payment/create-order', requireAuth, async (req, res) => {
+  try {
+    const { planId, billing } = req.body;
+
+    if (!planId || !billing) {
+      return res.status(400).json({ error: 'planId and billing are required.' });
+    }
+
+    if (!PLANS[planId] || planId === 'free') {
+      return res.status(400).json({ error: 'Invalid plan. Choose plus or professional.' });
+    }
+
+    if (!['monthly', 'yearly'].includes(billing)) {
+      return res.status(400).json({ error: 'Invalid billing cycle.' });
+    }
+
+    if (!razorpay) {
+      return res.status(500).json({ error: 'Payment not configured. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.' });
+    }
+
+    const amountInRupees = PLANS[planId][billing];
+    const amountInPaise = amountInRupees * 100;
+
+    const order = await razorpay.orders.create({
+      amount: amountInPaise,
+      currency: 'INR',
+      receipt: `conn_${req.auth.userId}_${Date.now()}`,
+      notes: { planId, billing, userId: req.auth.userId }
+    });
+
+    res.json({
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      key: RAZORPAY_KEY_ID
+    });
+  } catch (err) {
+    console.error('Create order error:', err);
+    res.status(500).json({ error: 'Failed to create payment order.' });
+  }
+});
+
+// POST /api/payment/verify — Verify Razorpay payment signature
+app.post('/api/payment/verify', requireAuth, async (req, res) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ error: 'Missing payment verification fields.' });
+    }
+
+    if (!razorpay) {
+      return res.status(500).json({ error: 'Payment not configured.' });
+    }
+
+    const isValid = Razorpay.validatePaymentVerification(
+      { order_id: razorpay_order_id, payment_id: razorpay_payment_id },
+      razorpay_signature,
+      RAZORPAY_KEY_SECRET
+    );
+
+    if (!isValid) {
+      return res.status(400).json({ success: false, error: 'Invalid payment signature.' });
+    }
+
+    // Fetch the order to get plan details from notes
+    let planId = 'plus';
+    let billing = 'monthly';
+    try {
+      const order = await razorpay.orders.fetch(razorpay_order_id);
+      if (order.notes) {
+        planId = order.notes.planId || 'plus';
+        billing = order.notes.billing || 'monthly';
+      }
+    } catch {
+      // fall back to defaults
+    }
+
+    // Update user's subscription
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({
+        subscription_plan: planId,
+        subscription_billing: billing,
+        subscribed_at: new Date().toISOString()
+      })
+      .eq('id', req.auth.userId);
+
+    if (updateError) {
+      console.error('Subscription update error:', updateError);
+      return res.status(500).json({ success: false, error: 'Failed to update subscription.' });
+    }
+
+    res.json({ success: true, plan: planId, billing });
+  } catch (err) {
+    console.error('Payment verification error:', err);
+    res.status(500).json({ success: false, error: 'Payment verification failed.' });
+  }
 });
 
 // ──────────────────── START SERVER ────────────────────
