@@ -2,7 +2,7 @@
 
 <img src="https://img.shields.io/badge/Conn-Link%20in%20Bio%20Platform-a855f7?style=for-the-badge&logo=lightning&logoColor=white" alt="Conn" />
 
-# ⚡ Conn.
+# ⚡ Conn
 
 ### The premium link-in-bio platform for modern creators.
 
@@ -62,6 +62,9 @@ Three tiers with Razorpay payment integration — upgrade seamlessly from Free �
 ### 🔐 Secure Auth
 JWT-based authentication with httpOnly cookies. No sessions stored in memory — works flawlessly on serverless platforms like Vercel.
 
+### 🔑 Google Authentication
+Secure Google Sign In / Sign Up integration using Google Identity Services and `google-auth-library`. Existing users can continue with Google using the same email, while new users get automatic account creation and profile initialization.
+
 ### 🌐 Public Profile URLs
 Every user gets a shareable public page at `/u/username` with a unique aesthetic, social icons, and their curated links.
 
@@ -80,7 +83,7 @@ Pixel-perfect on every screen size. Designed for the mobile creators your audien
 | **Runtime** | Node.js |
 | **Framework** | Express.js |
 | **Database** | Supabase (PostgreSQL) |
-| **Auth** | JWT + httpOnly Cookies |
+| **Auth** | JWT + httpOnly Cookies + Google OAuth |
 | **Payments** | Razorpay |
 | **Frontend** | Vanilla HTML, CSS, JavaScript |
 | **Hosting** | Vercel |
@@ -117,6 +120,10 @@ npm install
 ```
 *(Windows Users: Conn uses `bcryptjs`, a pure JavaScript implementation, so you do not need Python or Visual Studio Build Tools to compile native modules!)*
 
+```bash
+npm install google-auth-library
+```
+
 ### 3. Set up Database (Supabase)
 
 1. Create a free project at [supabase.com](https://supabase.com)
@@ -147,19 +154,42 @@ Add the following to your `.env` file:
 SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_SERVICE_KEY=your-service-role-key
 JWT_SECRET=your-random-secret-min-32-chars
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 ```
 
 > 💡 **Tip:** Generate a secure JWT secret by running:
 > `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
 
-### 5. Start the server
+### 5. 🔐 Google OAuth Setup
+
+To enable Google Authentication locally and in production:
+
+1. Go to the Google Cloud Console: https://console.cloud.google.com/apis/credentials
+2. Create an OAuth Client ID
+   * Application Type: Web Application
+3. Add the following Authorized JavaScript Origins:
+
+```txt
+http://localhost:3000
+https://conn-delta.vercel.app
+```
+
+4. Copy the generated Client ID and add it to your `.env` file:
+
+```env
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+```
+
+> ⚠️ **Warning:** Do not expose any Google Client Secret publicly. Only the Client ID is required for this implementation.
+
+### 6. Start the server
 
 ```bash
 npm start
 ```
 Visit `http://localhost:3000` to see your local instance running! 🎉
 
-### 6. (Optional) Seed existing data
+### 7. (Optional) Seed existing data
 
 If you have local JSON data files from a previous version, you can migrate them:
 ```bash
@@ -192,6 +222,7 @@ git push origin main
 | `NODE_ENV` | `production` |
 | `RAZORPAY_KEY_ID` | Your Razorpay key (if using payments) |
 | `RAZORPAY_KEY_SECRET` | Your Razorpay secret |
+| `GOOGLE_CLIENT_ID` | Your Google OAuth Client ID |
 
 4. Click **Deploy** ✅
 
@@ -258,6 +289,8 @@ Conn/
 | `POST` | `/api/auth/logout` | Sign out |
 | `GET` | `/api/auth/check` | Check session |
 | `GET` | `/api/auth/check-username/:username` | Check username availability |
+| `POST` | `/api/auth/google` | Authenticate user using Google OAuth |
+| `GET` | `/api/auth/google-client-id` | Get Google Client ID for frontend initialization |
 
 ### Profile & Links
 | Method | Endpoint | Description |
@@ -323,9 +356,7 @@ Verify that:
 - Database tables were created successfully
 
 ### JWT errors
-- Ensure `JWT_SECRET` is properly added in the `.env` file
-- The server will exit at startup with a clear error if `JWT_SECRET` is missing
-- Generate a secure secret: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
+
 ---
 
 ## 🤝 Contributing
@@ -334,6 +365,15 @@ We welcome contributions! Please check our [CONTRIBUTING.md](CONTRIBUTING.md) fo
 
 ---
 
+## 💖 Thanks to Contributors
+
+A huge thank you to everyone who has helped improve Conn!
+
+<a href="https://github.com/mayo-byte07/Conn/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=mayo-byte07/Conn" alt="Contributors Graph" />
+</a>
+
+---
 ## 📬 Contact
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/mayo-byte07/Conn/issues)

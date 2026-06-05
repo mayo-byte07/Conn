@@ -219,6 +219,198 @@
   const bulkSelection = new BulkSelectionManager();
   const bulkActions = new BulkActionsHandler(bulkSelection);
 
+  // ═══════════ CATEGORIES MANAGEMENT ═══════════
+  let categories = [];
+  let currentCategoryId = null;
+
+  async function loadCategories() {
+    try {
+      const res = await fetch('/api/categories');
+      categories = await res.json();
+      renderCategories();
+      updateCategoryDropdown();
+    } catch (err) {
+      console.error('Failed to load categories:', err);
+    }
+  }
+
+  function renderCategories() {
+    const list = document.getElementById('categoriesList');
+    if (!categories || categories.length === 0) {
+      list.innerHTML = `
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          </svg>
+          <h3>No categories yet</h3>
+          <p>Create categories to organize your links.</p>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = categories.map(cat => `
+      <div class="category-item" data-id="${cat.id}">
+        <div class="category-drag-handle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="5" r="1"/><circle cx="15" cy="5" r="1"/>
+            <circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/>
+            <circle cx="9" cy="19" r="1"/><circle cx="15" cy="19" r="1"/>
+          </svg>
+        </div>
+        <div class="category-icon" style="background: ${cat.color}20; color: ${cat.color}">
+          ${cat.icon || '📁'}
+        </div>
+        <div class="category-info">
+          <div class="category-name">${escapeHtml(cat.name)}</div>
+          <div class="category-count">${cat.link_count || 0} links</div>
+        </div>
+        <div class="category-actions">
+          <button class="btn btn-icon btn-secondary" data-action="edit" data-id="${cat.id}" title="Edit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+          <button class="btn btn-icon btn-danger" data-action="delete" data-id="${cat.id}" title="Delete">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    // Add event listeners using event delegation
+    list.querySelectorAll('[data-action="edit"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const category = categories.find(c => c.id === id);
+        if (category) openCategoryModal('Edit Category', category);
+      });
+    });
+
+    list.querySelectorAll('[data-action="delete"]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
+        const category = categories.find(c => c.id === id);
+        if (!category) return;
+        
+        const confirmed = await showConfirmModal(
+          'Delete Category',
+          `Delete "${category.name}"? Links in this category will become uncategorized.`
+        );
+        
+        if (!confirmed) return;
+
+        try {
+          await fetch(`/api/categories/${id}`, { method: 'DELETE' });
+          showToast('Category deleted');
+          await loadCategories();
+          await loadLinks();
+        } catch (err) {
+          showToast('Failed to delete category', 'error');
+        }
+      });
+    });
+  }
+
+  function updateCategoryDropdown() {
+    const dropdown = document.getElementById('modalLinkCategory');
+    if (!dropdown) return;
+    
+    dropdown.innerHTML = '<option value="">Uncategorized</option>' +
+      categories.map(cat => `<option value="${cat.id}">${cat.icon || '📁'} ${escapeHtml(cat.name)}</option>`).join('');
+  }
+
+  // Category Modal
+  const categoryModal = document.getElementById('categoryModal');
+  
+  function openCategoryModal(title = 'Add Category', data = {}) {
+    document.getElementById('categoryModalTitle').textContent = title;
+    document.getElementById('categoryName').value = data.name || '';
+    document.getElementById('categoryIcon').value = data.icon || '';
+    document.getElementById('categoryColor').value = data.color || '#a855f7';
+    
+    // Update color picker selection
+    document.querySelectorAll('.color-option').forEach(opt => {
+      opt.classList.toggle('selected', opt.dataset.color === (data.color || '#a855f7'));
+    });
+    
+    // Update emoji picker selection
+    document.querySelectorAll('.emoji-option').forEach(opt => {
+      opt.classList.toggle('selected', opt.dataset.emoji === (data.icon || ''));
+    });
+    
+    currentCategoryId = data.id || null;
+    categoryModal.classList.add('active');
+  }
+
+  function closeCategoryModal() {
+    categoryModal.classList.remove('active');
+    currentCategoryId = null;
+  }
+
+  // Emoji picker
+  document.querySelectorAll('.emoji-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.emoji-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      document.getElementById('categoryIcon').value = opt.dataset.emoji;
+    });
+  });
+
+  // Color picker
+  document.querySelectorAll('.color-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      document.getElementById('categoryColor').value = opt.dataset.color;
+    });
+  });
+
+  document.getElementById('addCategoryBtn')?.addEventListener('click', () => {
+    openCategoryModal('Add Category');
+  });
+
+  document.getElementById('categoryModalClose')?.addEventListener('click', closeCategoryModal);
+  document.getElementById('categoryModalCancel')?.addEventListener('click', closeCategoryModal);
+  categoryModal?.addEventListener('click', (e) => { if (e.target === categoryModal) closeCategoryModal(); });
+
+  document.getElementById('categoryModalSave')?.addEventListener('click', async () => {
+    const name = document.getElementById('categoryName').value.trim();
+    const icon = document.getElementById('categoryIcon').value.trim();
+    const color = document.getElementById('categoryColor').value;
+
+    if (!name) {
+      showToast('Please enter a category name', 'error');
+      return;
+    }
+
+    try {
+      if (currentCategoryId) {
+        await fetch(`/api/categories/${currentCategoryId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, icon, color })
+        });
+        showToast('Category updated!');
+      } else {
+        await fetch('/api/categories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, icon, color })
+        });
+        showToast('Category created!');
+      }
+      closeCategoryModal();
+      await loadCategories();
+      await loadLinks();
+    } catch (err) {
+      showToast('Failed to save category', 'error');
+    }
+  });
+
   // ─── Theme Definitions ───
   const THEMES = [
     { id: 'midnight',       name: 'Midnight',        tag: 'Default',  bg: 'linear-gradient(135deg, #0a0a0a, #1a0a2e, #0a0a0a)',   colors: ['#a855f7','#c084fc','#f5f5f5'] },
@@ -266,6 +458,7 @@
       if (target === 'analytics') loadAnalytics();
       if (target === 'profile') loadProfile();
       if (target === 'links') loadLinks();
+      if (target === 'categories') loadCategories();
       if (target === 'themes') loadThemes();
       if (target === 'settings') loadSettingsData();
     });
@@ -296,6 +489,7 @@
   // ═══════════ LINKS ═══════════
 
   async function loadLinks() {
+      showLinksSkeleton();
     try {
       const res = await fetch('/api/links');
       const links = await res.json();
@@ -304,6 +498,24 @@
       showToast('Failed to load links', 'error');
     }
   }
+  function showLinksSkeleton() {
+  const list = document.getElementById('adminLinksList');
+
+  list.innerHTML = `
+    ${Array(4).fill(`
+      <div class="admin-link-item skeleton-card">
+        <div class="skeleton skeleton-checkbox"></div>
+
+        <div class="admin-link-info">
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-url"></div>
+        </div>
+
+        <div class="skeleton skeleton-clicks"></div>
+      </div>
+    `).join('')}
+  `;
+}
 
   function renderAdminLinks(links) {
     const list = document.getElementById('adminLinksList');
@@ -316,7 +528,7 @@
       badge.className = 'link-count-badge';
       headerActions.insertBefore(badge, headerActions.firstChild);
     }
-    badge.textContent = `${links.length} links`;
+    badge.textContent = `${links?.length || 0} links`;
 
     if (links.length === 0) {
       list.innerHTML = `
@@ -345,6 +557,15 @@
         }
       }
 
+      // Category badge
+      let categoryBadge = '';
+      if (link.category_id) {
+        const category = categories.find(c => c.id === link.category_id);
+        if (category) {
+          categoryBadge = `<span class="link-category-badge" style="background: ${category.color}20; color: ${category.color}">${category.icon || '📁'} ${escapeHtml(category.name)}</span>`;
+        }
+      }
+
       return `
       <div class="admin-link-item ${!link.active ? 'inactive' : ''}" data-id="${link.id}">
         <div class="link-checkbox-wrapper">
@@ -358,7 +579,7 @@
           </svg>
         </div>
         <div class="admin-link-info">
-          <div class="admin-link-title">${escapeHtml(link.title)} ${scheduleBadge}</div>
+          <div class="admin-link-title">${escapeHtml(link.title)} ${scheduleBadge} ${categoryBadge}</div>
           <div class="admin-link-url">${escapeHtml(link.url)}</div>
         </div>
         <div class="admin-link-clicks">
@@ -647,6 +868,7 @@
     document.getElementById('modalTitle').textContent = title;
     document.getElementById('modalLinkTitle').value = data.title || '';
     document.getElementById('modalLinkUrl').value = data.url || '';
+    document.getElementById('modalLinkCategory').value = data.category_id || '';
     
     // Handle scheduling fields
     const isScheduled = data.is_scheduled || false;
@@ -697,6 +919,8 @@
   document.getElementById('modalSaveBtn').addEventListener('click', async () => {
     const title = document.getElementById('modalLinkTitle').value.trim();
     const url = document.getElementById('modalLinkUrl').value.trim();
+    const categoryId = document.getElementById('modalLinkCategory').value || null;
+    
     if (!title || !url) { showToast('Please fill in both title and URL', 'error'); return; }
 
     // Get scheduling data
@@ -722,6 +946,7 @@
     const linkData = {
       title,
       url,
+      category_id: categoryId,
       is_scheduled: isScheduled,
       scheduled_start: scheduledStart || null,
       scheduled_end: scheduledEnd || null
@@ -1032,11 +1257,18 @@
     }
   });
 
+  // Manual preview refresh button
+  document.getElementById('previewRefreshBtn')?.addEventListener('click', () => {
+    reloadPreview();
+    showToast('Preview refreshed');
+  });
+
   // ─── Init ───
   document.addEventListener('DOMContentLoaded', async () => {
-    checkAuth();
+    //checkAuth();
     loadLinks();
     loadProfile();
+    loadCategories();
     initPublicUrl();
     setupKeyboardShortcuts();
   });
@@ -1083,3 +1315,4 @@
     }
   }
 })();
+

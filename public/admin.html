@@ -47,6 +47,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           Links
         </button>
+        <button class="nav-item" data-section="categories" id="navCategories">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          Categories
+        </button>
         <button class="nav-item" data-section="profile" id="navProfile">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           Profile
@@ -111,6 +115,21 @@
           </div>
         </div>
         <div class="admin-links-list" id="adminLinksList"></div>
+      </section>
+
+      <!-- ══════ Categories Section ══════ -->
+      <section class="admin-section" id="sectionCategories">
+        <div class="admin-header">
+          <h1>Categories</h1>
+          <div class="admin-header-actions">
+            <button class="btn btn-primary" id="addCategoryBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Category
+            </button>
+          </div>
+        </div>
+        <p style="color:var(--text-secondary); margin-bottom:24px; font-size:0.9rem;">Organize your links into categories. Drag to reorder.</p>
+        <div class="categories-list" id="categoriesList"></div>
       </section>
 
       <!-- ══════ Profile Section ══════ -->
@@ -300,9 +319,14 @@
     <aside class="preview-panel" id="previewPanel">
       <div class="preview-header">
         <span class="preview-title">Live Preview</span>
-        <button class="btn btn-icon btn-secondary" title="Share" id="previewShareBtn" onclick="window.open('/me', '_blank')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </button>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-icon btn-secondary" title="Refresh Preview" id="previewRefreshBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          </button>
+          <button class="btn btn-icon btn-secondary" title="Open in New Tab" id="previewShareBtn" onclick="window.open('/me', '_blank')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </button>
+        </div>
       </div>
       <div class="phone-wrapper">
         <div class="phone-mockup">
@@ -329,6 +353,12 @@
       <div class="form-group">
         <label class="form-label">URL</label>
         <input class="form-input" type="url" id="modalLinkUrl" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-input" id="modalLinkCategory">
+          <option value="">Uncategorized</option>
+        </select>
       </div>
       
       <!-- Scheduling Section -->
@@ -367,6 +397,78 @@
       <div class="modal-footer">
         <button class="btn btn-secondary" id="modalCancelBtn">Cancel</button>
         <button class="btn btn-primary" id="modalSaveBtn">Save Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ Category Modal ══════ -->
+  <div class="modal-overlay" id="categoryModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="categoryModalTitle">Add Category</h2>
+        <button class="modal-close" id="categoryModalClose">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category Name</label>
+        <input class="form-input" type="text" id="categoryName" placeholder="Social Media" maxlength="50">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Icon (Emoji)</label>
+        <input class="form-input" type="text" id="categoryIcon" placeholder="📱" maxlength="2" readonly>
+        <div class="emoji-picker-grid" id="emojiPickerGrid">
+          <button type="button" class="emoji-option" data-emoji="📱">📱</button>
+          <button type="button" class="emoji-option" data-emoji="💼">💼</button>
+          <button type="button" class="emoji-option" data-emoji="🎨">🎨</button>
+          <button type="button" class="emoji-option" data-emoji="🛍️">🛍️</button>
+          <button type="button" class="emoji-option" data-emoji="📚">📚</button>
+          <button type="button" class="emoji-option" data-emoji="🎮">🎮</button>
+          <button type="button" class="emoji-option" data-emoji="🎵">🎵</button>
+          <button type="button" class="emoji-option" data-emoji="📺">📺</button>
+          <button type="button" class="emoji-option" data-emoji="🏋️">🏋️</button>
+          <button type="button" class="emoji-option" data-emoji="🍔">🍔</button>
+          <button type="button" class="emoji-option" data-emoji="✈️">✈️</button>
+          <button type="button" class="emoji-option" data-emoji="📦">📦</button>
+          <button type="button" class="emoji-option" data-emoji="🎯">🎯</button>
+          <button type="button" class="emoji-option" data-emoji="💡">💡</button>
+          <button type="button" class="emoji-option" data-emoji="🏠">🏠</button>
+          <button type="button" class="emoji-option" data-emoji="🚗">🚗</button>
+          <button type="button" class="emoji-option" data-emoji="🎬">🎬</button>
+          <button type="button" class="emoji-option" data-emoji="📷">📷</button>
+          <button type="button" class="emoji-option" data-emoji="🎓">🎓</button>
+          <button type="button" class="emoji-option" data-emoji="💻">💻</button>
+          <button type="button" class="emoji-option" data-emoji="📝">📝</button>
+          <button type="button" class="emoji-option" data-emoji="🎁">🎁</button>
+          <button type="button" class="emoji-option" data-emoji="⚽">⚽</button>
+          <button type="button" class="emoji-option" data-emoji="🎪">🎪</button>
+          <button type="button" class="emoji-option" data-emoji="🌟">🌟</button>
+          <button type="button" class="emoji-option" data-emoji="❤️">❤️</button>
+          <button type="button" class="emoji-option" data-emoji="🔥">🔥</button>
+          <button type="button" class="emoji-option" data-emoji="⭐">⭐</button>
+          <button type="button" class="emoji-option" data-emoji="🌈">🌈</button>
+          <button type="button" class="emoji-option" data-emoji="🎉">🎉</button>
+          <button type="button" class="emoji-option" data-emoji="📁">📁</button>
+          <button type="button" class="emoji-option" data-emoji="🔗">🔗</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Color</label>
+        <div class="color-picker" id="colorPicker">
+          <div class="color-option" data-color="#a855f7" style="background: #a855f7"></div>
+          <div class="color-option" data-color="#ec4899" style="background: #ec4899"></div>
+          <div class="color-option" data-color="#f97316" style="background: #f97316"></div>
+          <div class="color-option" data-color="#22c55e" style="background: #22c55e"></div>
+          <div class="color-option" data-color="#0ea5e9" style="background: #0ea5e9"></div>
+          <div class="color-option" data-color="#eab308" style="background: #eab308"></div>
+          <div class="color-option" data-color="#ef4444" style="background: #ef4444"></div>
+          <div class="color-option" data-color="#8b5cf6" style="background: #8b5cf6"></div>
+        </div>
+        <input type="hidden" id="categoryColor" value="#a855f7">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="categoryModalCancel">Cancel</button>
+        <button class="btn btn-primary" id="categoryModalSave">Save Category</button>
       </div>
     </div>
   </div>
@@ -437,6 +539,12 @@
       </div>
     </div>
   </div>
+
+  <button id="scrollTopBtn" aria-label="Scroll to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+   </button>
 
   <script src="/js/admin.js"></script>
   <script src="js/theme-toggle.js"></script>
