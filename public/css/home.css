@@ -1420,7 +1420,7 @@
 /* ─── Footer ─── */
 .site-footer {
   border-top: 1px solid var(--border);
-  padding: 48px 24px 32px;
+  padding: 56px 24px 32px;
   position: relative;
   z-index: 1;
 }
@@ -1428,44 +1428,60 @@
 .footer-inner {
   max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.footer-top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 80px;
+  margin-bottom: 40px;
 }
 
 .footer-brand-section {
-  margin-bottom: 32px;
+  flex: 0 0 auto;
+  max-width: 260px;
 }
 
 .footer-brand-section p {
   color: var(--text-muted);
   font-size: 0.85rem;
   margin-top: 10px;
+  line-height: 1.6;
 }
 
 .footer-links-grid {
   display: flex;
-  gap: 60px;
-  margin-bottom: 32px;
-  justify-content: center;
+  gap: 56px;
+  flex-shrink: 0;
 }
 
 .footer-links-grid > div {
-  text-align: center;
+  text-align: left;
+  min-width: 100px;
 }
 
 .footer-links-grid h4 {
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: 0.85rem;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .footer-links-grid a {
   display: block;
   color: var(--text-muted);
   font-size: 0.85rem;
-  padding: 4px 0;
+  padding: 5px 0;
   transition: color var(--duration-fast) var(--ease-out);
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .footer-links-grid a:hover {
@@ -1477,6 +1493,7 @@
   border-top: 1px solid var(--border);
   font-size: 0.78rem;
   color: var(--text-muted);
+  text-align: center;
 }
 
 /* ─── Scroll Animations ─── */
@@ -2007,8 +2024,33 @@
     font-size: 1.6rem;
   }
 
+  /* Footer responsive – tablet */
+  .footer-top-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 36px;
+  }
+
+  .footer-brand-section {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .footer-links-grid {
     gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .footer-links-grid > div {
+    text-align: center;
+  }
+
+  .footer-bottom {
+    text-align: center;
   }
 }
 
@@ -2025,7 +2067,19 @@
   .theme-showcase {
     grid-template-columns: 1fr 1fr;
   }
+
+  /* Footer on tiny phones – wrap link columns */
+  .footer-links-grid {
+    gap: 24px 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .footer-links-grid > div {
+    min-width: 110px;
+  }
 }
+
 
 @media (max-width: 768px) {
   .navbar-links,
