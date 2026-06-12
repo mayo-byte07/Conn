@@ -926,14 +926,19 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   overflow: hidden;
-  cursor: default;
+  cursor: pointer;
   transition: all var(--duration-normal) var(--ease-out);
 }
 
 .theme-preview-card:hover {
-  border-color: var(--border);
-  transform: none;
-  box-shadow: none;
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.theme-preview-card.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.16);
 }
 
 .theme-swatch {

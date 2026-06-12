@@ -316,6 +316,38 @@
     });
   }
 
+  function applyThemePreview(themeId) {
+    if (!themeId) return;
+    const body = document.body;
+    const existingThemeClasses = Array.from(body.classList).filter(c => c.startsWith('theme-'));
+    existingThemeClasses.forEach(c => body.classList.remove(c));
+    body.classList.add(`theme-${themeId}`);
+    localStorage.setItem('conn-home-theme', themeId);
+
+    document.querySelectorAll('.theme-preview-card.selected').forEach(card => {
+      card.classList.remove('selected');
+    });
+    const selectedCard = document.querySelector(`.theme-preview-card[data-theme="${themeId}"]`);
+    if (selectedCard) selectedCard.classList.add('selected');
+  }
+
+  function initThemeGalleryPicker() {
+    const cards = document.querySelectorAll('.theme-preview-card[data-theme]');
+    if (!cards.length) return;
+
+    cards.forEach(card => {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', () => {
+        applyThemePreview(card.dataset.theme);
+      });
+    });
+
+    const savedTheme = localStorage.getItem('conn-home-theme');
+    if (savedTheme) {
+      applyThemePreview(savedTheme);
+    }
+  }
+
   // ─── Auth State (toggle navbar buttons) ───
   function initAuthState() {
     fetch('/api/auth/check')
@@ -587,6 +619,7 @@
     initMegaDropdown();
     initCounters();
     initSmoothScroll();
+    initThemeGalleryPicker();
     initContactForm();
     initAuthState();
     initBillingToggle();
