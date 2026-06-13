@@ -11,6 +11,7 @@ const supabase = require('./db');
 const { OAuth2Client } = require('google-auth-library');
 const rateLimit = require('express-rate-limit');
 const Razorpay = require('razorpay');
+const { validatePaymentVerification } = require('razorpay/dist/utils/razorpay-utils');
 const app = express();
 const PORT = process.env.PORT || 3000;
 if (!process.env.JWT_SECRET) {
@@ -1719,7 +1720,7 @@ app.post('/api/payment/verify', requireAuth, async (req, res) => {
       return res.status(500).json({ error: 'Payment not configured.' });
     }
 
-    const isValid = Razorpay.validatePaymentVerification(
+    const isValid = validatePaymentVerification(
       { order_id: razorpay_order_id, payment_id: razorpay_payment_id },
       razorpay_signature,
       RAZORPAY_KEY_SECRET
