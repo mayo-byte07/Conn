@@ -1016,6 +1016,12 @@ app.post('/api/links', requireAuth, async (req, res) => {
     return res.status(400).json({ error: 'End date must be after start date.' });
   }
 
+  // Validate title length
+ const title = (req.body.title || 'New Link').trim();
+ if (title.length > 100) {
+  return res.status(400).json({ error: 'Link title must be 100 characters or fewer.' });
+}
+
   // Handle category assignment
   let categoryId = req.body.category_id ?? null;
   if (categoryId === 'uncategorized' || categoryId === '') categoryId = null;
@@ -1024,7 +1030,7 @@ app.post('/api/links', requireAuth, async (req, res) => {
   const { error } = await supabase.from('user_links').insert({
     id: newLinkId,
     user_id: req.auth.userId,
-    title: req.body.title || 'New Link',
+    title,
     url: req.body.url || 'https://',
     icon: req.body.icon || 'link',
     clicks: 0,
@@ -1044,7 +1050,7 @@ app.post('/api/links', requireAuth, async (req, res) => {
 
   res.status(201).json({
     id: newLinkId,
-    title: req.body.title || 'New Link',
+    title,
     url: req.body.url || 'https://',
     icon: req.body.icon || 'link',
     clicks: 0,
@@ -1141,7 +1147,13 @@ app.put('/api/links/:id', requireAuth, async (req, res) => {
   if (!existing) return res.status(404).json({ error: 'Link not found' });
 
   const updates = {};
-  if (req.body.title !== undefined) updates.title = req.body.title;
+  if (req.body.title !== undefined) {
+  const title = req.body.title.trim();
+  if (title.length > 100) {
+    return res.status(400).json({ error: 'Link title must be 100 characters or fewer.' });
+  }
+  updates.title = title;
+  }
   if (req.body.url !== undefined) updates.url = req.body.url;
   if (req.body.icon !== undefined) updates.icon = req.body.icon;
   if (req.body.active !== undefined) updates.active = req.body.active;
