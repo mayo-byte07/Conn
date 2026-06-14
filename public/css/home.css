@@ -73,6 +73,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
 }
 
 .navbar-logo {
@@ -80,6 +81,7 @@
   align-items: center;
   gap: 10px;
   text-decoration: none;
+  flex-shrink: 0;
 }
 
 .logo-icon {
@@ -111,7 +113,8 @@
 
 .navbar-links {
   display: flex;
-  gap: 32px;
+  gap: clamp(12px, 2vw, 32px);
+  min-width: 0;
 }
 
 .navbar-links a {
@@ -127,7 +130,9 @@
 
 .navbar-actions {
   display: flex;
+  align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .btn-nav {
@@ -1896,12 +1901,29 @@
 
 /* ─── Responsive ─── */
 @media (max-width: 1024px) {
+  .navbar-logo div span:last-child {
+    display: none;
+  }
+
+  .navbar-links {
+    gap: 18px;
+  }
+
+  .navbar-actions {
+    gap: 8px;
+  }
+
+  .btn-nav {
+    padding: 7px 14px;
+    font-size: 0.8rem;
+  }
+
   .mega-dropdown-inner {
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     padding: 24px;
   }
-
+  
   .mega-category:nth-child(4),
   .mega-category:nth-child(5) {
     /* Last two categories wrap to second row */
