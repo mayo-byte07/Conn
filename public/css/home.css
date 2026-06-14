@@ -119,6 +119,7 @@
   color: var(--text-secondary);
   transition: color var(--duration-fast) var(--ease-out);
   text-decoration: none;
+  position: relative;
 }
 
 .navbar-links a:hover {
@@ -142,7 +143,21 @@
   gap: 6px;
 }
 
-
+.navbar-links a::after{
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: -6px;
+    left:0;
+    background-color: #d4a017;
+    transform-origin: bottom center;
+    transition: transform 0.25s ease-out;
+}
+.navbar-links a:hover::after{
+  transform: scaleX(1);
+}
 
 @media (max-width: 768px) {
   .navbar-actions {
