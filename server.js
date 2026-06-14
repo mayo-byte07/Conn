@@ -1303,6 +1303,19 @@ app.get('/api/settings', requireAuth, async (req, res) => {
   });
 });
 
+// ─── CSS Sanitization ───
+function sanitizeCSS(css) {
+  if (!css) return '';
+  // Strip potentially dangerous patterns
+  return css
+    .replace(/url\s*\([^)]*\)/gi, '/* url() removed */')
+    .replace(/expression\s*\([^)]*\)/gi, '')
+    .replace(/@import\s+url/gi, '@import') // neuter @import url()
+    .replace(/behavior\s*:\s*[^;]+;?/gi, '')
+    .replace(/-moz-binding\s*:\s*[^;]+;?/gi, '')
+    .replace(/javascript\s*:/gi, '');
+}
+
 app.put('/api/settings', requireAuth, async (req, res) => {
   const { data: current } = await supabase
     .from('user_settings')
@@ -1316,7 +1329,7 @@ app.put('/api/settings', requireAuth, async (req, res) => {
     meta_description: req.body.metaDescription ?? current?.meta_description ?? '',
     show_verified_badge: req.body.showVerifiedBadge ?? current?.show_verified_badge ?? false,
     show_footer: req.body.showFooter ?? current?.show_footer ?? true,
-    custom_css: req.body.customCSS ?? current?.custom_css ?? '',
+    custom_css: sanitizeCSS(req.body.customCSS ?? current?.custom_css ?? ''),
     selected_theme: req.body.selectedTheme ?? current?.selected_theme ?? 'midnight'
   };
 
