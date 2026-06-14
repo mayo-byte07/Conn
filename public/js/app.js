@@ -93,10 +93,15 @@
       const footer = document.getElementById('pageFooter');
       if (footer && settings.showFooter === false) footer.style.display = 'none';
 
-      // Custom CSS
+      // Custom CSS (client-side sanitization as defense-in-depth)
       if (settings.customCSS) {
         const style = document.createElement('style');
-        style.textContent = settings.customCSS;
+        style.textContent = settings.customCSS
+          .replace(/url\s*\([^)]*\)/gi, '/* url() removed */')
+          .replace(/expression\s*\([^)]*\)/gi, '')
+          .replace(/behavior\s*:\s*[^;]+;?/gi, '')
+          .replace(/-moz-binding\s*:\s*[^;]+;?/gi, '')
+          .replace(/javascript\s*:/gi, '');
         document.head.appendChild(style);
       }
     } catch (err) {
