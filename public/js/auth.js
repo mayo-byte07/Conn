@@ -477,5 +477,14 @@ btnLoader.style.display = 'inline';
     initUsernameCheck();
     initGoogleAuth();
     initCopyProfileBtn();
+    // Close button
+  const closeBtn = document.getElementById("closeBtn");
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      window.location.href = "/index.html";
+    });
+  }
+
   });
 })();

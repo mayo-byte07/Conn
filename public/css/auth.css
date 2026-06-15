@@ -337,4 +337,35 @@
 #passwordRequirements li.valid::before {
   content: '✓ ';
 }
+/* ─── Close Button ─── */
 
+.auth-card {
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 28px;
+  line-height: 38px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  transform: rotate(90deg);
+}
+
+.light-mode .close-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
