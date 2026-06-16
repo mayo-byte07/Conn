@@ -1714,3 +1714,144 @@ select.form-input::-webkit-scrollbar-thumb {
   padding: 60px 20px;
 }
 
+/* ═══════════════════════════════════════════════════════════
+   RECENTLY VISITED PROFILES STYLES
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Recent Profiles Grid ─── */
+.recent-profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.recent-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--duration-fast) var(--ease-out);
+  overflow: hidden;
+}
+
+.recent-profile-card:hover {
+  border-color: var(--accent);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(168, 85, 247, 0.1);
+}
+
+/* ─── Recent Profile Avatar ─── */
+.recent-profile-avatar {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recent-profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: white;
+}
+
+/* ─── Recent Profile Info ─── */
+.recent-profile-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.recent-profile-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: text-overflow;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.recent-profile-username {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: text-overflow;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.recent-profile-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ─── Recent Profile Arrow ─── */
+.recent-profile-arrow {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.recent-profile-card:hover .recent-profile-arrow {
+  color: var(--accent);
+}
+
+.recent-profile-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ─── Mobile Responsiveness ─── */
+@media (max-width: 768px) {
+  .recent-profiles-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .recent-profiles-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recent-profile-card {
+    padding: 14px 16px;
+  }
+
+  .recent-profile-avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .recent-profile-name {
+    font-size: 0.9rem;
+  }
+}
+
+

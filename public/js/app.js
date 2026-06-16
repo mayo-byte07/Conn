@@ -486,6 +486,39 @@ function applyTheme(themeName, isPreview = false) {
     controls.style.display = 'none';
   });
 }
+  // ─── Recently Visited Profiles ───
+  function saveRecentProfile(profileData) {
+    if (!isPublicProfile || !profileUsername) return;
+
+    const RECENT_PROFILES_KEY = 'conn-recent-profiles';
+    const MAX_RECENT_PROFILES = 6;
+
+    try {
+      let recentProfiles = JSON.parse(localStorage.getItem(RECENT_PROFILES_KEY) || '[]');
+
+      // Remove duplicate by username (keep only one entry per profile)
+      recentProfiles = recentProfiles.filter(p => p.username !== profileUsername);
+
+      // Prepend newest profile with timestamp
+      const newProfile = {
+        username: profileUsername,
+        name: profileData.name || profileUsername,
+        avatar: profileData.avatar || '',
+        timestamp: Date.now(),
+        url: `/u/${profileUsername}`
+      };
+
+      recentProfiles.unshift(newProfile);
+
+      // Limit to max entries
+      recentProfiles = recentProfiles.slice(0, MAX_RECENT_PROFILES);
+
+      localStorage.setItem(RECENT_PROFILES_KEY, JSON.stringify(recentProfiles));
+    } catch (err) {
+      console.error('Failed to save recent profile:', err);
+    }
+  }
+
   // ─── Init ───
   document.addEventListener('DOMContentLoaded', async () => {
   await loadSettings();
@@ -497,5 +530,13 @@ function applyTheme(themeName, isPreview = false) {
   renderLinks();
 
   setupThemePreviewControls();
+  
+  // Save profile to recently visited when public profile loads
+  if (isPublicProfile) {
+    fetch(apiUrl('/profile'))
+      .then(res => res.json())
+      .then(profile => saveRecentProfile(profile))
+      .catch(err => console.error('Failed to save recent profile:', err));
+  }
 });
 })();
