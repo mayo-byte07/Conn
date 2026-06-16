@@ -12,9 +12,14 @@
   const profileUsername = isPublicProfile ? pathParts[1] : null;
   const urlParams = new URLSearchParams(window.location.search);
   const previewTheme = urlParams.get('previewTheme');
-  if (previewTheme) {
-    document.body.className = `theme-${previewTheme}`;
-  }
+
+let activeTheme = null;
+let originalTheme = null;
+
+if (previewTheme) {
+  activeTheme = previewTheme;
+  document.body.className = `theme-${previewTheme}`;
+}
 
   function apiUrl(endpoint) {
     if (isPublicProfile) {
@@ -64,6 +69,34 @@
 
   let currentThemeColor = '168, 85, 247';
 
+// Theme State Management
+let activeTheme = 'midnight';
+let previewThemeState = null;
+function applyTheme(themeName, isPreview = false) {
+  if (!themeName) return;
+
+  // Remove existing theme classes
+  document.body.className = document.body.className
+    .split(' ')
+    .filter(cls => !cls.startsWith('theme-'))
+    .join(' ');
+
+  // Apply new theme
+  document.body.classList.add(`theme-${themeName}`);
+
+  // Update particle colors
+  currentThemeColor =
+    THEME_COLORS[themeName] || '168, 85, 247';
+
+  // Store preview state
+  if (isPreview) {
+    previewThemeState = themeName;
+  } else {
+    activeTheme = themeName;
+    previewThemeState = null;
+  }
+}
+
   // ─── Load Settings & Apply Theme ───
   async function loadSettings() {
     try {
@@ -78,8 +111,8 @@
       // Apply theme
       const theme = settings.selectedTheme || 'midnight';
       if (!previewTheme) {
-        document.body.className = `theme-${theme}`;
-      }
+  applyTheme(theme);
+}
       currentThemeColor = THEME_COLORS[theme] || '168, 85, 247';
 
       // Update page title
@@ -400,12 +433,69 @@
   }
   });
   // --- End Scroll Progress Indicator ---
+  function setupThemePreviewControls() {
+  const controls = document.getElementById('themePreviewControls');
+  const applyBtn = document.getElementById('applyThemeBtn');
+  const cancelBtn = document.getElementById('cancelThemeBtn');
 
+  if (!controls) return;
+
+  // Hide controls if no preview theme exists
+  if (!previewTheme) {
+    controls.style.display = 'none';
+    return;
+  }
+
+  controls.style.display = 'flex';
+
+  // APPLY THEME
+  applyBtn?.addEventListener('click', async () => {
+    try {
+      const res = await fetch('/api/settings/theme', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          selectedTheme: previewTheme
+        })
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to save theme');
+      }
+
+      originalTheme = `theme-${previewTheme}`;
+
+      alert('Theme applied successfully!');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to apply theme');
+    }
+  });
+
+  // CANCEL PREVIEW
+  cancelBtn?.addEventListener('click', () => {
+    document.body.className = originalTheme;
+
+    const cleanUrl =
+      window.location.pathname;
+
+    window.history.replaceState({}, '', cleanUrl);
+
+    controls.style.display = 'none';
+  });
+}
   // ─── Init ───
   document.addEventListener('DOMContentLoaded', async () => {
-    await loadSettings();
-    initParticles();
-    renderProfile();
-    renderLinks();
-  });
+  await loadSettings();
+
+  originalTheme = document.body.className;
+
+  initParticles();
+  renderProfile();
+  renderLinks();
+
+  setupThemePreviewControls();
+});
 })();
