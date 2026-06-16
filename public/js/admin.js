@@ -516,6 +516,92 @@
       </div>
     `).join('')}
   `;
+
+  // ═══════════ SEARCH FUNCTIONALITY ═══════════
+  let allLinks = []; // Store all loaded links for search
+  let searchTimeout = null;
+
+  function renderSearchSkeleton() {
+    const list = document.getElementById('adminLinksList');
+    list.innerHTML = `
+      ${Array(5).fill(`
+        <div class="admin-link-item skeleton-card">
+          <div class="skeleton skeleton-checkbox"></div>
+          <div style="width: 16px; height: 16px; border-radius: 3px; flex-shrink: 0;"></div>
+          <div class="admin-link-info">
+            <div class="skeleton skeleton-title"></div>
+            <div class="skeleton skeleton-url"></div>
+          </div>
+          <div class="skeleton skeleton-clicks"></div>
+          <div class="skeleton" style="width: 40px; height: 20px; border-radius: 12px;"></div>
+        </div>
+      `).join('')}
+    `;
+  }
+
+  function performSearch(query) {
+    const list = document.getElementById('adminLinksList');
+    const normalizedQuery = query.toLowerCase().trim();
+
+    if (!normalizedQuery) {
+      renderAdminLinks(allLinks);
+      return;
+    }
+
+    const filtered = allLinks.filter(link => {
+      const titleMatch = link.title.toLowerCase().includes(normalizedQuery);
+      const urlMatch = link.url.toLowerCase().includes(normalizedQuery);
+      const categoryMatch = link.category_id && categories.some(cat =>
+        cat.id === link.category_id && (cat.name.toLowerCase().includes(normalizedQuery) || cat.icon?.includes(normalizedQuery))
+      );
+      return titleMatch || urlMatch || categoryMatch;
+    });
+
+    if (filtered.length === 0) {
+      list.innerHTML = `
+        <div class="empty-state search-empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <h3>No links found</h3>
+          <p>No links match your search. Try a different keyword.</p>
+        </div>
+      `;
+      bulkSelection.clearSelection();
+      return;
+    }
+
+    renderAdminLinks(filtered);
+  }
+
+  function setupSearchBar() {
+    const searchInput = document.getElementById('linksSearchInput');
+    const clearBtn = document.getElementById('searchClearBtn');
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value;
+      clearBtn.style.display = query ? 'flex' : 'none';
+      clearTimeout(searchTimeout);
+      if (query) {
+        renderSearchSkeleton();
+        searchTimeout = setTimeout(() => {
+          performSearch(query);
+        }, 300);
+      } else {
+        performSearch('');
+      }
+    });
+
+    clearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      searchInput.focus();
+      clearBtn.style.display = 'none';
+      performSearch('');
+    });
+  }
 }
 
   function renderAdminLinks(links) {
@@ -530,6 +616,9 @@
       headerActions.insertBefore(badge, headerActions.firstChild);
     }
     badge.textContent = `${links?.length || 0} links`;
+
+  // Store links for search functionality
+  allLinks = links || [];
 
     if (links.length === 0) {
       list.innerHTML = `
@@ -1326,6 +1415,13 @@
     loadCategories();
     initPublicUrl();
     setupKeyboardShortcuts();
+
+    // Call setupSearchBar after DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupSearchBar);
+    } else {
+      setupSearchBar();
+    }
   });
 
   // ─── Public URL Bar ───
