@@ -883,3 +883,112 @@ input, textarea, select {
 .theme-preview-controls button:hover {
   transform: translateY(-2px);
 }
+/* ═══════════════════════════════════════════════════════════
+   SESSION TIMEOUT MODAL
+   ═══════════════════════════════════════════════════════════ */
+
+.session-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(10px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 10000;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition: all 0.3s ease;
+}
+
+.session-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.session-modal {
+  width: 90%;
+  max-width: 420px;
+
+  background: rgba(15,15,15,0.95);
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  border-radius: 24px;
+
+  padding: 32px 28px;
+
+  text-align: center;
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.5),
+    0 0 40px rgba(168,85,247,0.15);
+
+  transform: translateY(20px) scale(0.96);
+
+  transition: all 0.3s ease;
+}
+
+.session-modal-overlay.active .session-modal {
+  transform: translateY(0) scale(1);
+}
+
+.session-modal-icon {
+  font-size: 3rem;
+  margin-bottom: 18px;
+}
+
+.session-modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.session-modal-text {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+#sessionCountdown {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.session-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+#extendSessionBtn,
+#logoutSessionBtn {
+  border: none;
+  padding: 12px 20px;
+  border-radius: 999px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+#extendSessionBtn {
+  background: var(--accent);
+  color: white;
+}
+
+#logoutSessionBtn {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-primary);
+}
+
+#extendSessionBtn:hover,
+#logoutSessionBtn:hover {
+  transform: translateY(-2px);
+}

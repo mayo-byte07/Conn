@@ -486,6 +486,112 @@ function applyTheme(themeName, isPreview = false) {
     controls.style.display = 'none';
   });
 }
+// ─────────────────────────────────────────────
+// Session Timeout Warning System
+// ─────────────────────────────────────────────
+
+function initSessionTimeout() {
+
+  // Skip public profiles
+  if (isPublicProfile) return;
+
+  const modal =
+    document.getElementById('sessionModalOverlay');
+
+  const countdownEl =
+    document.getElementById('sessionCountdown');
+
+  const extendBtn =
+    document.getElementById('extendSessionBtn');
+
+  const logoutBtn =
+    document.getElementById('logoutSessionBtn');
+
+  let inactivityTimer;
+  let countdownTimer;
+
+  // CONFIG
+  const INACTIVITY_LIMIT = 5 * 60 * 1000;
+  const WARNING_TIME = 30;
+
+  let countdown = WARNING_TIME;
+
+  // Reset inactivity timer
+  function resetTimer() {
+
+    clearTimeout(inactivityTimer);
+
+    inactivityTimer = setTimeout(() => {
+      showWarningModal();
+    }, INACTIVITY_LIMIT);
+  }
+
+  // Show modal
+  function showWarningModal() {
+
+    modal.classList.add('active');
+
+    countdown = WARNING_TIME;
+
+    countdownEl.textContent = countdown;
+
+    countdownTimer = setInterval(() => {
+
+      countdown--;
+
+      countdownEl.textContent = countdown;
+
+      if (countdown <= 0) {
+        clearInterval(countdownTimer);
+        logoutUser();
+      }
+
+    }, 1000);
+  }
+
+  // Extend session
+  function extendSession() {
+
+    modal.classList.remove('active');
+
+    clearInterval(countdownTimer);
+
+    resetTimer();
+  }
+
+  // Logout
+  function logoutUser() {
+
+    localStorage.clear();
+    sessionStorage.clear();
+
+    window.location.href = '/login.html';
+  }
+
+  // User activity events
+  [
+    'mousemove',
+    'keydown',
+    'click',
+    'scroll',
+    'touchstart'
+  ].forEach(event => {
+    document.addEventListener(event, resetTimer);
+  });
+
+  extendBtn?.addEventListener(
+    'click',
+    extendSession
+  );
+
+  logoutBtn?.addEventListener(
+    'click',
+    logoutUser
+  );
+
+  // Start timer
+  resetTimer();
+}
   // ─── Init ───
   document.addEventListener('DOMContentLoaded', async () => {
   await loadSettings();
@@ -496,6 +602,8 @@ function applyTheme(themeName, isPreview = false) {
   renderProfile();
   renderLinks();
 
-  setupThemePreviewControls();
+initSessionTimeout();
+
+setupThemePreviewControls();
 });
 })();

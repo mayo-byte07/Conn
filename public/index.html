@@ -111,7 +111,38 @@
     Cancel
   </button>
 </div>
-  <script src="/js/app.js"></script>
-  <script src="js/theme-toggle.js"></script>
+  <!-- Session Timeout Warning Modal -->
+<div class="session-modal-overlay" id="sessionModalOverlay">
+  <div class="session-modal">
+    
+    <div class="session-modal-icon">
+      ⚠️
+    </div>
+
+    <h2 class="session-modal-title">
+      Session Expiring Soon
+    </h2>
+
+    <p class="session-modal-text">
+      You've been inactive for a while.
+      Your session will expire in
+      <span id="sessionCountdown">30</span> seconds.
+    </p>
+
+    <div class="session-modal-actions">
+      <button id="extendSessionBtn">
+        Stay Logged In
+      </button>
+
+      <button id="logoutSessionBtn">
+        Logout
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="js/theme-toggle.js"></script>
 </body>
 </html>
