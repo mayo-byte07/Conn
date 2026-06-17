@@ -701,6 +701,37 @@ input, textarea, select {
   max-height: 0;
   opacity: 0;
 }
+
+/* ─── Custom Orb Cursor ─── */
+
+body { cursor: none; }
+a, button, .feature-card, .theme-preview-card { cursor: none; }
+
+#cursor-orb-glow {
+  position: fixed; width: 110px; height: 110px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(168,85,247,0.55) 0%, rgba(139,92,246,0.25) 45%, transparent 72%);
+  pointer-events: none; z-index: 99998;
+  transition: width .3s, height .3s;
+}
+#cursor-orb-core {
+  position: fixed; width: 10px; height: 10px; border-radius: 50%;
+  background: #e9d5ff;
+  box-shadow: 0 0 8px #a855f7, 0 0 18px #7c3aed;
+  pointer-events: none; z-index: 99999;
+}
+.light-mode #cursor-orb-core {
+  background: #a855f7;
+  box-shadow: 0 0 8px #7c3aed, 0 0 18px #a855f7;
+}
+@keyframes glitter-fly {
+  0%  { opacity:1; transform: translate(0,0) rotate(0deg) scale(1); }
+  100%{ opacity:0; transform: translate(var(--tx),var(--ty)) rotate(var(--rot)) scale(0); }
+}
+@keyframes cursor-ripple {
+  0%  { transform: translate(-50%,-50%) scale(0); opacity:.7; }
+  100%{ transform: translate(-50%,-50%) scale(1); opacity:0; }
+}
+=======
 ::selection {
   background: #a855f7;
   color: #ffffff;
@@ -841,4 +872,5 @@ input, textarea, select {
 .toggle-password svg{
     transition:.2s;
 }
+
 
