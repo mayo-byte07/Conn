@@ -22,6 +22,11 @@ if (!process.env.JWT_SECRET) {
 }
 const JWT_SECRET = process.env.JWT_SECRET;
 
+// Google OAuth client (only initialized if GOOGLE_CLIENT_ID is set)
+let googleClient = null;
+if (process.env.GOOGLE_CLIENT_ID) {
+  googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+}
 
 //LOGIN limiter
 const loginLimiter = rateLimit({
@@ -513,6 +518,10 @@ app.get('/api/auth/google-client-id', (req, res) => {
 
 app.post('/api/auth/google', googleAuthLimiter, async (req, res) => {
   try {
+    if (!process.env.GOOGLE_CLIENT_ID || !googleClient) {
+      return res.status(503).json({ error: 'Google authentication is not configured.' });
+    }
+
     const { credential, access_token } = req.body;
     let payload;
 
