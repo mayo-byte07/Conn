@@ -623,7 +623,11 @@ app.get('/api/profile', requireAuth, async (req, res) => {
 
   if (!profile) {
     return res.json({
-      name: 'Your Name', bio: '', avatar: '',
+      name: 'Your Name', 
+      bio: '', 
+      skills: '',
+      avatar: '',
+      interests: [],
       socials: { twitter: '', instagram: '', github: '', linkedin: '', youtube: '', tiktok: '', email: '' }
     });
   }
@@ -631,7 +635,9 @@ app.get('/api/profile', requireAuth, async (req, res) => {
   res.json({
     name: profile.name,
     bio: profile.bio,
+    skills: profile.skills || '',
     avatar: profile.avatar,
+    interests: profile.interests || [],
     socials: profile.socials || {}
   });
 });
@@ -696,7 +702,9 @@ app.put('/api/profile', requireAuth, async (req, res) => {
   const updates = {
     name: req.body.name ?? existing?.name ?? 'Your Name',
     bio: req.body.bio ?? existing?.bio ?? '',
+    skills: req.body.skills ?? existing?.skills ?? '',
     avatar: req.body.avatar ?? existing?.avatar ?? '',
+    interests: Array.isArray(req.body.interests) ? req.body.interests.filter(i => typeof i === 'string' && i.trim().length > 0) : (existing?.interests ?? []),
     socials
   };
 
@@ -1363,7 +1371,9 @@ app.get('/api/u/:username/profile', async (req, res) => {
   res.json({
     name: profile?.name || 'User',
     bio: profile?.bio || '',
+    skills: profile?.skills || '',
     avatar: profile?.avatar || '',
+    interests: profile?.interests || [],
     socials: profile?.socials || {}
   });
 });
