@@ -67,6 +67,27 @@ const googleAuthLimiter = rateLimit({
   }
 });
 
+// CLICK TRACKING limiter — prevent click fraud / ID enumeration
+const clickLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: 'Too many click requests. Please slow down.'
+  }
+});
+
+// In-memory dedup to prevent same IP from counting the same link multiple times
+const clickDedup = new Map();
+const CLICK_DEDUP_TTL = 60 * 60 * 1000; // 1 hour
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, ts] of clickDedup) {
+    if (now - ts > CLICK_DEDUP_TTL) clickDedup.delete(key);
+  }
+}, 5 * 60 * 1000);
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -1237,20 +1258,32 @@ app.put('/api/links-reorder', requireAuth, async (req, res) => {
   }
 });
 
-// Track clicks (public — find link by ID across all users)
-app.post('/api/links/:id/click', async (req, res) => {
+// Track clicks (public — rate-limited + IP dedup to prevent click fraud)
+app.post('/api/links/:id/click', clickLimiter, async (req, res) => {
+  const linkId = req.params.id;
+  const clientIp = req.ip || req.connection.remoteAddress;
+  const dedupKey = `${clientIp}:${linkId}`;
+
+  if (clickDedup.has(dedupKey)) {
+    return res.json({ clicks: null, deduplicated: true });
+  }
+  clickDedup.set(dedupKey, Date.now());
+
   const { data: link } = await supabase
     .from('user_links')
     .select('id, clicks')
-    .eq('id', req.params.id)
+    .eq('id', linkId)
     .maybeSingle();
 
-  if (!link) return res.status(404).json({ error: 'Link not found' });
+  if (!link) {
+    clickDedup.delete(dedupKey);
+    return res.status(404).json({ error: 'Link not found' });
+  }
 
   const newClicks = (link.clicks || 0) + 1;
   await supabase.from('user_links')
     .update({ clicks: newClicks })
-    .eq('id', req.params.id);
+    .eq('id', linkId);
 
   res.json({ clicks: newClicks });
 });
