@@ -491,27 +491,6 @@
     });
   }
 
-  // ─── Visual Upgrades (Cursor, Typewriter, Magnetic, Tilt) ───
-  function initCustomCursor() {
-    const cursor = document.getElementById('cursor-glow');
-    if (!cursor) return;
-    document.addEventListener('mousemove', (e) => {
-      cursor.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
-    });
-    const interactables = document.querySelectorAll('a, button, .feature-card, .pricing-card, .use-case-card, .theme-preview-card');
-    interactables.forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        cursor.style.width = '60px';
-        cursor.style.height = '60px';
-        cursor.style.background = 'var(--accent-light)';
-      });
-      el.addEventListener('mouseleave', () => {
-        cursor.style.width = '40px';
-        cursor.style.height = '40px';
-        cursor.style.background = 'var(--accent)';
-      });
-    });
-  }
 
   function initTypewriter() {
     const tw = document.getElementById('typewriter');
