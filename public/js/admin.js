@@ -248,7 +248,9 @@
       return;
     }
 
-    list.innerHTML = categories.map(cat => `
+    list.innerHTML = categories
+      .map(
+        (cat) => `
       <div class="category-item" data-id="${cat.id}">
         <div class="category-drag-handle">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -258,20 +260,20 @@
           </svg>
         </div>
         <div class="category-icon" style="background: ${cat.color}20; color: ${cat.color}">
-          ${cat.icon || '📁'}
+          ${cat.icon || "📁"}
         </div>
         <div class="category-info">
           <div class="category-name">${escapeHtml(cat.name)}</div>
           <div class="category-count">${cat.link_count || 0} links</div>
         </div>
         <div class="category-actions">
-          <button class="btn btn-icon btn-secondary" data-action="edit" data-id="${cat.id}" title="Edit">
+          <button class="btn btn-icon btn-secondary" data-action="edit" data-id="${cat.id}" title="Edit" aria-label="Edit category">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
             </svg>
           </button>
-          <button class="btn btn-icon btn-danger" data-action="delete" data-id="${cat.id}" title="Delete">
+          <button class="btn btn-icon btn-danger" data-action="delete" data-id="${cat.id}" title="Delete" aria-label="Delete category">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6"/>
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -279,7 +281,9 @@
           </button>
         </div>
       </div>
-    `).join('');
+    `,
+      )
+      .join("");
 
     // Add event listeners using event delegation
     list.querySelectorAll('[data-action="edit"]').forEach(btn => {
