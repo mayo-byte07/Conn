@@ -280,13 +280,31 @@
     }
 
     if (passwordInput && strengthContainer) {
+      const updatePasswordStrength = () => {
+        validatePassword(passwordInput.value);
+      };
+
+      const schedulePasswordStrengthUpdate = () => {
+        window.requestAnimationFrame(updatePasswordStrength);
+      };
+
       passwordInput.addEventListener("focus", () => {
         strengthContainer.style.display = "block";
+        schedulePasswordStrengthUpdate();
       });
 
-      passwordInput.addEventListener("input", () => {
-        validatePassword(passwordInput.value);
+      passwordInput.addEventListener("input", schedulePasswordStrengthUpdate);
+      passwordInput.addEventListener("change", schedulePasswordStrengthUpdate);
+      passwordInput.addEventListener("keyup", schedulePasswordStrengthUpdate);
+      passwordInput.addEventListener("compositionend", schedulePasswordStrengthUpdate);
+      passwordInput.addEventListener("paste", () => {
+        window.requestAnimationFrame(updatePasswordStrength);
       });
+
+      if (passwordInput.value) {
+        strengthContainer.style.display = "block";
+        updatePasswordStrength();
+      }
     }
 
     form.addEventListener("submit", async (e) => {
