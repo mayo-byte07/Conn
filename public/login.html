@@ -49,8 +49,49 @@
         </div>
         <div class="form-group">
           <label class="form-label">Password</label>
-          <input class="form-input" type="password" id="loginPassword" placeholder="••••••••" required>
-        </div>
+
+          <div class="password-wrapper"><input class="form-input" type="password" id="loginPassword" placeholder="••••••••" required>
+    <button
+      type="button"
+      class="toggle-password"
+      id="togglePassword"
+      aria-label="Show password"
+    >
+      <!-- Eye Icon -->
+      <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg"
+        width="20" height="20" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor"
+        stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M2.458 12C3.732 7.943 7.523 5 12 5
+          c4.478 0 8.268 2.943 9.542 7
+          -1.274 4.057-5.064 7-9.542 7
+          -4.477 0-8.268-2.943-9.542-7z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+
+      <!-- Eye Off Icon -->
+      <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg"
+        width="20" height="20" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor"
+        stroke-width="2" style="display:none;">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M3 3l18 18"/>
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M10.584 10.587A2 2 0 0012 14
+          a2 2 0 001.414-.586"/>
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M9.88 5.09A9.77 9.77 0 0112 5
+          c4.477 0 8.268 2.943 9.542 7
+          a9.956 9.956 0 01-4.293 5.175"/>
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M6.228 6.228A9.956 9.956 0 002.458 12
+          c1.274 4.057 5.065 7 9.542 7
+          a9.77 9.77 0 003.182-.527"/>
+      </svg>
+    </button>
+  </div>
+</div>
         <button type="submit" class="auth-submit">
           <span class="btn-content">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -87,6 +128,31 @@
 
   <script src="/js/auth.js"></script>
   <script src="js/theme-toggle.js"></script>
+
   <script src="/js/cursor.js"></script>
+
+
+  <script>
+    const password = document.getElementById("loginPassword");
+    const toggle = document.getElementById("togglePassword");
+    const eyeOpen = document.getElementById("eyeOpen");
+    const eyeClosed = document.getElementById("eyeClosed");
+
+    toggle.addEventListener("click", () => {
+        if (password.type === "password") {
+            password.type = "text";
+            eyeOpen.style.display = "none";
+            eyeClosed.style.display = "block";
+            toggle.setAttribute("aria-label", "Hide password");
+        } else {
+            password.type = "password";
+            eyeOpen.style.display = "block";
+            eyeClosed.style.display = "none";
+            toggle.setAttribute("aria-label", "Show password");
+        }
+    });
+</script>
+
+
 </body>
 </html>

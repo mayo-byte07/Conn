@@ -14,14 +14,14 @@
   <meta name="robots" content="index, follow">
 
   <!-- Canonical URL -->
-  <link rel="canonical" href="https://conn-delta.vercel.app/" />
+  <link rel="canonical" href="https://conn-delta.vercel.app/" id="canonicalTag" />
 
   <!-- Performance Hints -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
   <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">
+  <script type="application/ld+json" id="jsonldSchema">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -56,24 +56,24 @@
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://conn-delta.vercel.app/">
+  <meta property="og:url" content="https://conn-delta.vercel.app/" id="ogUrl">
   <meta property="og:title" content="Conn — All Links at One Place | Best Link in Bio Tool">
   <meta property="og:description"
     content="Conn is the ultimate link-in-bio tool. Create a stunning portfolio page with gorgeous themes, powerful analytics, and full customization. All your links in one place.">
-  <meta property="og:image" content="https://conn-delta.vercel.app/assets/og-home.jpg">
+  <meta property="og:image" content="https://conn-delta.vercel.app/assets/og-home.jpg" id="ogImage">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="Conn">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="https://conn-delta.vercel.app/">
+  <meta name="twitter:url" content="https://conn-delta.vercel.app/" id="twUrl">
   <meta name="twitter:title" content="Conn — All Links at One Place | Best Link in Bio Tool">
   <meta name="twitter:site" content="@connapp">
   <meta name="twitter:creator" content="@connapp">
   <meta name="twitter:description"
     content="Conn is the ultimate link-in-bio tool. Create a stunning portfolio page with gorgeous themes, powerful analytics, and full customization. All your links in one place.">
-  <meta name="twitter:image" content="https://conn-delta.vercel.app/assets/og-home.jpg">
+  <meta name="twitter:image" content="https://conn-delta.vercel.app/assets/og-home.jpg" id="twImage">
 
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -85,6 +85,30 @@
   <script defer src="/_vercel/insights/script.js"></script>
   <script>(function(){if(localStorage.getItem("conn-color-mode")==="light"){document.documentElement.classList.add("light-mode");}}());</script>
     <link rel="stylesheet" href="css/light-mode.css">
+  <script>
+    (function() {
+      var origin = window.location.origin;
+      var canonical = document.getElementById('canonicalTag');
+      var ogUrl = document.getElementById('ogUrl');
+      var ogImage = document.getElementById('ogImage');
+      var twUrl = document.getElementById('twUrl');
+      var twImage = document.getElementById('twImage');
+      var jsonld = document.getElementById('jsonldSchema');
+      if (canonical) canonical.href = origin + '/';
+      if (ogUrl) ogUrl.content = origin + '/';
+      if (ogImage) ogImage.content = origin + '/assets/og-home.jpg';
+      if (twUrl) twUrl.content = origin + '/';
+      if (twImage) twImage.content = origin + '/assets/og-home.jpg';
+      if (jsonld) {
+        try {
+          var data = JSON.parse(jsonld.textContent);
+          data.url = origin + '/';
+          if (data.creator && data.creator.url) data.creator.url = origin + '/';
+          jsonld.textContent = JSON.stringify(data);
+        } catch(e) {}
+      }
+    })();
+  </script>
 </head>
 
 <body>
@@ -399,7 +423,7 @@
       </h1>
       <p class="hero-subtitle animate-on-scroll">
         <span id="typewriter"></span><span class="typewriter-cursor">|</span><br>
-        <span style="opacity: 0.8; font-size: 0.95rem;">Choose from 12+ stunning themes, track analytics, and make your online presence unforgettable.</span>
+        <span style="opacity: 0.8; font-size: 0.95rem;">Choose from 26+ stunning themes, track analytics, and make your online presence unforgettable.</span>
       </p>
       <div class="hero-cta animate-on-scroll">
         <a href="/admin" class="btn-hero btn-hero-primary">
@@ -542,7 +566,7 @@
               <polyline points="21 15 16 10 5 21" />
             </svg>
           </div>
-          <h3>12+ Stunning Themes</h3>
+          <h3>26+ Stunning Themes</h3>
           <p>From Midnight Noir to Neon Cyber — find the perfect aesthetic that matches your vibe. One click to switch.
           </p>
         </div>
@@ -619,7 +643,7 @@
       <div class="section-header animate-on-scroll">
         <span class="section-tag">Themes</span>
         <h2 class="section-title">Find your <span class="gradient-text">aesthetic.</span></h2>
-        <p class="section-desc">18 handcrafted themes designed to make your page stand out. Switch anytime with one
+        <p class="section-desc">26 handcrafted themes designed to make your page stand out. Switch anytime with one
   click.</p>
       </div>
 
@@ -870,7 +894,7 @@
       </div>
       <div class="stats-row">
         <div class="stat-block animate-on-scroll">
-          <div class="stat-number" data-target="12">0</div>
+          <div class="stat-number" data-target="26">0</div>
           <div class="stat-label-text">Themes</div>
         </div>
         <div class="stat-block animate-on-scroll">
@@ -1142,6 +1166,8 @@
         <div>
           <h4>Support</h4>
           <a href="#contact">Contact Us</a>
+          <a href="/privacy-policy.html">Privacy Policy</a>
+          <a href="/terms-and-services.html">Terms & Services</a>
         </div>
       </div>
       <div class="footer-bottom">
@@ -1149,6 +1175,13 @@
       </div>
     </div>
   </footer>
+
+  <!-- Scroll to Top Button -->
+<button id="scrollTopBtn" aria-label="Scroll to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
 
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>

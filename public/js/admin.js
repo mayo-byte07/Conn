@@ -308,6 +308,7 @@
           showToast('Category deleted');
           await loadCategories();
           await loadLinks();
+          reloadPreview();
         } catch (err) {
           showToast('Failed to delete category', 'error');
         }
@@ -413,33 +414,33 @@
 
   // ─── Theme Definitions ───
   const THEMES = [
-    { id: 'midnight',       name: 'Midnight',        tag: 'Default',  bg: 'linear-gradient(135deg, #0a0a0a, #1a0a2e, #0a0a0a)',   colors: ['#a855f7','#c084fc','#f5f5f5'] },
-    { id: 'neon-cyber',     name: 'Neon Cyber',      tag: 'Electric', bg: 'linear-gradient(135deg, #020617, #0c1222, #020617)',   colors: ['#06b6d4','#ec4899','#e0f2fe'] },
-    { id: 'sunset-blaze',   name: 'Sunset Blaze',    tag: 'Warm',     bg: 'linear-gradient(135deg, #1a0a00, #2d1400, #1a0a00)',   colors: ['#f97316','#fbbf24','#fff7ed'] },
-    { id: 'forest-dusk',    name: 'Forest Dusk',     tag: 'Natural',  bg: 'linear-gradient(135deg, #021a09, #04260e, #021a09)',   colors: ['#22c55e','#4ade80','#f0fdf4'] },
-    { id: 'ocean-deep',     name: 'Ocean Deep',      tag: 'Cool',     bg: 'linear-gradient(135deg, #001a2c, #002844, #001a2c)',   colors: ['#0ea5e9','#38bdf8','#e0f2fe'] },
-    { id: 'rose-gold',      name: 'Rose Gold',       tag: 'Elegant',  bg: 'linear-gradient(135deg, #1a0a10, #2d1520, #1a0a10)',   colors: ['#f43f5e','#fda4af','#fbbf24'] },
-    { id: 'arctic-frost',   name: 'Arctic Frost',    tag: 'Minimal',  bg: 'linear-gradient(135deg, #0f172a, #1e293b, #0f172a)',   colors: ['#94a3b8','#e2e8f0','#f8fafc'] },
-    { id: 'lava-flow',      name: 'Lava Flow',       tag: 'Intense',  bg: 'linear-gradient(135deg, #1a0000, #2d0a00, #1a0000)',   colors: ['#ef4444','#f97316','#fef2f2'] },
-    { id: 'vaporwave',      name: 'Vaporwave',       tag: 'Retro',    bg: 'linear-gradient(135deg, #1a0026, #0a0033, #1a0026)',   colors: ['#d946ef','#8b5cf6','#fde68a'] },
-    { id: 'monochrome',     name: 'Monochrome',      tag: 'Classic',  bg: 'linear-gradient(135deg, #0a0a0a, #171717, #0a0a0a)',   colors: ['#a3a3a3','#d4d4d4','#fafafa'] },
-    { id: 'galaxy',         name: 'Galaxy',          tag: 'Cosmic',   bg: 'linear-gradient(135deg, #0a001a, #150030, #0a0033)',   colors: ['#818cf8','#a78bfa','#c4b5fd'] },
-    { id: 'emerald-matrix', name: 'Emerald Matrix',  tag: 'Hacker',   bg: 'linear-gradient(135deg, #001a00, #002200, #001a00)',   colors: ['#10b981','#34d399','#d1fae5'] },
-    { id: 'botanical',      name: 'Botanical',       tag: 'Organic',  bg: '#0a2e20',                                              colors: ['#0a2e20','#d4f7e2','#bcedcc'] },
-    { id: 'minimal-light',  name: 'Minimal Light',   tag: 'Clean',    bg: '#f0f2f5',                                              colors: ['#111827','#ffffff','#f9fafb'] },
-    { id: 'muddy-texture',  name: 'Muddy Texture',   tag: 'Earthy',   bg: '#4a3b32',                                              colors: ['#f5eedc','rgba(255,255,255,0.4)','transparent'] },
-    { id: 'wavy-purple',    name: 'Wavy Purple',     tag: 'Playful',  bg: 'radial-gradient(circle at top left, #a78bfa 0%, #7c3aed 100%)', colors: ['#ffffff','#ede9fe','#8b5cf6'] },
-    { id: 'retro-shadow',   name: 'Retro Shadow',    tag: 'Brutalist',bg: '#e8e1cc',                                              colors: ['#171717','#ffffff','#fcfcfc'] },
-    { id: 'sunset-mesh',    name: 'Sunset Mesh',     tag: 'Vibrant',  bg: 'radial-gradient(circle at top left, #10b981 0%, #ef4444 100%)', colors: ['#ffffff','#ffffff','#f1f5f9'] },
+    { id: 'midnight', name: 'Midnight', tag: 'Default', bg: 'linear-gradient(135deg, #0a0a0a, #1a0a2e, #0a0a0a)', colors: ['#a855f7', '#c084fc', '#f5f5f5'] },
+    { id: 'neon-cyber', name: 'Neon Cyber', tag: 'Electric', bg: 'linear-gradient(135deg, #020617, #0c1222, #020617)', colors: ['#06b6d4', '#ec4899', '#e0f2fe'] },
+    { id: 'sunset-blaze', name: 'Sunset Blaze', tag: 'Warm', bg: 'linear-gradient(135deg, #1a0a00, #2d1400, #1a0a00)', colors: ['#f97316', '#fbbf24', '#fff7ed'] },
+    { id: 'forest-dusk', name: 'Forest Dusk', tag: 'Natural', bg: 'linear-gradient(135deg, #021a09, #04260e, #021a09)', colors: ['#22c55e', '#4ade80', '#f0fdf4'] },
+    { id: 'ocean-deep', name: 'Ocean Deep', tag: 'Cool', bg: 'linear-gradient(135deg, #001a2c, #002844, #001a2c)', colors: ['#0ea5e9', '#38bdf8', '#e0f2fe'] },
+    { id: 'rose-gold', name: 'Rose Gold', tag: 'Elegant', bg: 'linear-gradient(135deg, #1a0a10, #2d1520, #1a0a10)', colors: ['#f43f5e', '#fda4af', '#fbbf24'] },
+    { id: 'arctic-frost', name: 'Arctic Frost', tag: 'Minimal', bg: 'linear-gradient(135deg, #0f172a, #1e293b, #0f172a)', colors: ['#94a3b8', '#e2e8f0', '#f8fafc'] },
+    { id: 'lava-flow', name: 'Lava Flow', tag: 'Intense', bg: 'linear-gradient(135deg, #1a0000, #2d0a00, #1a0000)', colors: ['#ef4444', '#f97316', '#fef2f2'] },
+    { id: 'vaporwave', name: 'Vaporwave', tag: 'Retro', bg: 'linear-gradient(135deg, #1a0026, #0a0033, #1a0026)', colors: ['#d946ef', '#8b5cf6', '#fde68a'] },
+    { id: 'monochrome', name: 'Monochrome', tag: 'Classic', bg: 'linear-gradient(135deg, #0a0a0a, #171717, #0a0a0a)', colors: ['#a3a3a3', '#d4d4d4', '#fafafa'] },
+    { id: 'galaxy', name: 'Galaxy', tag: 'Cosmic', bg: 'linear-gradient(135deg, #0a001a, #150030, #0a0033)', colors: ['#818cf8', '#a78bfa', '#c4b5fd'] },
+    { id: 'emerald-matrix', name: 'Emerald Matrix', tag: 'Hacker', bg: 'linear-gradient(135deg, #001a00, #002200, #001a00)', colors: ['#10b981', '#34d399', '#d1fae5'] },
+    { id: 'botanical', name: 'Botanical', tag: 'Organic', bg: '#0a2e20', colors: ['#0a2e20', '#d4f7e2', '#bcedcc'] },
+    { id: 'minimal-light', name: 'Minimal Light', tag: 'Clean', bg: '#f0f2f5', colors: ['#111827', '#ffffff', '#f9fafb'] },
+    { id: 'muddy-texture', name: 'Muddy Texture', tag: 'Earthy', bg: '#4a3b32', colors: ['#f5eedc', 'rgba(255,255,255,0.4)', 'transparent'] },
+    { id: 'wavy-purple', name: 'Wavy Purple', tag: 'Playful', bg: 'radial-gradient(circle at top left, #a78bfa 0%, #7c3aed 100%)', colors: ['#ffffff', '#ede9fe', '#8b5cf6'] },
+    { id: 'retro-shadow', name: 'Retro Shadow', tag: 'Brutalist', bg: '#e8e1cc', colors: ['#171717', '#ffffff', '#fcfcfc'] },
+    { id: 'sunset-mesh', name: 'Sunset Mesh', tag: 'Vibrant', bg: 'radial-gradient(circle at top left, #10b981 0%, #ef4444 100%)', colors: ['#ffffff', '#ffffff', '#f1f5f9'] },
     // ── Gradient Themes ──
-    { id: 'aurora-borealis',    name: 'Aurora Borealis',    tag: 'Gradient',   bg: 'linear-gradient(135deg, #020b18 0%, #0a3d2e 30%, #1a1a5e 70%, #020b18 100%)', colors: ['#34d399','#818cf8','#06b6d4'] },
-    { id: 'cosmic-nebula',      name: 'Cosmic Nebula',      tag: 'Gradient',   bg: 'linear-gradient(135deg, #0a0015 0%, #3d1566 30%, #661535 70%, #0a0015 100%)', colors: ['#a855f7','#f43f5e','#ec4899'] },
-    { id: 'tropical-paradise',  name: 'Tropical Paradise',  tag: 'Gradient',   bg: 'linear-gradient(135deg, #001a1a 0%, #0a4040 30%, #3d2e0a 70%, #001a1a 100%)', colors: ['#38b2ac','#f6ad55','#48bb78'] },
-    { id: 'midnight-oil',       name: 'Midnight Oil',       tag: 'Gradient',   bg: 'linear-gradient(135deg, #0c0c1d 0%, #1a1a5e 30%, #3d1e0a 70%, #0c0c1d 100%)', colors: ['#6366f1','#fb923c','#4f46e5'] },
-    { id: 'cotton-candy',       name: 'Cotton Candy',       tag: 'Gradient',   bg: 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 30%, #ede9fe 70%, #fdf2f8 100%)', colors: ['#ec4899','#8b5cf6','#f472b6'] },
-    { id: 'emerald-aurora',     name: 'Emerald Aurora',     tag: 'Gradient',   bg: 'linear-gradient(135deg, #021a12 0%, #0a4030 30%, #0a2e40 70%, #021a12 100%)', colors: ['#10b981','#06b6d4','#34d399'] },
-    { id: 'holographic',        name: 'Holographic',        tag: 'Gradient',   bg: 'linear-gradient(135deg, #0a0a12 0%, #2d1b69 25%, #0a3d4d 50%, #3d1035 75%, #0a0a12 100%)', colors: ['#a78bfa','#22d3ee','#f472b6'] },
-    { id: 'molten-lava',        name: 'Molten Lava',        tag: 'Gradient',   bg: 'linear-gradient(135deg, #120800 0%, #4d1a00 30%, #4d0a0a 70%, #120800 100%)', colors: ['#f97316','#ef4444','#fbbf24'] },
+    { id: 'aurora-borealis', name: 'Aurora Borealis', tag: 'Gradient', bg: 'linear-gradient(135deg, #020b18 0%, #0a3d2e 30%, #1a1a5e 70%, #020b18 100%)', colors: ['#34d399', '#818cf8', '#06b6d4'] },
+    { id: 'cosmic-nebula', name: 'Cosmic Nebula', tag: 'Gradient', bg: 'linear-gradient(135deg, #0a0015 0%, #3d1566 30%, #661535 70%, #0a0015 100%)', colors: ['#a855f7', '#f43f5e', '#ec4899'] },
+    { id: 'tropical-paradise', name: 'Tropical Paradise', tag: 'Gradient', bg: 'linear-gradient(135deg, #001a1a 0%, #0a4040 30%, #3d2e0a 70%, #001a1a 100%)', colors: ['#38b2ac', '#f6ad55', '#48bb78'] },
+    { id: 'midnight-oil', name: 'Midnight Oil', tag: 'Gradient', bg: 'linear-gradient(135deg, #0c0c1d 0%, #1a1a5e 30%, #3d1e0a 70%, #0c0c1d 100%)', colors: ['#6366f1', '#fb923c', '#4f46e5'] },
+    { id: 'cotton-candy', name: 'Cotton Candy', tag: 'Gradient', bg: 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 30%, #ede9fe 70%, #fdf2f8 100%)', colors: ['#ec4899', '#8b5cf6', '#f472b6'] },
+    { id: 'emerald-aurora', name: 'Emerald Aurora', tag: 'Gradient', bg: 'linear-gradient(135deg, #021a12 0%, #0a4030 30%, #0a2e40 70%, #021a12 100%)', colors: ['#10b981', '#06b6d4', '#34d399'] },
+    { id: 'holographic', name: 'Holographic', tag: 'Gradient', bg: 'linear-gradient(135deg, #0a0a12 0%, #2d1b69 25%, #0a3d4d 50%, #3d1035 75%, #0a0a12 100%)', colors: ['#a78bfa', '#22d3ee', '#f472b6'] },
+    { id: 'molten-lava', name: 'Molten Lava', tag: 'Gradient', bg: 'linear-gradient(135deg, #120800 0%, #4d1a00 30%, #4d0a0a 70%, #120800 100%)', colors: ['#f97316', '#ef4444', '#fbbf24'] },
   ];
 
   // ─── Navigation ───
@@ -998,19 +999,66 @@
   }
 
   document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+    const socials = {
+      twitter: document.getElementById('socialTwitter').value.trim(),
+      instagram: document.getElementById('socialInstagram').value.trim(),
+      github: document.getElementById('socialGithub').value.trim(),
+      linkedin: document.getElementById('socialLinkedin').value.trim(),
+      youtube: document.getElementById('socialYoutube').value.trim(),
+      tiktok: document.getElementById('socialTiktok').value.trim(),
+      email: document.getElementById('socialEmail').value.trim()
+    };
+
+    // Auto-prefix http/https for platform links if not empty
+    const platforms = ['twitter', 'instagram', 'github', 'linkedin', 'youtube', 'tiktok'];
+    platforms.forEach(p => {
+      if (socials[p] && !/^https?:\/\//i.test(socials[p])) {
+        socials[p] = 'https://' + socials[p];
+      }
+    });
+
+    // Auto-prefix http/https for email if it doesn't look like an email and isn't empty
+    if (socials.email && !socials.email.includes('@') && !/^https?:\/\//i.test(socials.email)) {
+      socials.email = 'https://' + socials.email;
+    }
+
+    // Validation patterns
+    const validationErrors = [];
+    const patterns = {
+      twitter: { name: 'Twitter / X', regex: /^https?:\/\/(www\.)?(twitter\.com|x\.com)\/.+/i },
+      instagram: { name: 'Instagram', regex: /^https?:\/\/(www\.)?instagram\.com\/.+/i },
+      github: { name: 'GitHub', regex: /^https?:\/\/(www\.)?github\.com\/.+/i },
+      linkedin: { name: 'LinkedIn', regex: /^https?:\/\/(www\.)?linkedin\.com\/.+/i },
+      youtube: { name: 'YouTube', regex: /^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/.+/i },
+      tiktok: { name: 'TikTok', regex: /^https?:\/\/(www\.)?tiktok\.com\/.+/i }
+    };
+
+    for (const [key, platform] of Object.entries(patterns)) {
+      if (socials[key]) {
+        if (!platform.regex.test(socials[key])) {
+          validationErrors.push(`${platform.name} URL is invalid. It must be a valid link.`);
+        }
+      }
+    }
+
+    if (socials.email) {
+      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(socials.email);
+      const isUrl = /^https?:\/\/.+/i.test(socials.email);
+      if (!isEmail && !isUrl) {
+        validationErrors.push('Email must be a valid email address or a valid URL.');
+      }
+    }
+
+    if (validationErrors.length > 0) {
+      showToast(validationErrors[0], 'error');
+      return;
+    }
+
     const data = {
       name: document.getElementById('inputName').value.trim(),
       bio: document.getElementById('inputBio').value.trim(),
       avatar: document.getElementById('inputAvatar').value.trim(),
-      socials: {
-        twitter: document.getElementById('socialTwitter').value.trim(),
-        instagram: document.getElementById('socialInstagram').value.trim(),
-        github: document.getElementById('socialGithub').value.trim(),
-        linkedin: document.getElementById('socialLinkedin').value.trim(),
-        youtube: document.getElementById('socialYoutube').value.trim(),
-        tiktok: document.getElementById('socialTiktok').value.trim(),
-        email: document.getElementById('socialEmail').value.trim()
-      }
+      socials
     };
     try {
       await fetch('/api/profile', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
@@ -1029,7 +1077,7 @@
       const res = await fetch('/api/settings');
       const settings = await res.json();
       selectedTheme = settings.selectedTheme || 'midnight';
-    } catch (err) {}
+    } catch (err) { }
 
     renderThemePicker();
   }
@@ -1058,7 +1106,8 @@
           ${theme.colors.map(c => `<div class="theme-pick-dot" style="background:${c}"></div>`).join('')}
         </div>
       </div>
-    `;}).join('');
+    `;
+    }).join('');
   }
 
   // Save theme
@@ -1208,6 +1257,12 @@
       document.querySelectorAll('.theme-pick-card').forEach(card => {
         card.classList.toggle('selected', card.dataset.theme === themeId);
       });
+      // Live preview update
+      const iframe = document.getElementById('livePreviewIframe');
+      if (iframe) {
+        const base = iframe.src.split('?')[0];
+        iframe.src = `${base}?previewTheme=${themeId}&t=${Date.now()}`;
+      }
     }
   };
 
@@ -1315,3 +1370,4 @@
     }
   }
 })();
+

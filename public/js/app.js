@@ -10,6 +10,11 @@
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   const isPublicProfile = pathParts[0] === 'u' && pathParts[1];
   const profileUsername = isPublicProfile ? pathParts[1] : null;
+  const urlParams = new URLSearchParams(window.location.search);
+  const previewTheme = urlParams.get('previewTheme');
+  if (previewTheme) {
+    document.body.className = `theme-${previewTheme}`;
+  }
 
   function apiUrl(endpoint) {
     if (isPublicProfile) {
@@ -72,7 +77,9 @@
 
       // Apply theme
       const theme = settings.selectedTheme || 'midnight';
-      document.body.className = `theme-${theme}`;
+      if (!previewTheme) {
+        document.body.className = `theme-${theme}`;
+      }
       currentThemeColor = THEME_COLORS[theme] || '168, 85, 247';
 
       // Update page title
@@ -207,7 +214,7 @@
       if (isPublicProfile) {
         const displayName = profile.name || profileUsername;
         const bio = profile.bio || `All links for ${displayName} in one place.`;
-        const pageUrl = `https://conn-delta.vercel.app/u/${profileUsername}`;
+        const pageUrl = `${window.location.origin}/u/${profileUsername}`;
 
         // Title + description
         document.title = `${displayName} — Conn | All Links`;
@@ -261,10 +268,11 @@
       if (profile.socials) {
         Object.entries(profile.socials).forEach(([platform, url]) => {
           if (!url || !SOCIAL_ICONS[platform]) return;
-          const finalUrl = platform === 'email' ? `mailto:${url}` : url;
+          const isUrl = url.startsWith('http://') || url.startsWith('https://');
+          const finalUrl = platform === 'email' ? (isUrl ? url : `mailto:${url}`) : url;
           const btn = document.createElement('a');
           btn.href = finalUrl;
-          btn.target = platform !== 'email' ? '_blank' : '';
+          btn.target = (platform !== 'email' || isUrl) ? '_blank' : '';
           btn.rel = 'noopener noreferrer';
           btn.className = 'social-icon-btn';
           btn.title = platform.charAt(0).toUpperCase() + platform.slice(1);
@@ -372,6 +380,26 @@
     div.textContent = str;
     return div.innerHTML;
   }
+
+  // --- Scroll Progress Indicator ---
+  window.addEventListener("scroll", () => {
+  const scrollTop = document.documentElement.scrollTop;
+
+  const scrollHeight =
+    document.documentElement.scrollHeight -
+    document.documentElement.clientHeight;
+
+  const scrollPercent =
+    (scrollTop / scrollHeight) * 100;
+
+  const progressBar =
+    document.getElementById("scroll-progress");
+
+  if (progressBar) {
+    progressBar.style.width = scrollPercent + "%";
+  }
+  });
+  // --- End Scroll Progress Indicator ---
 
   // ─── Init ───
   document.addEventListener('DOMContentLoaded', async () => {

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Privacy Policy | Conn</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,0,0">
+
+<style>
+
+:root{
+    --bg:#ffffff;
+    --surface:rgba(255,255,255,.8);
+    --text:#111827;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+
+    --purple:#8b5cf6;
+    --pink:#ec4899;
+
+    --gradient:
+    linear-gradient(
+        135deg,
+        #8b5cf6,
+        #ec4899
+    );
+}
+
+@media(prefers-color-scheme:dark){
+
+:root{
+    --bg:#050505;
+    --surface:rgba(255,255,255,.04);
+    --text:#ffffff;
+    --muted:#a1a1aa;
+    --border:rgba(255,255,255,.08);
+}
+
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+}
+
+/* Background Glow */
+
+body::before,
+body::after{
+    content:'';
+    position:fixed;
+    width:500px;
+    height:500px;
+    border-radius:50%;
+    filter:blur(140px);
+    z-index:-1;
+}
+
+body::before{
+    background:#8b5cf6;
+    top:-200px;
+    left:-200px;
+    opacity:.15;
+}
+
+body::after{
+    background:#ec4899;
+    right:-200px;
+    bottom:-200px;
+    opacity:.12;
+}
+
+/* Layout */
+
+.container{
+    width:min(1200px,92%);
+    margin:auto;
+}
+
+/* Hero */
+
+.hero{
+    min-height:65vh;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+}
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.6rem;
+
+    padding:.85rem 1.3rem;
+
+    border-radius:999px;
+
+    background:var(--surface);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid var(--border);
+
+    margin-bottom:2rem;
+}
+
+.hero h1{
+    font-size:clamp(3rem,8vw,6rem);
+    line-height:1;
+    font-weight:800;
+}
+
+.hero h1 span{
+    background:var(--gradient);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.hero p{
+    max-width:800px;
+    margin-top:1.5rem;
+
+    color:var(--muted);
+
+    font-size:1.1rem;
+    line-height:1.9;
+}
+
+.updated{
+    margin-top:2rem;
+    color:var(--muted);
+}
+
+/* Quick Highlights */
+
+.highlights{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(250px,1fr));
+
+    gap:1.5rem;
+
+    margin-bottom:5rem;
+}
+
+.highlight{
+    background:var(--surface);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid var(--border);
+
+    border-radius:24px;
+
+    padding:2rem;
+
+    transition:.3s;
+}
+
+.highlight:hover{
+    transform:translateY(-6px);
+
+    box-shadow:
+    0 15px 40px rgba(139,92,246,.15);
+}
+
+.highlight .material-symbols-rounded{
+    font-size:32px;
+    color:var(--purple);
+    margin-bottom:1rem;
+}
+
+.highlight h3{
+    margin-bottom:.8rem;
+}
+
+.highlight p{
+    color:var(--muted);
+}
+
+/* Contents */
+
+.contents{
+    margin-bottom:5rem;
+}
+
+.contents h2{
+    text-align:center;
+    margin-bottom:2rem;
+    font-size:2rem;
+}
+
+.contents-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:1rem;
+}
+
+.contents-grid a{
+    text-decoration:none;
+
+    color:var(--text);
+
+    background:var(--surface);
+
+    border:1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:1.2rem;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.7rem;
+
+    transition:.3s;
+}
+
+.contents-grid a:hover{
+    transform:translateY(-4px);
+    border-color:var(--purple);
+}
+
+/* Sections */
+
+.policy{
+    display:grid;
+    gap:1.5rem;
+}
+
+.section{
+    background:var(--surface);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid var(--border);
+
+    border-radius:28px;
+
+    padding:2rem;
+}
+
+.section h2{
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+
+    margin-bottom:1rem;
+}
+
+.section .material-symbols-rounded{
+    color:var(--purple);
+}
+
+.section p,
+.section li{
+    color:var(--muted);
+    line-height:1.9;
+}
+
+.section ul{
+    margin-left:1.5rem;
+}
+
+/* FAQ */
+
+.faq{
+    margin:6rem 0;
+}
+
+.faq-title{
+    text-align:center;
+    margin-bottom:2rem;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:.5rem;
+}
+
+details{
+    background:var(--surface);
+
+    border:1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:1.2rem;
+
+    margin-bottom:1rem;
+}
+
+summary{
+    cursor:pointer;
+    font-weight:600;
+}
+
+details p{
+    margin-top:1rem;
+    color:var(--muted);
+}
+
+/* CTA */
+
+.cta{
+    text-align:center;
+
+    padding:4rem 2rem;
+
+    border-radius:32px;
+
+    margin:5rem 0;
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(139,92,246,.10),
+        rgba(236,72,153,.10)
+    );
+
+    border:1px solid var(--border);
+}
+
+.cta h2{
+    font-size:clamp(2rem,5vw,3rem);
+    margin-bottom:1rem;
+}
+
+.cta p{
+    color:var(--muted);
+    margin-bottom:2rem;
+}
+
+.btn{
+    display:inline-flex;
+    align-items:center;
+    gap:.5rem;
+
+    text-decoration:none;
+    color:white;
+
+    background:var(--gradient);
+
+    padding:1rem 2rem;
+
+    border-radius:999px;
+
+    font-weight:600;
+}
+
+/* Footer */
+
+.footer{
+    text-align:center;
+    padding:2rem 0 4rem;
+    color:var(--muted);
+}
+
+.material-symbols-rounded{
+    vertical-align:middle;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<section class="hero">
+
+<div class="badge">
+<span class="material-symbols-rounded">
+shield_lock
+</span>
+Privacy & Security
+</div>
+
+<h1>
+Your Data.
+<span>Your Control.</span>
+</h1>
+
+<p>
+At Conn, privacy is fundamental. We are committed to protecting
+your information, being transparent about how data is used,
+and giving you meaningful control over your digital experience.
+</p>
+
+<div class="updated">
+Last Updated • June 2026
+</div>
+
+</section>
+
+<section class="highlights">
+
+<div class="highlight">
+<span class="material-symbols-rounded">security</span>
+<h3>Secure Storage</h3>
+<p>Your information is protected using modern security practices.</p>
+</div>
+
+<div class="highlight">
+<span class="material-symbols-rounded">lock</span>
+<h3>Encrypted Connections</h3>
+<p>Data transmission is secured through encrypted communication.</p>
+</div>
+
+<div class="highlight">
+<span class="material-symbols-rounded">manage_accounts</span>
+<h3>User Control</h3>
+<p>Access, update, or manage your account information anytime.</p>
+</div>
+
+<div class="highlight">
+<span class="material-symbols-rounded">data_usage</span>
+<h3>Minimal Collection</h3>
+<p>We collect only what is necessary to provide our services.</p>
+</div>
+
+</section>
+
+<section class="contents">
+
+<h2>Contents</h2>
+
+<div class="contents-grid">
+
+<a href="#collect">
+<span class="material-symbols-rounded">database</span>
+Information
+</a>
+
+<a href="#usage">
+<span class="material-symbols-rounded">analytics</span>
+Usage
+</a>
+
+<a href="#cookies">
+<span class="material-symbols-rounded">cookie</span>
+Cookies
+</a>
+
+<a href="#third">
+<span class="material-symbols-rounded">hub</span>
+Third Parties
+</a>
+
+<a href="#security">
+<span class="material-symbols-rounded">verified_user</span>
+Security
+</a>
+
+<a href="#rights">
+<span class="material-symbols-rounded">gavel</span>
+Rights
+</a>
+
+<a href="#updates">
+<span class="material-symbols-rounded">edit_note</span>
+Updates
+</a>
+
+<a href="#contact">
+<span class="material-symbols-rounded">support_agent</span>
+Contact
+</a>
+
+</div>
+
+</section>
+
+<section class="policy">
+
+<div class="section" id="collect">
+<h2>
+<span class="material-symbols-rounded">database</span>
+Information We Collect
+</h2>
+
+<p>
+We may collect account information, profile details, device data,
+usage analytics, and communications you voluntarily provide while
+using Conn and its services.
+</p>
+</div>
+
+<div class="section" id="usage">
+<h2>
+<span class="material-symbols-rounded">analytics</span>
+How We Use Information
+</h2>
+
+<ul>
+<li>Provide and improve platform functionality.</li>
+<li>Maintain security and service reliability.</li>
+<li>Respond to support requests and inquiries.</li>
+<li>Analyze performance and user experience.</li>
+<li>Communicate updates and important notices.</li>
+</ul>
+</div>
+
+<div class="section" id="cookies">
+<h2>
+<span class="material-symbols-rounded">cookie</span>
+Cookies & Tracking Technologies
+</h2>
+
+<p>
+Cookies may be used to maintain sessions, remember preferences,
+and improve overall platform performance and usability.
+</p>
+</div>
+
+<div class="section" id="third">
+<h2>
+<span class="material-symbols-rounded">hub</span>
+Third-Party Services
+</h2>
+
+<p>
+Conn may use trusted third-party providers for hosting,
+authentication, analytics, and infrastructure services.
+These providers operate under their own privacy policies.
+</p>
+</div>
+
+<div class="section" id="security">
+<h2>
+<span class="material-symbols-rounded">verified_user</span>
+Security Measures
+</h2>
+
+<p>
+We implement administrative, technical, and organizational safeguards
+designed to protect information against unauthorized access,
+disclosure, alteration, or destruction.
+</p>
+</div>
+
+<div class="section" id="rights">
+<h2>
+<span class="material-symbols-rounded">gavel</span>
+Your Rights
+</h2>
+
+<ul>
+<li>Access your information.</li>
+<li>Request corrections or updates.</li>
+<li>Manage communication preferences.</li>
+<li>Request deletion where applicable.</li>
+<li>Review information associated with your account.</li>
+</ul>
+</div>
+
+<div class="section" id="updates">
+<h2>
+<span class="material-symbols-rounded">edit_note</span>
+Policy Updates
+</h2>
+
+<p>
+We may update this Privacy Policy periodically to reflect product
+changes, legal requirements, or operational improvements.
+</p>
+</div>
+
+<div class="section" id="contact">
+<h2>
+<span class="material-symbols-rounded">support_agent</span>
+Contact Us
+</h2>
+
+<p>
+If you have questions regarding privacy, security, or data handling,
+please reach out through Conn's official support channels.
+</p>
+</div>
+
+</section>
+
+<section class="faq">
+
+<h2 class="faq-title">
+<span class="material-symbols-rounded">help</span>
+Frequently Asked Questions
+</h2>
+
+<details>
+<summary>What information does Conn collect?</summary>
+<p>Only information necessary to provide and improve platform services.</p>
+</details>
+
+<details>
+<summary>Can I request deletion of my data?</summary>
+<p>Yes. Users may request account or data removal where applicable.</p>
+</details>
+
+<details>
+<summary>Does Conn sell personal information?</summary>
+<p>No. Conn does not sell user information to third parties.</p>
+</details>
+
+</section>
+
+<section class="cta">
+
+<h2>Questions About Privacy?</h2>
+
+<p>
+We're committed to transparency, security, and earning your trust.
+</p>
+
+<a href="/contact" class="btn">
+<span class="material-symbols-rounded">support_agent</span>
+Contact Us
+</a>
+
+</section>
+
+<div class="footer">
+© 2026 Conn • Privacy First
+</div>
+
+</div>
+
+</body>
+</html>

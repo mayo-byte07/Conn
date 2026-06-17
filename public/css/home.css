@@ -381,6 +381,9 @@
 .mega-item:hover .mega-item-title {
   color: var(--accent-light);
 }
+[data-theme="light"] .mega-item:hover .mega-item-title {
+  color: #111111 !important; 
+}
 
 /* Dropdown CTA Banner */
 .mega-cta {
@@ -1441,6 +1444,11 @@
   display: flex;
   gap: 60px;
   margin-bottom: 32px;
+  justify-content: center;
+}
+
+.footer-links-grid > div {
+  text-align: center;
 }
 
 .footer-links-grid h4 {
@@ -2018,3 +2026,19 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .navbar-links,
+  .navbar-actions,
+  #navGuest,
+  #navAuth {
+    display: none !important;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+  }
+}
+
+
+
