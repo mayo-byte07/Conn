@@ -14,6 +14,7 @@
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
+
   <link rel="stylesheet" href="css/light-mode.css">
 </head>
 <body>
@@ -80,6 +81,16 @@
             </button>
           </div>
         </div>
+
+        <button class="sidebar-logout-btn" id="generateQRBtn" style="margin-bottom: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; width: 100%; justify-content: center; transition: transform 0.2s;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; stroke: white;">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        Generate QR Code
+    </button>
+  
         <a href="/" target="_blank">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           Home Page
@@ -545,6 +556,50 @@
     <polyline points="18 15 12 9 6 15"/>
   </svg>
    </button>
+
+    <!-- QR Code Generator Library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+  <!-- ══════ QR CODE GENERATOR MODAL ══════ -->
+<div class="modal-overlay" id="qrModal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h2 class="modal-title">✨ Your Profile QR Code</h2>
+            <button class="modal-close" id="qrModalClose">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+        <div style="padding: 24px; text-align: center;">
+            <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">
+                Scan to visit your unified creator profile — perfect for business cards, flyers, stickers & merchandise
+            </p>
+            
+            <!-- QR Code Container -->
+            <div id="qrCodeContainer" style="display: flex; justify-content: center; margin: 20px 0; padding: 20px; background: #ffffff; border-radius: 16px; border: 2px dashed var(--border);"></div>
+            
+            <!-- Profile URL Display -->
+            <div id="qrProfileUrl" style="margin: 16px 0; padding: 12px; background: var(--bg-card); border-radius: 12px; font-size: 0.85rem; word-break: break-all; border: 1px solid var(--border);"></div>
+            
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 12px; margin-top: 20px;">
+                <button class="btn btn-primary" id="downloadQRBtn" style="flex: 1;">
+                    ⬇️ Download PNG
+                </button>
+                <button class="btn btn-secondary" id="copyQRUrlBtn" style="flex: 1;">
+                    📋 Copy URL
+                </button>
+            </div>
+            
+            <p style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 16px;">
+                High-resolution QR code for offline marketing materials
+            </p>
+        </div>
+    </div>
+</div>
+
 
   <script src="/js/admin.js"></script>
   <script src="js/theme-toggle.js"></script>

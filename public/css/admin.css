@@ -1714,3 +1714,43 @@ select.form-input::-webkit-scrollbar-thumb {
   padding: 60px 20px;
 }
 
+/* QR Code Generator Modal Styles */
+#qrModal .modal-content {
+    animation: slideUp 0.3s ease;
+    overflow: hidden;
+}
+
+#qrCodeContainer {
+    transition: all 0.3s ease;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#qrCodeContainer img {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* QR Button Hover Effect */
+#generateQRBtn:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+#generateQRBtn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Slide Up Animation */
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
