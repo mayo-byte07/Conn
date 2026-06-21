@@ -22,6 +22,9 @@ if (!process.env.JWT_SECRET) {
 }
 const JWT_SECRET = process.env.JWT_SECRET;
 
+if (!process.env.GOOGLE_CLIENT_ID) {
+  console.warn('  GOOGLE_CLIENT_ID not set — Google OAuth sign-in will be unavailable.');
+}
 
 //LOGIN limiter
 const loginLimiter = rateLimit({
