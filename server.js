@@ -67,6 +67,17 @@ const googleAuthLimiter = rateLimit({
   }
 });
 
+//CLICK limiter
+const clickLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: 'Too many requests. Please slow down.'
+  }
+});
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -1238,7 +1249,7 @@ app.put('/api/links-reorder', requireAuth, async (req, res) => {
 });
 
 // Track clicks (public — find link by ID across all users)
-app.post('/api/links/:id/click', async (req, res) => {
+app.post('/api/links/:id/click', clickLimiter, async (req, res) => {
   const { data: link } = await supabase
     .from('user_links')
     .select('id, clicks')
@@ -1490,7 +1501,7 @@ app.get('/api/u/:username/settings', async (req, res) => {
 });
 
 // Track clicks on public profile
-app.post('/api/u/:username/links/:id/click', async (req, res) => {
+app.post('/api/u/:username/links/:id/click', clickLimiter, async (req, res) => {
   const { data: user } = await supabase
     .from('users')
     .select('id')

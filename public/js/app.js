@@ -95,8 +95,15 @@
 
       // Custom CSS
       if (settings.customCSS) {
-        const style = document.createElement('style');
-        style.textContent = settings.customCSS;
+        var sanitized = settings.customCSS
+          .replace(/javascript\s*:/gi, 'blocked:')
+          .replace(/expression\s*\(/gi, 'blocked(')
+          .replace(/@import\s+/gi, '/* @import blocked */ ')
+          .replace(/-moz-binding\s*:/gi, '/* blocked */')
+          .replace(/behavior\s*:/gi, '/* blocked */')
+          .replace(/url\(["']?data:/gi, 'url(invalid:');
+        var style = document.createElement('style');
+        style.textContent = sanitized;
         document.head.appendChild(style);
       }
     } catch (err) {
