@@ -101,7 +101,14 @@
           .replace(/@import\s+/gi, '/* @import blocked */ ')
           .replace(/-moz-binding\s*:/gi, '/* blocked */')
           .replace(/behavior\s*:/gi, '/* blocked */')
+<<<<<<< fix/179-dynamic-og-domain
           .replace(/url\(["']?data:/gi, 'url(invalid:');
+=======
+          .replace(/url\(["']?data:/gi, 'url(invalid:')
+          .replace(/position\s*:\s*fixed/gi, '/* position:fixed blocked */')
+          .replace(/position\s*:\s*sticky/gi, '/* position:sticky blocked */')
+          .replace(/z-index\s*:/gi, '/* z-index blocked */');
+>>>>>>> main
         var style = document.createElement('style');
         style.textContent = sanitized;
         document.head.appendChild(style);

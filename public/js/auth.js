@@ -425,7 +425,12 @@ btnLoader.style.display = 'inline';
         setTimeout(() => clearInterval(waitForGoogle), 10000);
       })
       .catch(() => {
-        /* Google auth unavailable — button stays disabled */
+        const btn = document.getElementById("googleSignInBtn");
+        if (btn) {
+          btn.title = "Google sign-in is not configured";
+          btn.style.opacity = '0.4';
+          btn.style.cursor = 'not-allowed';
+        }
       });
   }
 
