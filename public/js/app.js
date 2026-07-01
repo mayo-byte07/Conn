@@ -12,9 +12,14 @@
   const profileUsername = isPublicProfile ? pathParts[1] : null;
   const urlParams = new URLSearchParams(window.location.search);
   const previewTheme = urlParams.get('previewTheme');
-  if (previewTheme) {
-    document.body.className = `theme-${previewTheme}`;
-  }
+
+let activeTheme = null;
+let originalTheme = null;
+
+if (previewTheme) {
+  activeTheme = previewTheme;
+  document.body.className = `theme-${previewTheme}`;
+}
 
   function apiUrl(endpoint) {
     if (isPublicProfile) {
@@ -64,6 +69,34 @@
 
   let currentThemeColor = '168, 85, 247';
 
+// Theme State Management
+let activeTheme = 'midnight';
+let previewThemeState = null;
+function applyTheme(themeName, isPreview = false) {
+  if (!themeName) return;
+
+  // Remove existing theme classes
+  document.body.className = document.body.className
+    .split(' ')
+    .filter(cls => !cls.startsWith('theme-'))
+    .join(' ');
+
+  // Apply new theme
+  document.body.classList.add(`theme-${themeName}`);
+
+  // Update particle colors
+  currentThemeColor =
+    THEME_COLORS[themeName] || '168, 85, 247';
+
+  // Store preview state
+  if (isPreview) {
+    previewThemeState = themeName;
+  } else {
+    activeTheme = themeName;
+    previewThemeState = null;
+  }
+}
+
   // ─── Load Settings & Apply Theme ───
   async function loadSettings() {
     try {
@@ -78,8 +111,8 @@
       // Apply theme
       const theme = settings.selectedTheme || 'midnight';
       if (!previewTheme) {
-        document.body.className = `theme-${theme}`;
-      }
+  applyTheme(theme);
+}
       currentThemeColor = THEME_COLORS[theme] || '168, 85, 247';
 
       // Update page title
@@ -410,12 +443,177 @@
   }
   });
   // --- End Scroll Progress Indicator ---
+  function setupThemePreviewControls() {
+  const controls = document.getElementById('themePreviewControls');
+  const applyBtn = document.getElementById('applyThemeBtn');
+  const cancelBtn = document.getElementById('cancelThemeBtn');
 
+  if (!controls) return;
+
+  // Hide controls if no preview theme exists
+  if (!previewTheme) {
+    controls.style.display = 'none';
+    return;
+  }
+
+  controls.style.display = 'flex';
+
+  // APPLY THEME
+  applyBtn?.addEventListener('click', async () => {
+    try {
+      const res = await fetch('/api/settings/theme', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          selectedTheme: previewTheme
+        })
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to save theme');
+      }
+
+      originalTheme = `theme-${previewTheme}`;
+
+      alert('Theme applied successfully!');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to apply theme');
+    }
+  });
+
+  // CANCEL PREVIEW
+  cancelBtn?.addEventListener('click', () => {
+    document.body.className = originalTheme;
+
+    const cleanUrl =
+      window.location.pathname;
+
+    window.history.replaceState({}, '', cleanUrl);
+
+    controls.style.display = 'none';
+  });
+}
+// ─────────────────────────────────────────────
+// Session Timeout Warning System
+// ─────────────────────────────────────────────
+
+function initSessionTimeout() {
+
+  // Skip public profiles
+  if (isPublicProfile) return;
+
+  const modal =
+    document.getElementById('sessionModalOverlay');
+
+  const countdownEl =
+    document.getElementById('sessionCountdown');
+
+  const extendBtn =
+    document.getElementById('extendSessionBtn');
+
+  const logoutBtn =
+    document.getElementById('logoutSessionBtn');
+
+  let inactivityTimer;
+  let countdownTimer;
+
+  // CONFIG
+  const INACTIVITY_LIMIT = 5 * 60 * 1000;
+  const WARNING_TIME = 30;
+
+  let countdown = WARNING_TIME;
+
+  // Reset inactivity timer
+  function resetTimer() {
+
+    clearTimeout(inactivityTimer);
+
+    inactivityTimer = setTimeout(() => {
+      showWarningModal();
+    }, INACTIVITY_LIMIT);
+  }
+
+  // Show modal
+  function showWarningModal() {
+
+    modal.classList.add('active');
+
+    countdown = WARNING_TIME;
+
+    countdownEl.textContent = countdown;
+
+    countdownTimer = setInterval(() => {
+
+      countdown--;
+
+      countdownEl.textContent = countdown;
+
+      if (countdown <= 0) {
+        clearInterval(countdownTimer);
+        logoutUser();
+      }
+
+    }, 1000);
+  }
+
+  // Extend session
+  function extendSession() {
+
+    modal.classList.remove('active');
+
+    clearInterval(countdownTimer);
+
+    resetTimer();
+  }
+
+  // Logout
+  function logoutUser() {
+
+    localStorage.clear();
+    sessionStorage.clear();
+
+    window.location.href = '/login.html';
+  }
+
+  // User activity events
+  [
+    'mousemove',
+    'keydown',
+    'click',
+    'scroll',
+    'touchstart'
+  ].forEach(event => {
+    document.addEventListener(event, resetTimer);
+  });
+
+  extendBtn?.addEventListener(
+    'click',
+    extendSession
+  );
+
+  logoutBtn?.addEventListener(
+    'click',
+    logoutUser
+  );
+
+  // Start timer
+  resetTimer();
+}
   // ─── Init ───
   document.addEventListener('DOMContentLoaded', async () => {
-    await loadSettings();
-    initParticles();
-    renderProfile();
-    renderLinks();
-  });
+  await loadSettings();
+
+  originalTheme = document.body.className;
+
+  initParticles();
+  renderProfile();
+  renderLinks();
+
+initSessionTimeout();
+
+setupThemePreviewControls();
+});
 })();
