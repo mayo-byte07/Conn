@@ -77,11 +77,7 @@ const clickLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: {
-<<<<<<< fix/179-dynamic-og-domain
-    error: 'Too many requests. Please slow down.'
-=======
     error: 'Too many click requests. Please slow down.'
->>>>>>> main
   }
 });
 
@@ -1256,11 +1252,7 @@ app.put('/api/links-reorder', requireAuth, async (req, res) => {
 });
 
 // Track clicks (public — find link by ID across all users)
-<<<<<<< fix/179-dynamic-og-domain
-app.post('/api/links/:id/click', clickLimiter, async (req, res) => {
-=======
 app.post('/api/links/:id/click', requireAuth, clickLimiter, async (req, res) => {
->>>>>>> main
   const { data: link } = await supabase
     .from('user_links')
     .select('id, clicks')
