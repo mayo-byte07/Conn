@@ -348,7 +348,12 @@
 
     @media (max-width: 768px) {
       .team-nav { padding: 16px 20px; }
-      .team-nav-links { display: none; }
+      .team-nav-links { 
+        margin-left: auto;
+       }
+      .team-nav-links > a {
+        display: none !important;
+      }
       .team-hero { padding: 60px 20px 40px; }
       .team-stats { gap: 24px; flex-wrap: wrap; }
       .team-cta { padding: 40px 24px; }

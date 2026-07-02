@@ -2028,7 +2028,16 @@
 }
 
 @media (max-width: 768px) {
-  .navbar-links,
+  .navbar-links {
+    display: flex !important;
+    gap: 0;
+  }
+
+  .navbar-links > a,
+  .navbar-links > .nav-dropdown {
+    display: none !important;
+  }
+
   .navbar-actions,
   #navGuest,
   #navAuth {
@@ -2037,6 +2046,16 @@
 
   .mobile-menu-btn {
     display: flex;
+  }
+
+  .navbar-logo {
+    margin-right: auto !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .logo-subtext {
+    display: none !important;
   }
 }
 
