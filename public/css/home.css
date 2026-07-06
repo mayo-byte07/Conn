@@ -15,7 +15,10 @@
   filter: blur(28px);
   z-index: 9999;
   mix-blend-mode: screen;
-  transition: transform 0.1s ease-out, width 0.3s ease, height 0.3s ease;
+  transition:
+    transform 0.1s ease-out,
+    width 0.3s ease,
+    height 0.3s ease;
   transform: translate(-50%, -50%);
   display: none;
   /* JS will reveal it to avoid popping instantly */
@@ -35,7 +38,6 @@
 }
 
 @keyframes blink {
-
   0%,
   100% {
     opacity: 1;
@@ -142,8 +144,6 @@
   gap: 6px;
 }
 
-
-
 @media (max-width: 768px) {
   .navbar-actions {
     gap: 6px;
@@ -156,14 +156,6 @@
     font-size: 0.75rem;
   }
 }
-
-
-
-
-
-
-
-
 
 .btn-nav-ghost {
   color: var(--text-secondary);
@@ -382,7 +374,7 @@
   color: var(--accent-light);
 }
 [data-theme="light"] .mega-item:hover .mega-item-title {
-  color: #111111 !important; 
+  color: #111111 !important;
 }
 
 /* Dropdown CTA Banner */
@@ -394,7 +386,11 @@
 }
 
 .mega-cta-content {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(236, 72, 153, 0.08));
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.08),
+    rgba(236, 72, 153, 0.08)
+  );
   border: 1px solid rgba(168, 85, 247, 0.15);
   border-radius: 14px;
   padding: 16px 24px;
@@ -571,7 +567,12 @@
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--accent-light), var(--accent2-light), var(--accent));
+  background: linear-gradient(
+    135deg,
+    var(--accent-light),
+    var(--accent2-light),
+    var(--accent)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -668,7 +669,6 @@
 }
 
 @keyframes heroFloat {
-
   0%,
   100% {
     transform: translateY(0);
@@ -719,7 +719,12 @@
   position: absolute;
   inset: -3px;
   border-radius: 50%;
-  background: conic-gradient(from 0deg, var(--accent), var(--accent2), var(--accent));
+  background: conic-gradient(
+    from 0deg,
+    var(--accent),
+    var(--accent2),
+    var(--accent)
+  );
   animation: rotateGlow 4s linear infinite;
   filter: blur(3px);
   opacity: 0.7;
@@ -796,12 +801,15 @@
 }
 
 .mock-featured {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.1),
+    rgba(236, 72, 153, 0.1)
+  );
   border-color: rgba(168, 85, 247, 0.25);
 }
 
 @keyframes mockLinkFloat {
-
   0%,
   100% {
     transform: translateX(0);
@@ -912,7 +920,11 @@
 
 /* ─── Theme Gallery ─── */
 .theme-gallery-section {
-  background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(168, 85, 247, 0.04), transparent);
+  background: radial-gradient(
+    ellipse 60% 40% at 50% 50%,
+    rgba(168, 85, 247, 0.04),
+    transparent
+  );
 }
 
 .theme-showcase {
@@ -998,7 +1010,11 @@
   font-family: var(--font-heading);
   font-size: 3.5rem;
   font-weight: 800;
-  background: linear-gradient(135deg, var(--accent-light), var(--accent2-light));
+  background: linear-gradient(
+    135deg,
+    var(--accent-light),
+    var(--accent2-light)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1013,7 +1029,11 @@
 
 /* ─── Pricing Section ─── */
 .pricing-section {
-  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(168, 85, 247, 0.04), transparent);
+  background: radial-gradient(
+    ellipse 70% 50% at 50% 50%,
+    rgba(168, 85, 247, 0.04),
+    transparent
+  );
 }
 
 .billing-toggle {
@@ -1111,7 +1131,11 @@
 
 /* Popular card – gradient border glow */
 .pricing-card-popular {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.06), rgba(236, 72, 153, 0.06));
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.06),
+    rgba(236, 72, 153, 0.06)
+  );
   border-color: rgba(168, 85, 247, 0.3);
   box-shadow: 0 0 40px rgba(168, 85, 247, 0.08);
   transform: scale(1.03);
@@ -1203,14 +1227,22 @@
   font-size: 3.2rem;
   font-weight: 800;
   line-height: 1;
-  background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+  background: linear-gradient(
+    135deg,
+    var(--text-primary),
+    var(--text-secondary)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .pricing-card-popular .price-amount {
-  background: linear-gradient(135deg, var(--accent-light), var(--accent2-light));
+  background: linear-gradient(
+    135deg,
+    var(--accent-light),
+    var(--accent2-light)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1314,7 +1346,11 @@
 }
 
 .cta-card {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(236, 72, 153, 0.08));
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.08),
+    rgba(236, 72, 153, 0.08)
+  );
   border: 1px solid rgba(168, 85, 247, 0.2);
   border-radius: var(--radius-xl);
   padding: 60px 40px;
@@ -1340,80 +1376,192 @@
   justify-content: center;
 }
 
-/* ─── Contact Section ─── */
+/* ─── Enhanced Contact Section ─── */
 .contact-section {
-  padding-bottom: 40px;
+  padding-bottom: 80px;
 }
 
-.contact-card {
-  max-width: 640px;
+.contact-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr; /* Sidebar (Left) | Form (Right) */
+  gap: 48px;
+  max-width: 1240px;
   margin: 0 auto;
+  align-items: start;
+}
+
+.contact-form-card {
   background: var(--bg-glass);
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  padding: 36px;
+  padding: 42px 40px;
+  height: fit-content;
 }
 
-.contact-form {
+.contact-info-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.info-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+}
+
+.info-card h4 {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  margin-bottom: 22px;
+  color: var(--text-primary);
+}
+
+.response-time {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.time-badge {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.response-time strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+
+.contact-methods {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
 
-.contact-form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.contact-form .form-group {
-  margin-bottom: 0;
-}
-
-.contact-form .form-label {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.contact-form .form-input {
-  width: 100%;
-  padding: 10px 14px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 0.9rem;
-  color: var(--text-primary);
-  font-family: var(--font-body);
+.contact-method {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 18px;
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: inherit;
   transition: all var(--duration-fast) var(--ease-out);
 }
 
-.contact-form .form-input:focus {
+.contact-method:hover {
+  background: var(--bg-card);
+  transform: translateX(6px);
+}
+
+.method-icon {
+  font-size: 1.5rem;
+  width: 44px;
+  flex-shrink: 0;
+}
+
+.contact-method strong {
+  display: block;
+  font-size: 0.97rem;
+}
+
+.contact-method span {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.social-links {
+  display: flex;
+  gap: 14px;
+}
+
+.social-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.social-btn:hover {
+  background: var(--accent);
+  color: white;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-glow);
-  outline: none;
+  transform: translateY(-3px);
 }
 
-.contact-form .form-input::placeholder {
-  color: var(--text-muted);
-}
-
-.contact-success {
+.faq-cta {
   text-align: center;
-  padding: 32px 20px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  padding: 24px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  line-height: 1.5;
 }
 
-@media (max-width: 768px) {
-  .contact-form-row {
+.faq-cta a {
+  color: var(--accent-light);
+  text-decoration: underline;
+}
+
+/* Form Enhancements */
+.contact-form .required {
+  color: #f87171;
+}
+
+.btn-spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Success & Error States */
+.contact-success,
+.contact-error {
+  padding: 48px 20px;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .contact-grid {
     grid-template-columns: 1fr;
+    gap: 36px;
   }
 
-  .contact-card {
-    padding: 24px;
+  .contact-form-card {
+    padding: 36px;
+  }
+}
+
+@media (max-width: 640px) {
+  .contact-form-card {
+    padding: 28px 24px;
+  }
+
+  .info-card {
+    padding: 28px;
   }
 }
 
@@ -1484,7 +1632,9 @@
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(40px);
-  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   transition-delay: var(--delay, 0s);
   will-change: opacity, transform;
 }
@@ -1533,7 +1683,11 @@
   align-items: center;
   position: relative;
   min-height: 300px;
-  background: radial-gradient(circle at center, rgba(168, 85, 247, 0.1), transparent 70%);
+  background: radial-gradient(
+    circle at center,
+    rgba(168, 85, 247, 0.1),
+    transparent 70%
+  );
 }
 
 .mock-card {
@@ -1854,7 +2008,6 @@
 }
 
 @media (max-width: 768px) {
-
   .use-case-card,
   .use-case-card.reverse {
     flex-direction: column;
@@ -1949,7 +2102,6 @@
 }
 
 @media (max-width: 768px) {
-
   .navbar-links,
   .navbar-actions {
     display: none !important;
@@ -2039,6 +2191,3 @@
     display: flex;
   }
 }
-
-
-
