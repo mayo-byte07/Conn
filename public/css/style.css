@@ -842,3 +842,17 @@ input, textarea, select {
     transition:.2s;
 }
 
+/* ─── Focus Indicator for Keyboard Navigation ─── */
+*:focus-visible {
+  outline: 2px solid #a855f7;
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #a855f7;
+  outline-offset: 2px;
+}

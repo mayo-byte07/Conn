@@ -286,6 +286,7 @@
           btn.rel = 'noopener noreferrer';
           btn.className = 'social-icon-btn';
           btn.title = platform.charAt(0).toUpperCase() + platform.slice(1);
+          btn.setAttribute("aria-label", `Visit our ${platform}`);
           btn.innerHTML = SOCIAL_ICONS[platform];
           socialsRow.appendChild(btn);
         });
