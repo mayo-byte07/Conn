@@ -337,4 +337,44 @@
 #passwordRequirements li.valid::before {
   content: '✓ ';
 }
+.close-page-btn {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text-color, #ffffff);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.close-page-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.close-page-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+
+:root.light-mode .close-page-btn {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #1a1a1a;
+}
+
+:root.light-mode .close-page-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
 
