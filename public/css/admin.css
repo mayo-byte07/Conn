@@ -780,6 +780,42 @@ select.form-input::-webkit-scrollbar-thumb {
   background: var(--bg-primary);
 }
 
+/* Live preview panel avatar visibility fix */
+.preview-panel,
+.preview-panel .phone-wrapper,
+.preview-panel .phone-mockup {
+  overflow: visible;
+}
+
+.preview-panel .phone-mockup {
+  padding-top: 10px;
+}
+
+.preview-panel .mock-avatar,
+.preview-panel .mock-avatar-circle,
+.preview-panel .mock-avatar-glow {
+  position: relative;
+  z-index: 60;
+}
+
+.preview-panel .mock-avatar,
+.preview-panel .mock-avatar-circle {
+  margin-top: 6px;
+}
+
+@media (max-width: 640px) {
+  .preview-panel .phone-mockup {
+    padding-top: 6px;
+  }
+
+  .preview-panel .mock-avatar,
+  .preview-panel .mock-avatar-circle {
+    width: 56px;
+    height: 56px;
+    margin-top: 4px;
+  }
+}
+
 /* ─── Empty State ─── */
 .empty-state {
   text-align: center;
