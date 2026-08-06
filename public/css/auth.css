@@ -338,3 +338,67 @@
   content: '✓ ';
 }
 
+/* ─── Back to Home Floating Button ─── */
+.back-home-floating {
+  position: fixed;
+  top: 18px;
+  left: 20px;
+  z-index: 9999;
+}
+
+.back-home-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all var(--duration-normal) var(--ease-out);
+  backdrop-filter: blur(12px) saturate(1.5);
+  -webkit-backdrop-filter: blur(12px) saturate(1.5);
+  box-shadow: var(--shadow-sm);
+}
+
+.back-home-btn svg {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.back-home-btn:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--accent);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.15);
+}
+
+.back-home-btn:hover svg {
+  transform: translateX(-3px);
+}
+
+.back-home-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive collapse on mobile */
+@media (max-width: 480px) {
+  .back-home-btn span {
+    display: none;
+  }
+  .back-home-btn {
+    padding: 0;
+    width: 38px;
+    height: 38px;
+    justify-content: center;
+    border-radius: 50%;
+  }
+}
+
+
