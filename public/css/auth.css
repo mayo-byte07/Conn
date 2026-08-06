@@ -290,6 +290,21 @@
     font-size: 1.35rem;
   }
 }
+/* ─── Back To Home Button ─── */
+.back-home-btn {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.back-home-btn:hover {
+  color: var(--accent-light);
+  transform: translateX(-2px);
+}
 
 /* ─── Password Strength Indicator ─── */
 .strength-bar {
