@@ -325,14 +325,27 @@
                 <div class="mega-cta-content">
                   <span class="mega-cta-badge">✨ New</span>
                   <h4>8 Premium Gradient Themes</h4>
-                  <p>Aurora Borealis, Cosmic Nebula, Holographic & more — animated mesh gradients you won't find anywhere else.
-                  </p>
-                  <a href="#themes" class="mega-cta-btn">Explore Themes →</a>
+                  <p>Aurora Borealis, Cosmic Nebula, Holographic & more — animated mesh gradients you won't find anywhere else.</p>
+                  <a href="/#themes" class="mega-cta-btn">Explore Themes →</a>
                 </div>
               </div>
             </div>
           </div>
-        </div><a href="/#themes">Templates</a><a href="/#learn">Resources</a><a href="/#contact">Contact</a>
+        <a href="/#themes">Templates</a>
+        <a href="/#learn">Resources</a>
+        <a href="/#contact">Contact</a>
+        <a href="/team">Team</a>
+        <button class="theme-toggle-btn" aria-label="Switch to light mode" title="Switch to light mode">
+          <span class="toggle-track">
+            <span class="toggle-icon toggle-icon-moon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </span>
+            <span class="toggle-icon toggle-icon-sun">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </span>
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
       </nav>
       <div class="navbar-actions navbar-actions-guest" id="navGuest" style="display:none"><a href="/login"
           class="btn-nav btn-nav-ghost">Sign In</a><a href="/signup" class="btn-nav btn-nav-primary">Sign Up →</a></div>
@@ -345,19 +358,32 @@
           <line x1="3" y1="18" x2="21" y2="18" />
         </svg></button>
     </div>
-    <div class="mobile-menu" id="mobileMenu"><button class="mobile-product-toggle" id="mobileProductToggle">Product <svg
-          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="6 9 12 15 18 9" />
-        </svg></button>
-      <div class="mobile-product-panel" id="mobileProductPanel"><a href="/features/link-in-bio">🔗 Link in Bio</a><a
-          href="/features/social-media">📱 Social Media</a><a href="/features/grow">📈 Grow</a><a
-          href="/features/monetize">💰 Monetize</a><a href="/features/analytics">📊 Analytics</a></div><a
-        href="/#themes">Templates</a><a href="/#learn">Resources</a><a href="/#contact">Contact</a>
+    <div class="mobile-menu" id="mobileMenu">
+      <!-- Mobile Product Accordion -->
+      <button class="mobile-product-toggle" id="mobileProductToggle">
+        Product
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="mobile-product-panel" id="mobileProductPanel">
+        <a href="/features/link-in-bio">🔗 Link in Bio + Tools</a>
+        <a href="/features/social-media">📱 Manage Social Media</a>
+        <a href="/features/grow">📈 Grow & Engage Audience</a>
+        <a href="/features/monetize">💰 Monetize Your Following</a>
+        <a href="/features/analytics">📊 Measure Your Success</a>
+      </div>
+      <a href="/#themes">Templates</a>
+      <a href="/#learn">Resources</a>
+      <a href="/#contact">Contact</a>
+      <a href="/team">👥 Team</a>
       <hr>
-      <div class="mobile-guest" id="mobileGuest" style="display:none"><a href="/login">Sign In</a><a href="/signup">Sign
-          Up</a></div>
-      <div class="mobile-auth" id="mobileAuth" style="display:none"><a href="/admin">Dashboard</a><a href="/me">My
-          Page</a></div>
+      <div class="mobile-guest" id="mobileGuest" style="display:none;">
+        <a href="/login">Sign In</a>
+        <a href="/signup">Sign Up</a>
+      </div>
+      <div class="mobile-auth" id="mobileAuth" style="display:none;">
+        <a href="/admin">Dashboard</a>
+        <a href="/me">My Page</a>
+      </div>
     </div>
   </header>
 
@@ -609,6 +635,8 @@
     </div>
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+  <script src="/js/theme-toggle.js"></script>
+  <script src="/js/navbar.js"></script>
   <script src="/js/features.js"></script>
 </body>
 
