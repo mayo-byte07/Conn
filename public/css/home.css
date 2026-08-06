@@ -54,10 +54,10 @@
   right: 0;
   z-index: 1000;
   padding: 0 24px;
-  background: rgba(5, 5, 5, 0.6);
+  background: rgba(5, 5, 5, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
   transition: all var(--duration-normal) var(--ease-out);
 }
 
@@ -563,7 +563,7 @@
 
 .hero-title {
   font-family: var(--font-heading);
-  font-size: 3.8rem;
+  font-size: clamp(2.2rem, 6vw, 3.8rem);
   font-weight: 800;
   line-height: 1.08;
   letter-spacing: -0.03em;
@@ -579,7 +579,7 @@
 
 .hero-subtitle {
   font-size: 1.1rem;
-  color: var(--text-secondary);
+  color: #cbd5e1;
   line-height: 1.7;
   margin-bottom: 32px;
   max-width: 480px;

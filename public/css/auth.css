@@ -205,6 +205,12 @@
   margin-top: 24px;
   font-size: 0.85rem;
   color: var(--text-muted);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
 }
 
 .auth-footer a {

@@ -97,8 +97,24 @@
 .sidebar-footer {
   padding-top: 16px;
   border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
+.sidebar-footer a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  transition: all var(--duration-fast) var(--ease-out);
+  text-align: center;
+}
 /* ─── Public URL Bar ─── */
 .sidebar-public-url {
   background: rgba(168, 85, 247, 0.06);
@@ -150,16 +166,7 @@
 .sidebar-url-copy svg { width: 12px; height: 12px; }
 
 
-.sidebar-footer a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  transition: all var(--duration-fast) var(--ease-out);
-}
+
 
 .sidebar-footer a:hover {
   background: var(--bg-glass-hover);
