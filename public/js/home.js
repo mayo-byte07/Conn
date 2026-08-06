@@ -99,8 +99,6 @@
       const y = window.scrollY;
       navbar.classList.toggle('scrolled', y > 50);
       lastY = y;
-      // Close mega dropdown on scroll
-      closeMegaDropdown();
     });
 
     // Mobile menu
@@ -203,6 +201,13 @@
       }
     });
 
+    // Mobile: close dropdown on scroll (keeps JS state in sync)
+    window.addEventListener('scroll', () => {
+      if (window.innerWidth <= 768 && isOpen) {
+        closeMegaDropdownDelayed(0);
+      }
+    });
+
     // Close on link click inside mega dropdown
     megaPanel.querySelectorAll('a').forEach(a => {
       a.addEventListener('click', () => {
@@ -212,11 +217,7 @@
     });
   }
 
-  // Global close function (used by scroll handler)
-  function closeMegaDropdown() {
-    const dropdown = document.getElementById('navDropdown');
-    if (dropdown) dropdown.classList.remove('open');
-  }
+  
 
   // ─── Counter Animation ───
   function initCounters() {
