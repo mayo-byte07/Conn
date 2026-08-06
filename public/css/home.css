@@ -115,118 +115,34 @@
 }
 
 .navbar-links a {
+  position: relative;
   font-size: 0.9rem;
   color: var(--text-secondary);
-  transition: color var(--duration-fast) var(--ease-out);
   text-decoration: none;
+  padding: 4px 0;
+  transition: color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out), text-shadow var(--duration-fast) var(--ease-out);
+}
+
+.navbar-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 2px;
+  transition: width var(--duration-normal) var(--ease-out);
 }
 
 .navbar-links a:hover {
   color: var(--text-primary);
+  transform: translateY(-2px);
+  text-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
 }
 
-.navbar-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-nav {
-  padding: 8px 18px;
-  border-radius: var(--radius-full);
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all var(--duration-fast) var(--ease-out);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-
-
-@media (max-width: 768px) {
-  .navbar-actions {
-    gap: 6px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .btn-nav {
-    padding: 6px 12px;
-    font-size: 0.75rem;
-  }
-}
-
-
-
-
-
-
-
-
-
-.btn-nav-ghost {
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
-}
-
-.btn-nav-ghost:hover {
-  color: var(--text-primary);
-  border-color: var(--border-hover);
-  background: var(--bg-glass);
-}
-
-.btn-nav-primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  color: white;
-}
-
-.btn-nav-primary:hover {
-  box-shadow: var(--shadow-glow);
-  transform: translateY(-1px);
-}
-
-.mobile-menu-btn {
-  display: none;
-  width: 40px;
-  height: 40px;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-secondary);
-}
-
-.mobile-menu-btn svg {
-  width: 22px;
-  height: 22px;
-}
-
-.mobile-menu {
-  display: none;
-  flex-direction: column;
-  padding: 16px 0;
-  border-top: 1px solid var(--border);
-}
-
-.mobile-menu.open {
-  display: flex;
-}
-
-.mobile-menu a {
-  padding: 12px 16px;
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  text-decoration: none;
-  transition: color var(--duration-fast) var(--ease-out);
-}
-
-.mobile-menu a:hover {
-  color: var(--text-primary);
-}
-
-.mobile-menu hr {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 8px 16px;
+.navbar-links a:hover::after {
+  width: 100%;
 }
 
 /* ─── Product Mega Dropdown ─── */
