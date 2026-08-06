@@ -841,4 +841,45 @@ input, textarea, select {
 .toggle-password svg{
     transition:.2s;
 }
+.theme-preview-controls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
 
+  display: flex;
+  gap: 12px;
+
+  padding: 12px 16px;
+
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 999px;
+}
+
+.theme-preview-controls button {
+  border: none;
+  padding: 10px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+#applyThemeBtn {
+  background: var(--accent);
+  color: white;
+}
+
+#cancelThemeBtn {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-primary);
+}
+
+.theme-preview-controls button:hover {
+  transform: translateY(-2px);
+}
