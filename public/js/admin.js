@@ -975,6 +975,61 @@
     }
   });
 
+  // ═══════════ PROFILE SETUP ═══════════
+
+  let interestRecommenderInstance = null;
+
+  /**
+   * Initialize the AI-based interest recommendation system
+   * Sets up keyword-based suggestion engine with real-time updates
+   */
+  function initInterestRecommender(savedInterests = []) {
+    // Check if recommender library is loaded
+    if (!window.InterestRecommender) {
+      console.error('InterestRecommender not loaded');
+      return;
+    }
+
+    const bioInput = document.getElementById('inputBio');
+    const skillsInput = document.getElementById('inputSkills');
+    const suggestionsContainer = document.getElementById('interestSuggestionsContainer');
+    const tagsContainer = document.getElementById('interestTagsContainer');
+
+    if (!bioInput || !skillsInput || !suggestionsContainer || !tagsContainer) {
+      console.error('Required interest elements not found in DOM');
+      return;
+    }
+
+    // Initialize the recommender
+    interestRecommenderInstance = window.InterestRecommender.initInterestRecommender({
+      bioInput,
+      skillsInput,
+      suggestionsContainer,
+      tagsContainer,
+      onSuggestionSelect: (interest, allInterests) => {
+        // Optional: Could trigger auto-save here
+      },
+      onTagRemove: (interest, allInterests) => {
+        // Optional: Could trigger auto-save here
+      },
+    });
+
+    // Load saved interests if any
+    if (savedInterests && savedInterests.length > 0) {
+      interestRecommenderInstance.loadInterests(savedInterests);
+    }
+  }
+
+  /**
+   * Get currently selected interests from the recommender
+   */
+  function getSelectedInterests() {
+    if (!interestRecommenderInstance) {
+      return [];
+    }
+    return interestRecommenderInstance.getSelectedInterests();
+  }
+
   // ═══════════ PROFILE ═══════════
 
   async function loadProfile() {
@@ -983,6 +1038,7 @@
       const profile = await res.json();
       document.getElementById('inputName').value = profile.name || '';
       document.getElementById('inputBio').value = profile.bio || '';
+      document.getElementById('inputSkills').value = profile.skills || '';
       document.getElementById('inputAvatar').value = profile.avatar || '';
       if (profile.socials) {
         document.getElementById('socialTwitter').value = profile.socials.twitter || '';
@@ -993,6 +1049,9 @@
         document.getElementById('socialTiktok').value = profile.socials.tiktok || '';
         document.getElementById('socialEmail').value = profile.socials.email || '';
       }
+      
+      // Initialize interest recommender and load interests
+      initInterestRecommender(profile.interests || []);
     } catch (err) {
       showToast('Failed to load profile', 'error');
     }
@@ -1057,7 +1116,9 @@
     const data = {
       name: document.getElementById('inputName').value.trim(),
       bio: document.getElementById('inputBio').value.trim(),
+      skills: document.getElementById('inputSkills').value.trim(),
       avatar: document.getElementById('inputAvatar').value.trim(),
+      interests: getSelectedInterests(),
       socials
     };
     try {

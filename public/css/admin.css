@@ -1714,3 +1714,195 @@ select.form-input::-webkit-scrollbar-thumb {
   padding: 60px 20px;
 }
 
+
+/* -----------------------------------------------------------
+   CONN — Interest Recommendation Styles
+   ----------------------------------------------------------- */
+
+/* --- Interest Suggestions Container --- */
+.interest-suggestions {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(8px);
+}
+
+.interest-suggestions-header {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.interest-suggestions-header svg {
+  width: 16px;
+  height: 16px;
+  opacity: 0.6;
+}
+
+/* --- Suggestion Chips --- */
+.interest-suggestions-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 32px;
+}
+
+.interest-suggestion-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.1));
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--accent-light);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+
+.interest-suggestion-chip:hover {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2));
+  border-color: rgba(168, 85, 247, 0.5);
+  transform: translateY(-2px);
+}
+
+.interest-suggestion-chip:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.interest-suggestion-chip:active {
+  transform: translateY(0);
+}
+
+.interest-suggestion-chip .chip-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.interest-suggestion-chip:hover .chip-icon {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* --- Interest Tags Container --- */
+.interest-tags-container {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 32px;
+}
+
+/* --- Interest Tags --- */
+.interest-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: white;
+  animation: slideInTag 0.3s var(--ease-out);
+}
+
+@keyframes slideInTag {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.interest-tag .tag-text {
+  user-select: none;
+}
+
+.interest-tag .tag-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  flex-shrink: 0;
+}
+
+.interest-tag .tag-remove:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+.interest-tag .tag-remove svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* --- Empty State --- */
+.interest-suggestions p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* --- Profile Grid Layout --- */
+.profile-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.profile-form-grid .form-group.full {
+  grid-column: 1 / -1;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+  .interest-suggestion-chip {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+
+  .interest-tag {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+
+  .profile-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .interest-suggestions-chips {
+    gap: 6px;
+  }
+
+  .interest-tags-container {
+    gap: 6px;
+  }
+}
