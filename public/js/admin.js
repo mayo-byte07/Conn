@@ -1371,3 +1371,272 @@
   }
 })();
 
+// =============================================
+// QR CODE GENERATOR MODULE
+// =============================================
+
+let currentQRCode = null;
+let currentProfileURL = '';
+
+/**
+ * Fetch current user's profile and construct public URL
+ */
+async function getUserProfileURL() {
+    try {
+        const response = await fetch('/api/profile');
+        const data = await response.json();
+        if (data.success && data.profile) {
+            const username = data.profile.username;
+            // Conn uses /u/username pattern for public profiles
+            currentProfileURL = `${window.location.origin}/u/${username}`;
+            return currentProfileURL;
+        }
+    } catch (error) {
+        console.error('Error fetching profile:', error);
+        return null;
+    }
+}
+
+/**
+ * Open QR Modal and generate QR code
+ */
+async function openQRModal() {
+    const modal = document.getElementById('qrModal');
+    const qrContainer = document.getElementById('qrCodeContainer');
+    
+    if (!modal || !qrContainer) {
+        console.error('QR Modal elements not found');
+        return;
+    }
+    
+    // Show modal with fade effect
+    modal.style.display = 'flex';
+    modal.style.opacity = '0';
+    setTimeout(() => { modal.style.opacity = '1'; }, 50);
+    
+    // Clear previous QR code
+    qrContainer.innerHTML = '';
+    
+    // Get profile URL
+    const profileUrl = await getUserProfileURL();
+    
+    if (!profileUrl) {
+        qrContainer.innerHTML = `
+            <p style="color: var(--danger); font-size: 0.9rem;">
+                ⚠️ Unable to generate QR code. Please refresh and try again.
+            </p>
+        `;
+        return;
+    }
+    
+    // Display URL
+    const urlDisplay = document.getElementById('qrProfileUrl');
+    if (urlDisplay) {
+        urlDisplay.innerHTML = `
+            <span style="font-weight: 600; color: var(--text-primary);">Your public profile:</span>
+            <code style="font-family: monospace; color: var(--accent); word-break: break-all; display: block; margin-top: 4px;">
+                ${profileUrl}
+            </code>
+        `;
+    }
+    
+    // Generate QR code
+    try {
+        currentQRCode = new QRCode(qrContainer, {
+            text: profileUrl,
+            width: 250,
+            height: 250,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H  // High error correction for better scanning
+        });
+        
+        showToast('✅ QR Code generated successfully!', 'success');
+    } catch (error) {
+        console.error('QR generation error:', error);
+        qrContainer.innerHTML = `
+            <p style="color: var(--danger); font-size: 0.9rem;">
+                ❌ Failed to generate QR code. Please try again.
+            </p>
+        `;
+    }
+}
+
+/**
+ * Close QR Modal
+ */
+function closeQRModal() {
+    const modal = document.getElementById('qrModal');
+    if (modal) {
+        modal.style.opacity = '0';
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+    
+    // Clean up QR container
+    const qrContainer = document.getElementById('qrCodeContainer');
+    if (qrContainer) {
+        setTimeout(() => {
+            qrContainer.innerHTML = '';
+        }, 300);
+    }
+}
+
+/**
+ * Download QR Code as High-Resolution PNG
+ */
+async function downloadQRCode() {
+    const qrContainer = document.getElementById('qrCodeContainer');
+    if (!qrContainer) return;
+    
+    // Wait for QR to render
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    const qrImage = qrContainer.querySelector('img');
+    
+    if (qrImage && qrImage.src) {
+        try {
+            // Fetch profile for filename
+            const profile = await fetch('/api/profile').then(r => r.json());
+            const username = profile.profile?.username || 'creator';
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.download = `conn_qrcode_${username}_${Date.now()}.png`;
+            link.href = qrImage.src;
+            link.click();
+            
+            showToast('✅ QR Code downloaded successfully!', 'success');
+        } catch (error) {
+            console.error('Download error:', error);
+            showToast('❌ Failed to download QR code', 'error');
+        }
+    } else {
+        showToast('❌ Please wait for QR code to generate', 'error');
+    }
+}
+
+/**
+ * Copy Profile URL to Clipboard
+ */
+async function copyProfileURL() {
+    if (!currentProfileURL) {
+        await getUserProfileURL();
+    }
+    
+    if (currentProfileURL) {
+        try {
+            await navigator.clipboard.writeText(currentProfileURL);
+            showToast('✅ Profile URL copied to clipboard!', 'success');
+        } catch (err) {
+            // Fallback for older browsers
+            const textarea = document.createElement('textarea');
+            textarea.value = currentProfileURL;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showToast('✅ Profile URL copied to clipboard!', 'success');
+        }
+    } else {
+        showToast('❌ Unable to get profile URL', 'error');
+    }
+}
+
+/**
+ * Initialize QR Code Module
+ */
+function initQRModule() {
+    // Generate QR button
+    const qrBtn = document.getElementById('generateQRBtn');
+    if (qrBtn) {
+        qrBtn.addEventListener('click', openQRModal);
+        console.log('✅ QR Module initialized');
+    } else {
+        console.warn('⚠️ QR button not found - make sure element with id="generateQRBtn" exists');
+    }
+    
+    // Modal close handlers
+    const qrModalClose = document.getElementById('qrModalClose');
+    if (qrModalClose) {
+        qrModalClose.addEventListener('click', closeQRModal);
+    }
+    
+    // Click outside modal to close
+    const qrModal = document.getElementById('qrModal');
+    if (qrModal) {
+        qrModal.addEventListener('click', (e) => {
+            if (e.target === qrModal) closeQRModal();
+        });
+    }
+    
+    // Download button
+    const downloadBtn = document.getElementById('downloadQRBtn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', downloadQRCode);
+    }
+    
+    // Copy URL button
+    const copyUrlBtn = document.getElementById('copyQRUrlBtn');
+    if (copyUrlBtn) {
+        copyUrlBtn.addEventListener('click', copyProfileURL);
+    }
+    
+    // Escape key handler
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('qrModal');
+            if (modal && modal.style.display === 'flex') {
+                closeQRModal();
+            }
+        }
+    });
+}
+
+// =============================================
+// INITIALIZE ON DOM READY
+// =============================================
+
+// Check if showToast exists, if not add it
+if (typeof showToast !== 'function') {
+    window.showToast = function(message, type = 'info') {
+        const toastContainer = document.getElementById('toastContainer');
+        if (!toastContainer) {
+            console.warn('Toast container not found');
+            return;
+        }
+        
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        `;
+        
+        toastContainer.appendChild(toast);
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, 3000);
+    };
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initQRModule);
+} else {
+    initQRModule();
+}
