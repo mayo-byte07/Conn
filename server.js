@@ -22,6 +22,9 @@ if (!process.env.JWT_SECRET) {
 }
 const JWT_SECRET = process.env.JWT_SECRET;
 
+if (!process.env.GOOGLE_CLIENT_ID) {
+  console.warn('  GOOGLE_CLIENT_ID not set — Google OAuth sign-in will be unavailable.');
+}
 
 //LOGIN limiter
 const loginLimiter = rateLimit({
@@ -64,6 +67,17 @@ const googleAuthLimiter = rateLimit({
   legacyHeaders: false,
   message: {
     error: 'Too many Google auth attempts. Please try again later.'
+  }
+});
+
+//CLICK limiter
+const clickLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: 'Too many click requests. Please slow down.'
   }
 });
 
@@ -623,7 +637,11 @@ app.get('/api/profile', requireAuth, async (req, res) => {
 
   if (!profile) {
     return res.json({
-      name: 'Your Name', bio: '', avatar: '',
+      name: 'Your Name', 
+      bio: '', 
+      skills: '',
+      avatar: '',
+      interests: [],
       socials: { twitter: '', instagram: '', github: '', linkedin: '', youtube: '', tiktok: '', email: '' }
     });
   }
@@ -631,7 +649,9 @@ app.get('/api/profile', requireAuth, async (req, res) => {
   res.json({
     name: profile.name,
     bio: profile.bio,
+    skills: profile.skills || '',
     avatar: profile.avatar,
+    interests: profile.interests || [],
     socials: profile.socials || {}
   });
 });
@@ -696,7 +716,9 @@ app.put('/api/profile', requireAuth, async (req, res) => {
   const updates = {
     name: req.body.name ?? existing?.name ?? 'Your Name',
     bio: req.body.bio ?? existing?.bio ?? '',
+    skills: req.body.skills ?? existing?.skills ?? '',
     avatar: req.body.avatar ?? existing?.avatar ?? '',
+    interests: Array.isArray(req.body.interests) ? req.body.interests.filter(i => typeof i === 'string' && i.trim().length > 0) : (existing?.interests ?? []),
     socials
   };
 
@@ -1238,7 +1260,7 @@ app.put('/api/links-reorder', requireAuth, async (req, res) => {
 });
 
 // Track clicks (public — find link by ID across all users)
-app.post('/api/links/:id/click', async (req, res) => {
+app.post('/api/links/:id/click', requireAuth, clickLimiter, async (req, res) => {
   const { data: link } = await supabase
     .from('user_links')
     .select('id, clicks')
@@ -1363,7 +1385,9 @@ app.get('/api/u/:username/profile', async (req, res) => {
   res.json({
     name: profile?.name || 'User',
     bio: profile?.bio || '',
+    skills: profile?.skills || '',
     avatar: profile?.avatar || '',
+    interests: profile?.interests || [],
     socials: profile?.socials || {}
   });
 });
@@ -1490,7 +1514,7 @@ app.get('/api/u/:username/settings', async (req, res) => {
 });
 
 // Track clicks on public profile
-app.post('/api/u/:username/links/:id/click', async (req, res) => {
+app.post('/api/u/:username/links/:id/click', clickLimiter, async (req, res) => {
   const { data: user } = await supabase
     .from('users')
     .select('id')

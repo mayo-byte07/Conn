@@ -2,6 +2,46 @@
    CONN — Auth Pages (Login / Signup)
    ═══════════════════════════════════════════════════════════ */
 
+.auth-back-home {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.auth-back-home svg {
+  width: 16px;
+  height: 16px;
+}
+
+.auth-back-home:hover {
+  color: var(--text-primary);
+  border-color: var(--accent);
+  background: rgba(168, 85, 247, 0.08);
+  transform: translateX(-2px);
+}
+
+@media (max-width: 480px) {
+  .auth-back-home {
+    top: 12px;
+    left: 12px;
+    padding: 6px 10px;
+    font-size: 0.78rem;
+  }
+}
+
 .auth-page {
   min-height: 100vh;
   display: flex;

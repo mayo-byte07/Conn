@@ -167,48 +167,176 @@
     }
     .member-social-link svg { width: 15px; height: 15px; }
 
-    /* Apply CTA */
-    .team-cta {
-      max-width: 760px; margin: 0 auto 100px;
-      background: linear-gradient(135deg, rgba(168,85,247,0.08), rgba(236,72,153,0.06));
-      border: 1px solid rgba(168,85,247,0.2); border-radius: 24px;
-      padding: 60px 48px; text-align: center; position: relative; overflow: hidden;
-    }
-    .team-cta::before {
-      content: ''; position: absolute;
-      width: 300px; height: 300px; border-radius: 50%;
-      background: rgba(168,85,247,0.08); filter: blur(60px);
-      top: -100px; left: 50%; transform: translateX(-50%);
-    }
-    .team-cta-emoji { font-size: 2.5rem; margin-bottom: 20px; display: block; }
-    .team-cta h2 {
-      font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 800;
-      color: #f5f5f5; letter-spacing: -0.02em; margin-bottom: 12px;
-    }
-    .team-cta p { color: #7a7a7a; font-size: 0.95rem; line-height: 1.7; margin-bottom: 32px; max-width: 480px; margin-left: auto; margin-right: auto; }
-    .team-cta-roles {
-      display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 36px;
-    }
-    .team-cta-role {
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-      color: #a0a0a0; font-size: 0.8rem; padding: 6px 16px; border-radius: 9999px;
-    }
-    .btn-apply {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: linear-gradient(135deg, #a855f7, #ec4899);
-      color: #fff; font-family: 'Outfit', sans-serif; font-weight: 700;
-      font-size: 1rem; padding: 16px 40px; border-radius: 9999px;
-      text-decoration: none; border: none; cursor: pointer;
-      box-shadow: 0 8px 32px rgba(168,85,247,0.35);
-      transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
-      /* fix 'Apply Now' buttons in Team Page */
-      position: relative;
-      z-index: 2;
-    }
-    .btn-apply:hover {
-      transform: translateY(-3px); box-shadow: 0 16px 48px rgba(168,85,247,0.5);
-    }
-    .btn-apply svg { width: 18px; height: 18px; }
+    /* Apply CTA - Modern Classic */
+  .team-cta {
+    max-width: 980px;
+    margin: 0 auto 100px;
+    padding: 72px 48px;
+    text-align: center;
+    position: relative;
+  overflow: hidden;
+  border-radius: 32px;
+  border: 1px solid rgba(168,85,247,0.28);
+  background:
+    radial-gradient(circle at top center, rgba(168,85,247,0.22), transparent 38%),
+    linear-gradient(135deg, rgba(168,85,247,0.10), rgba(236,72,153,0.08));
+  box-shadow: 0 24px 70px rgba(168,85,247,0.16);
+}
+
+.team-cta::before {
+  content: "";
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: rgba(236,72,153,0.18);
+  filter: blur(90px);
+  top: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.team-cta-emoji {
+  position: relative;
+  z-index: 2;
+  font-size: 3rem;
+  margin-bottom: 22px;
+  display: inline-block;
+  animation: rocketFloat 3s ease-in-out infinite;
+}
+
+.team-cta h2 {
+  position: relative;
+  z-index: 2;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.15;
+  color: #f8fafc;
+  letter-spacing: -0.04em;
+  margin-bottom: 18px;
+}
+
+.team-cta p {
+  position: relative;
+  z-index: 2;
+  color: #b8b8b8;
+  font-size: 1rem;
+  line-height: 1.8;
+  max-width: 650px;
+  margin: 0 auto 36px;
+}
+
+.team-cta-role:hover {
+  color: #fff;
+  transform: translateY(-5px);
+  background: rgba(236,72,153,0.14);
+  border-color: rgba(236,72,153,0.45);
+  box-shadow: 0 14px 32px rgba(236,72,153,0.2);
+}
+
+.btn-apply {
+  position: relative;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 18px 46px;
+  border-radius: 999px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 18px 45px rgba(168,85,247,0.38);
+  transition: 0.35s ease;
+}
+
+.btn-apply:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 26px 65px rgba(236,72,153,0.48);
+}
+
+.btn-apply svg {
+  width: 20px;
+  height: 20px;
+}
+
+@keyframes rocketFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(-5deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(8deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .team-cta {
+    padding: 48px 22px;
+  }
+
+  .btn-apply {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.team-cta h2{
+  font-family:'Outfit',sans-serif;
+  font-size:clamp(2.5rem,5vw,4rem);
+  font-weight:900;
+  line-height:1.1;
+  color:#111827;
+  letter-spacing:-2px;
+  margin-bottom:24px;
+  text-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+.team-cta p{
+  max-width:700px;
+  margin:0 auto 40px;
+  font-size:1.15rem;
+  line-height:1.9;
+  font-weight:500;
+  color:#4b5563;
+}
+
+.team-cta-roles{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:14px;
+  margin:40px 0;
+}
+
+.team-cta-role{
+  background:#ffffff;
+  color:#374151;
+  font-size:0.95rem;
+  font-weight:700;
+  padding:12px 20px;
+  border-radius:999px;
+  border:1px solid rgba(168,85,247,0.2);
+  box-shadow:0 8px 20px rgba(0,0,0,0.06);
+  transition:all .3s ease;
+}
+
+.team-cta-role:hover{
+  transform:translateY(-4px);
+  color:#a855f7;
+  box-shadow:0 12px 25px rgba(168,85,247,0.2);
+}
+
+.btn-apply{
+  font-size:1.1rem;
+  font-weight:800;
+  padding:20px 50px;
+}
 
     /* Footer */
     .team-footer {
@@ -361,7 +489,14 @@
       <div class="team-cta" id="apply">
         <span class="team-cta-emoji">🚀</span>
         <h2>Join the team building<br>the future of creator tools.</h2>
-        <p>We're a remote-first team that moves fast, ships often, and genuinely cares about creators. If that sounds like you, we'd love to hear from you.</p>
+        <!-- 
+        
+        -->
+        <p>
+  We're a remote-first team that moves fast, ships often, and genuinely cares about creators.<br>
+  If you're passionate about building impactful products and working with talented people,<br>
+  we'd love to hear from you.
+</p>
         <div class="team-cta-roles">
           <span class="team-cta-role">🎨 Designer</span>
           <span class="team-cta-role">⚙️ Backend Dev</span>
@@ -382,7 +517,7 @@
 
     <!-- Footer -->
     <footer class="team-footer">
-      <p>© 2025 Conn — Built with ⚡ by <a href="/">aethercodesociety</a> · <a href="/">Back to Home</a></p>
+      <p>© 2026 Conn — Built with ⚡ by <a href="/">aethercodesociety</a> · <a href="/">Back to Home</a></p>
     </footer>
 
   </div>
