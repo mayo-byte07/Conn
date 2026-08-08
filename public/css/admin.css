@@ -1,14 +1,14 @@
-/* ═══════════════════════════════════════════════════════════
-   CONN — Admin Dashboard Styles
-   ═══════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   CONN â€” Admin Dashboard Styles
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ─── Layout ─── */
+/* â”€â”€â”€ Layout â”€â”€â”€ */
 .admin-layout {
   display: flex;
   min-height: 100vh;
 }
 
-/* ─── Sidebar ─── */
+/* â”€â”€â”€ Sidebar â”€â”€â”€ */
 .admin-sidebar {
   width: 260px;
   background: var(--bg-secondary);
@@ -99,7 +99,7 @@
   border-top: 1px solid var(--border);
 }
 
-/* ─── Public URL Bar ─── */
+/* â”€â”€â”€ Public URL Bar â”€â”€â”€ */
 .sidebar-public-url {
   background: rgba(168, 85, 247, 0.06);
   border: 1px solid rgba(168, 85, 247, 0.15);
@@ -198,7 +198,7 @@
   color: #ef4444;
 }
 
-/* ─── Main Content ─── */
+/* â”€â”€â”€ Main Content â”€â”€â”€ */
 .admin-main {
   flex: 1;
   margin-left: 260px;
@@ -226,7 +226,7 @@
   gap: 10px;
 }
 
-/* ─── Stats Cards ─── */
+/* â”€â”€â”€ Stats Cards â”€â”€â”€ */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -265,7 +265,7 @@
   background-clip: text;
 }
 
-/* ─── Buttons ─── */
+/* â”€â”€â”€ Buttons â”€â”€â”€ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -323,7 +323,7 @@
   height: 16px;
 }
 
-/* ─── Section Card ─── */
+/* â”€â”€â”€ Section Card â”€â”€â”€ */
 .section-card {
   background: var(--bg-glass);
   border: 1px solid var(--border);
@@ -345,7 +345,7 @@
   font-size: 1.1rem;
 }
 
-/* ─── Link Item (Admin) ─── */
+/* â”€â”€â”€ Link Item (Admin) â”€â”€â”€ */
 .admin-links-list {
   display: flex;
   flex-direction: column;
@@ -471,7 +471,7 @@
   transform: translateX(16px);
 }
 
-/* ─── Form Fields ─── */
+/* â”€â”€â”€ Form Fields â”€â”€â”€ */
 .form-group {
   margin-bottom: 18px;
 }
@@ -511,7 +511,7 @@ textarea.form-input {
   min-height: 80px;
 }
 
-/* ─── Select Dropdown ─── */
+/* â”€â”€â”€ Select Dropdown â”€â”€â”€ */
 select.form-input {
   cursor: pointer;
   appearance: none;
@@ -555,7 +555,7 @@ select.form-input::-webkit-scrollbar-thumb {
 
 
 
-/* ─── Character Counter ─── */
+/* â”€â”€â”€ Character Counter â”€â”€â”€ */
 .char-counter {
   margin-top: 6px;
   font-size: 0.8rem;
@@ -578,7 +578,7 @@ select.form-input::-webkit-scrollbar-thumb {
   font-weight: 700;
 }
 
-/* ─── Modal ─── */
+/* â”€â”€â”€ Modal â”€â”€â”€ */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -657,7 +657,7 @@ select.form-input::-webkit-scrollbar-thumb {
   border-top: 1px solid var(--border);
 }
 
-/* ─── Toast Notification ─── */
+/* â”€â”€â”€ Toast Notification â”€â”€â”€ */
 .toast-container {
   position: fixed;
   bottom: 24px;
@@ -709,7 +709,7 @@ select.form-input::-webkit-scrollbar-thumb {
   }
 }
 
-/* ─── Preview Panel ─── */
+/* â”€â”€â”€ Preview Panel â”€â”€â”€ */
 .preview-panel {
   position: fixed;
   top: 0;
@@ -780,7 +780,7 @@ select.form-input::-webkit-scrollbar-thumb {
   background: var(--bg-primary);
 }
 
-/* ─── Empty State ─── */
+/* â”€â”€â”€ Empty State â”€â”€â”€ */
 .empty-state {
   text-align: center;
   padding: 48px 20px;
@@ -805,7 +805,7 @@ select.form-input::-webkit-scrollbar-thumb {
   font-size: 0.875rem;
 }
 
-/* ─── Mobile Sidebar Toggle ─── */
+/* â”€â”€â”€ Mobile Sidebar Toggle â”€â”€â”€ */
 .sidebar-toggle {
   display: none;
   position: fixed;
@@ -827,7 +827,7 @@ select.form-input::-webkit-scrollbar-thumb {
   height: 20px;
 }
 
-/* ─── Sections ─── */
+/* â”€â”€â”€ Sections â”€â”€â”€ */
 .admin-section {
   display: none;
 }
@@ -837,7 +837,7 @@ select.form-input::-webkit-scrollbar-thumb {
   animation: fadeIn 0.3s var(--ease-out);
 }
 
-/* ─── Profile Form ─── */
+/* â”€â”€â”€ Profile Form â”€â”€â”€ */
 .profile-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -848,7 +848,7 @@ select.form-input::-webkit-scrollbar-thumb {
   grid-column: 1 / -1;
 }
 
-/* ─── Responsive ─── */
+/* â”€â”€â”€ Responsive â”€â”€â”€ */
 @media (max-width: 1100px) {
   .preview-panel {
     display: none;
@@ -888,7 +888,7 @@ select.form-input::-webkit-scrollbar-thumb {
   }
 }
 
-/* ─── Subscription Access Control ─── */
+/* â”€â”€â”€ Subscription Access Control â”€â”€â”€ */
 
 /* Upgrade Banner */
 .upgrade-banner {
@@ -1117,7 +1117,7 @@ select.form-input::-webkit-scrollbar-thumb {
   color: #fbbf24;
 }
 
-/* ─── Schedule Badges ─── */
+/* â”€â”€â”€ Schedule Badges â”€â”€â”€ */
 .schedule-badge {
   display: inline-flex;
   align-items: center;
@@ -1149,7 +1149,7 @@ select.form-input::-webkit-scrollbar-thumb {
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-/* ─── Link Count Badge ─── */
+/* â”€â”€â”€ Link Count Badge â”€â”€â”€ */
 .link-count-badge {
   display: inline-flex;
   align-items: center;
@@ -1163,11 +1163,11 @@ select.form-input::-webkit-scrollbar-thumb {
   margin-right: 12px;
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    BULK OPERATIONS STYLES
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ─── Select All Checkbox ─── */
+/* â”€â”€â”€ Select All Checkbox â”€â”€â”€ */
 .select-all-checkbox {
   display: flex;
   align-items: center;
@@ -1197,7 +1197,7 @@ select.form-input::-webkit-scrollbar-thumb {
   accent-color: var(--accent);
 }
 
-/* ─── Link Checkbox ─── */
+/* â”€â”€â”€ Link Checkbox â”€â”€â”€ */
 .link-checkbox-wrapper {
   display: flex;
   align-items: center;
@@ -1217,7 +1217,7 @@ select.form-input::-webkit-scrollbar-thumb {
   transform: scale(1.1);
 }
 
-/* ─── Selected Link State ─── */
+/* â”€â”€â”€ Selected Link State â”€â”€â”€ */
 .admin-link-item.selected {
   background: rgba(168, 85, 247, 0.12);
   border-color: var(--accent);
@@ -1253,7 +1253,7 @@ select.form-input::-webkit-scrollbar-thumb {
   border-color: var(--accent-light);
 }
 
-/* ─── Floating Bulk Toolbar ─── */
+/* â”€â”€â”€ Floating Bulk Toolbar â”€â”€â”€ */
 .bulk-toolbar {
   position: fixed;
   bottom: 24px;
@@ -1416,7 +1416,7 @@ select.form-input::-webkit-scrollbar-thumb {
   transform: scale(0.95);
 }
 
-/* ─── Custom Confirmation Modal ─── */
+/* â”€â”€â”€ Custom Confirmation Modal â”€â”€â”€ */
 .confirm-modal {
   max-width: 420px;
 }
@@ -1465,7 +1465,7 @@ select.form-input::-webkit-scrollbar-thumb {
   outline-color: #ef4444;
 }
 
-/* ─── Responsive Bulk Toolbar ─── */
+/* â”€â”€â”€ Responsive Bulk Toolbar â”€â”€â”€ */
 @media (max-width: 768px) {
   .bulk-toolbar {
     left: 16px;
@@ -1557,11 +1557,11 @@ select.form-input::-webkit-scrollbar-thumb {
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    CATEGORIES STYLES
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ─── Categories List ─── */
+/* â”€â”€â”€ Categories List â”€â”€â”€ */
 .categories-list {
   display: flex;
   flex-direction: column;
@@ -1633,7 +1633,7 @@ select.form-input::-webkit-scrollbar-thumb {
   flex-shrink: 0;
 }
 
-/* ─── Emoji Picker ─── */
+/* â”€â”€â”€ Emoji Picker â”€â”€â”€ */
 .emoji-picker-grid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
@@ -1672,7 +1672,7 @@ select.form-input::-webkit-scrollbar-thumb {
   background: var(--accent-bg);
 }
 
-/* ─── Color Picker ─── */
+/* â”€â”€â”€ Color Picker â”€â”€â”€ */
 .color-picker {
   display: flex;
   gap: 8px;
@@ -1697,7 +1697,7 @@ select.form-input::-webkit-scrollbar-thumb {
   box-shadow: 0 0 0 2px var(--bg-elevated);
 }
 
-/* ─── Category Badge in Link Item ─── */
+/* â”€â”€â”€ Category Badge in Link Item â”€â”€â”€ */
 .link-category-badge {
   display: inline-flex;
   align-items: center;
@@ -1709,14 +1709,155 @@ select.form-input::-webkit-scrollbar-thumb {
   margin-left: 8px;
 }
 
-/* ─── Empty State for Categories ─── */
+/* â”€â”€â”€ Empty State for Categories â”€â”€â”€ */
 .categories-list .empty-state {
   padding: 60px 20px;
 }
 
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   RECENTLY VISITED PROFILES STYLES
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+/* â”€â”€â”€ Recent Profiles Grid â”€â”€â”€ */
+.recent-profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.recent-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--duration-fast) var(--ease-out);
+  overflow: hidden;
+}
+
+.recent-profile-card:hover {
+  border-color: var(--accent);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(168, 85, 247, 0.1);
+}
+
+/* â”€â”€â”€ Recent Profile Avatar â”€â”€â”€ */
+.recent-profile-avatar {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recent-profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: white;
+}
+
+/* â”€â”€â”€ Recent Profile Info â”€â”€â”€ */
+.recent-profile-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.recent-profile-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: text-overflow;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.recent-profile-username {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: text-overflow;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.recent-profile-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* â”€â”€â”€ Recent Profile Arrow â”€â”€â”€ */
+.recent-profile-arrow {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.recent-profile-card:hover .recent-profile-arrow {
+  color: var(--accent);
+}
+
+.recent-profile-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* â”€â”€â”€ Mobile Responsiveness â”€â”€â”€ */
+@media (max-width: 768px) {
+  .recent-profiles-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .recent-profiles-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recent-profile-card {
+    padding: 14px 16px;
+  }
+
+  .recent-profile-avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .recent-profile-name {
+    font-size: 0.9rem;
+  }
+}
+
+
 
 /* -----------------------------------------------------------
-   CONN � Interest Recommendation Styles
+   CONN — Interest Recommendation Styles
    ----------------------------------------------------------- */
 
 /* --- Interest Suggestions Container --- */

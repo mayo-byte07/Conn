@@ -1379,12 +1379,103 @@
     showToast('Preview refreshed');
   });
 
+  // ═══════════ RECENTLY VISITED PROFILES ═══════════
+  const RECENT_PROFILES_KEY = 'conn-recent-profiles';
+
+  function getRecentProfiles() {
+    try {
+      return JSON.parse(localStorage.getItem(RECENT_PROFILES_KEY) || '[]');
+    } catch (err) {
+      console.error('Failed to load recent profiles:', err);
+      return [];
+    }
+  }
+
+  function clearRecentProfiles() {
+    localStorage.removeItem(RECENT_PROFILES_KEY);
+    renderRecentProfiles();
+    showToast('Recent profiles cleared');
+  }
+
+  function getTimeAgo(date) {
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (seconds < 60) return 'Just now';
+    if (minutes < 60) return `${minutes}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    if (days < 7) return `${days}d ago`;
+    return date.toLocaleDateString();
+  }
+
+  function renderRecentProfiles() {
+    const grid = document.getElementById('recentProfilesGrid');
+    const profiles = getRecentProfiles();
+
+    if (!profiles || profiles.length === 0) {
+      grid.innerHTML = `
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <h3>No recently visited profiles</h3>
+          <p>Profiles you visit will appear here. Click on profile links to start tracking them.</p>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = profiles.map((profile) => {
+      const lastVisited = new Date(profile.timestamp);
+      const timeAgo = getTimeAgo(lastVisited);
+
+      const avatarContent = profile.avatar
+        ? `<img src="${escapeHtml(profile.avatar)}" alt="${escapeHtml(profile.name)}" />`
+        : `<div class="avatar-placeholder">${(profile.name || profile.username).charAt(0).toUpperCase()}</div>`;
+
+      return `
+        <a href="${escapeHtml(profile.url)}" class="recent-profile-card" target="_blank" rel="noopener noreferrer">
+          <div class="recent-profile-avatar">
+            ${avatarContent}
+          </div>
+          <div class="recent-profile-info">
+            <div class="recent-profile-name">${escapeHtml(profile.name || profile.username)}</div>
+            <div class="recent-profile-username">@${escapeHtml(profile.username)}</div>
+            <div class="recent-profile-time">${timeAgo}</div>
+          </div>
+          <div class="recent-profile-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </div>
+        </a>
+      `;
+    }).join('');
+  }
+
+  // Setup clear recent profiles button
+  document.getElementById('clearRecentProfilesBtn')?.addEventListener('click', async () => {
+    const confirmed = await showConfirmModal(
+      'Clear Recent Profiles',
+      'Are you sure you want to clear your recently visited profiles history?'
+    );
+    if (confirmed) {
+      clearRecentProfiles();
+    }
+  });
+
   // ─── Init ───
   document.addEventListener('DOMContentLoaded', async () => {
     //checkAuth();
     loadLinks();
     loadProfile();
     loadCategories();
+    renderRecentProfiles();
     initPublicUrl();
     setupKeyboardShortcuts();
   });

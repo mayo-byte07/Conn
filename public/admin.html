@@ -55,6 +55,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           Profile
         </button>
+        <button class="nav-item" data-section="recentProfiles" id="navRecentProfiles">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M16 11h6"/><path d="M16 7h6"/><path d="M16 15h6"/></svg>
+          Recent Profiles
+        </button>
         <button class="nav-item" data-section="themes" id="navThemes">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           Themes
@@ -230,6 +234,20 @@
             </div>
           </div>
         </div>
+      </section>
+
+      <!-- ══════ Recently Visited Profiles Section ══════ -->
+      <section class="admin-section" id="sectionRecentProfiles">
+        <div class="admin-header">
+          <h1>Recently Visited Profiles</h1>
+          <div class="admin-header-actions">
+            <button class="btn btn-secondary" id="clearRecentProfilesBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              Clear History
+            </button>
+          </div>
+        </div>
+        <div id="recentProfilesGrid" class="recent-profiles-grid"></div>
       </section>
 
       <!-- ══════ Themes Section ══════ -->
