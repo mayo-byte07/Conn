@@ -2097,4 +2097,40 @@
 }
 
 
+#scrollTopBtn {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
 
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+
+  background: rgba(15, 15, 20, 0.85);
+  backdrop-filter: blur(10px);
+
+  color: #ffffff;
+  cursor: pointer;
+
+  z-index: 1000;
+
+  transition: transform 0.2s ease,
+              background-color 0.2s ease,
+              opacity 0.2s ease;
+}
+
+#scrollTopBtn:hover {
+  transform: translateY(-2px);
+  background: rgba(30, 30, 40, 0.95);
+}
+
+#scrollTopBtn svg {
+  width: 20px;
+  height: 20px;
+}
