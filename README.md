@@ -356,6 +356,7 @@ Verify that:
 - Database tables were created successfully
 
 ### JWT errors
+If you see "JWT_SECRET is required" on startup, make sure `JWT_SECRET` is set in your `.env` file and is at least 32 characters long.
 
 ---
 
