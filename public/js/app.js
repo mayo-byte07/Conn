@@ -299,7 +299,9 @@ function applyTheme(themeName, isPreview = false) {
       // Avatar
       const avatarEl = document.getElementById('avatarEl');
       if (profile.avatar) {
-        avatarEl.innerHTML = `<img src="${profile.avatar}" alt="${profile.name}" />`;
+        // Escape both attributes — the stored avatar URL is user-controlled
+        // and must not be able to break out of the img tag (stored XSS).
+        avatarEl.innerHTML = `<img src="${escapeHtml(profile.avatar)}" alt="${escapeHtml(profile.name || '')}" />`;
       } else {
         const initials = (profile.name || 'C').charAt(0).toUpperCase();
         avatarEl.innerHTML = `<div class="avatar-placeholder">${initials}</div>`;
