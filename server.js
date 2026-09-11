@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
 const supabase = require('./db');
 const { OAuth2Client } = require('google-auth-library');
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const rateLimit = require('express-rate-limit');
 const app = express();
 const PORT = process.env.PORT || 3000;
