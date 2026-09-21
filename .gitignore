@@ -4,3 +4,5 @@ data/*.json
 data/users/
 !data/subscriptions.json
 .vercel/
+cookies.txt
+*.cookie
