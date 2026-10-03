@@ -34,22 +34,17 @@
   <div class="floating-orb orb-2"></div>
 
 <header class="navbar" id="navbar">
-    <div class="navbar-inner"><a href="/" class="navbar-logo">
-        <div class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-          </svg></div>
-        <div style="display:flex;flex-direction:column;justify-content:center"><span class="logo-text">Conn<span
-              class="logo-dot">.</span></span><span
-            style="font-size:0.5rem;color:var(--text-secondary);line-height:1;margin-top:-1px;text-transform:uppercase;letter-spacing:0.5px;opacity:0.8">powered
-            by aethercodesociety</span></div>
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <div class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+        <div style="display:flex;flex-direction:column;justify-content:center"><span class="logo-text">Conn<span class="logo-dot">.</span></span><span style="font-size:0.5rem;color:var(--text-secondary);line-height:1;margin-top:-1px;text-transform:uppercase;letter-spacing:0.5px;opacity:0.8">powered by aethercodesociety</span></div>
       </a>
       <nav class="navbar-links">
-        <div class="nav-dropdown" id="navDropdown"><button class="nav-dropdown-trigger" id="navDropdownTrigger">Product
-            <svg class="dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="6 9 12 15 18 9" />
-            </svg></button>
+        <div class="nav-dropdown" id="navDropdown">
+          <button class="nav-dropdown-trigger" id="navDropdownTrigger">Product <svg class="dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
           <div class="mega-dropdown" id="megaDropdown">
             <div class="mega-dropdown-inner">
+              <!-- Category 1: Link in Bio + Tools -->
               <div class="mega-category">
                 <div class="mega-category-header">
                   <div class="mega-category-icon" style="--cat-color: #a855f7; --cat-bg: rgba(168,85,247,0.12)">
@@ -105,6 +100,7 @@
                 </a>
               </div>
           
+              <!-- Category 2: Manage Social Media -->
               <div class="mega-category">
                 <div class="mega-category-header">
                   <div class="mega-category-icon" style="--cat-color: #06b6d4; --cat-bg: rgba(6,182,212,0.12)">
@@ -156,6 +152,7 @@
                 </a>
               </div>
           
+              <!-- Category 3: Grow & Engage -->
               <div class="mega-category">
                 <div class="mega-category-header">
                   <div class="mega-category-icon" style="--cat-color: #22c55e; --cat-bg: rgba(34,197,94,0.12)">
@@ -209,6 +206,7 @@
                 </a>
               </div>
           
+              <!-- Category 4: Monetize -->
               <div class="mega-category">
                 <div class="mega-category-header">
                   <div class="mega-category-icon" style="--cat-color: #f97316; --cat-bg: rgba(249,115,22,0.12)">
@@ -262,6 +260,7 @@
                 </a>
               </div>
           
+              <!-- Category 5: Measure Success -->
               <div class="mega-category">
                 <div class="mega-category-header">
                   <div class="mega-category-icon" style="--cat-color: #ec4899; --cat-bg: rgba(236,72,153,0.12)">
@@ -314,13 +313,13 @@
                 </a>
               </div>
           
+              <!-- Dropdown CTA -->
               <div class="mega-cta">
                 <div class="mega-cta-content">
                   <span class="mega-cta-badge">✨ New</span>
                   <h4>8 Premium Gradient Themes</h4>
-                  <p>Aurora Borealis, Cosmic Nebula, Holographic & more — animated mesh gradients you won't find anywhere else.
-                  </p>
-                  <a href="#themes" class="mega-cta-btn">Explore Themes →</a>
+                  <p>Aurora Borealis, Cosmic Nebula, Holographic & more — animated mesh gradients you won't find anywhere else.</p>
+                  <a href="/#themes" class="mega-cta-btn">Explore Themes →</a>
                 </div>
               </div>
             </div>
@@ -329,20 +328,51 @@
         <a href="/#themes">Templates</a>
         <a href="/#learn">Resources</a>
         <a href="/#contact">Contact</a>
+        <a href="/team">Team</a>
         <button class="theme-toggle-btn" aria-label="Switch to light mode" title="Switch to light mode">
           <span class="toggle-track">
             <span class="toggle-icon toggle-icon-moon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-              </svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             </span>
             <span class="toggle-icon toggle-icon-sun">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="5"/>
-                <line x1="12" y1="1" x2="12" y2="3"/>
-                <line x1="12" y1="21" x2="12" y2="23"/>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                <line x1="18.36" y1="18.36
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </span>
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+      </nav>
+      <div class="navbar-actions navbar-actions-guest" id="navGuest" style="display:none"><a href="/login" class="btn-nav btn-nav-ghost">Sign In</a><a href="/signup" class="btn-nav btn-nav-primary">Sign Up →</a></div>
+      <div class="navbar-actions navbar-actions-auth" id="navAuth" style="display:none"><a href="/admin" class="btn-nav btn-nav-ghost">Dashboard</a><a href="/me" class="btn-nav btn-nav-primary">My Page →</a></div>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <!-- Mobile Product Accordion -->
+      <button class="mobile-product-toggle" id="mobileProductToggle">
+        Product
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="mobile-product-panel" id="mobileProductPanel">
+        <a href="/features/link-in-bio">🔗 Link in Bio + Tools</a>
+        <a href="/features/social-media">📱 Manage Social Media</a>
+        <a href="/features/grow">📈 Grow & Engage Audience</a>
+        <a href="/features/monetize">💰 Monetize Your Following</a>
+        <a href="/features/analytics">📊 Measure Your Success</a>
+      </div>
+      <a href="/#themes">Templates</a>
+      <a href="/#learn">Resources</a>
+      <a href="/#contact">Contact</a>
+      <a href="/team">👥 Team</a>
+      <hr>
+      <div class="mobile-guest" id="mobileGuest" style="display:none;">
+        <a href="/login">Sign In</a>
+        <a href="/signup">Sign Up</a>
+      </div>
+      <div class="mobile-auth" id="mobileAuth" style="display:none;">
+        <a href="/admin">Dashboard</a>
+        <a href="/me">My Page</a>
+      </div>
+    </div>
+  </header>
 
   <section class="feat-hero">
     <div class="feat-hero-inner feat-animate">
@@ -591,8 +621,9 @@
     </div>
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+  <script src="/js/theme-toggle.js"></script>
+  <script src="/js/navbar.js"></script>
   <script src="/js/features.js"></script>
-  <script src="../js/theme-toggle.js"></script>
 </body>
 
 </html>

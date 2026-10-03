@@ -91,132 +91,9 @@
     elements.forEach(el => observer.observe(el));
   }
 
-  // ─── Navbar Scroll Effect ───
-  function initNavbar() {
-    const navbar = document.getElementById('navbar');
-    let lastY = 0;
-    window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      navbar.classList.toggle('scrolled', y > 50);
-      lastY = y;
-      // Close mega dropdown on scroll
-      closeMegaDropdown();
-    });
+  // (Navbar logic moved to navbar.js)
 
-    // Mobile menu
-    const btn = document.getElementById('mobileMenuBtn');
-    const menu = document.getElementById('mobileMenu');
-    btn.addEventListener('click', () => menu.classList.toggle('open'));
-
-    // Close menu on link click
-    menu.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => menu.classList.remove('open'));
-    });
-
-    // Mobile product accordion
-    const mobileProductToggle = document.getElementById('mobileProductToggle');
-    const mobileProductPanel = document.getElementById('mobileProductPanel');
-    if (mobileProductToggle && mobileProductPanel) {
-      mobileProductToggle.addEventListener('click', () => {
-        mobileProductToggle.classList.toggle('open');
-        mobileProductPanel.classList.toggle('open');
-      });
-      // Close accordion when a link inside is clicked
-      mobileProductPanel.querySelectorAll('a').forEach(a => {
-        a.addEventListener('click', () => {
-          menu.classList.remove('open');
-          mobileProductToggle.classList.remove('open');
-          mobileProductPanel.classList.remove('open');
-        });
-      });
-    }
-  }
-
-  // ─── Mega Dropdown Logic ───
-  function initMegaDropdown() {
-    const dropdown = document.getElementById('navDropdown');
-    const trigger = document.getElementById('navDropdownTrigger');
-    const megaPanel = document.getElementById('megaDropdown');
-    if (!dropdown || !trigger || !megaPanel) return;
-
-    let hoverTimeout = null;
-    let isOpen = false;
-
-    function openMegaDropdown() {
-      clearTimeout(hoverTimeout);
-      dropdown.classList.add('open');
-      isOpen = true;
-    }
-
-    function closeMegaDropdownDelayed(delay) {
-      clearTimeout(hoverTimeout);
-      hoverTimeout = setTimeout(() => {
-        dropdown.classList.remove('open');
-        isOpen = false;
-      }, delay || 200);
-    }
-
-    // Desktop: hover with delay
-    dropdown.addEventListener('mouseenter', () => {
-      if (window.innerWidth > 768) openMegaDropdown();
-    });
-
-    dropdown.addEventListener('mouseleave', () => {
-      if (window.innerWidth > 768) closeMegaDropdownDelayed(250);
-    });
-
-    megaPanel.addEventListener('mouseenter', () => {
-      if (window.innerWidth > 768) {
-        clearTimeout(hoverTimeout);
-      }
-    });
-
-    megaPanel.addEventListener('mouseleave', () => {
-      if (window.innerWidth > 768) closeMegaDropdownDelayed(250);
-    });
-
-    // Click toggle (works on both desktop and as fallback)
-    trigger.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (isOpen) {
-        dropdown.classList.remove('open');
-        isOpen = false;
-      } else {
-        openMegaDropdown();
-      }
-    });
-
-    // Close on outside click
-    document.addEventListener('click', (e) => {
-      if (isOpen && !dropdown.contains(e.target) && !megaPanel.contains(e.target)) {
-        dropdown.classList.remove('open');
-        isOpen = false;
-      }
-    });
-
-    // Close on Escape
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && isOpen) {
-        dropdown.classList.remove('open');
-        isOpen = false;
-      }
-    });
-
-    // Close on link click inside mega dropdown
-    megaPanel.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => {
-        dropdown.classList.remove('open');
-        isOpen = false;
-      });
-    });
-  }
-
-  // Global close function (used by scroll handler)
-  function closeMegaDropdown() {
-    const dropdown = document.getElementById('navDropdown');
-    if (dropdown) dropdown.classList.remove('open');
-  }
+  // (Mega dropdown logic moved to navbar.js)
 
   // ─── Counter Animation ───
   function initCounters() {
@@ -252,18 +129,7 @@
     requestAnimationFrame(update);
   }
 
-  // ─── Smooth Scroll ───
-  function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', (e) => {
-        e.preventDefault();
-        const target = document.querySelector(anchor.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    });
-  }
+  // (Smooth scroll logic moved to navbar.js)
 
   // ─── Contact Form ───
   function initContactForm() {
@@ -316,36 +182,7 @@
     });
   }
 
-  // ─── Auth State (toggle navbar buttons) ───
-  function initAuthState() {
-    fetch('/api/auth/check')
-      .then(res => res.json())
-      .then(data => {
-        const navGuest = document.getElementById('navGuest');
-        const navAuth = document.getElementById('navAuth');
-        const mobileGuest = document.getElementById('mobileGuest');
-        const mobileAuth = document.getElementById('mobileAuth');
-
-        if (data.authenticated) {
-          if (navAuth) navAuth.style.display = 'flex';
-          if (navGuest) navGuest.style.display = 'none';
-          if (mobileAuth) mobileAuth.style.display = 'block';
-          if (mobileGuest) mobileGuest.style.display = 'none';
-        } else {
-          if (navGuest) navGuest.style.display = 'flex';
-          if (navAuth) navAuth.style.display = 'none';
-          if (mobileGuest) mobileGuest.style.display = 'block';
-          if (mobileAuth) mobileAuth.style.display = 'none';
-        }
-      })
-      .catch(() => {
-        // Fallback: show guest buttons on error
-        const navGuest = document.getElementById('navGuest');
-        const mobileGuest = document.getElementById('mobileGuest');
-        if (navGuest) navGuest.style.display = 'flex';
-        if (mobileGuest) mobileGuest.style.display = 'block';
-      });
-  }
+  // (Auth state check logic moved to navbar.js)
 
   // ─── Billing Toggle (Monthly / Yearly) ───
   function initBillingToggle() {
@@ -583,12 +420,8 @@
   document.addEventListener('DOMContentLoaded', () => {
     initParticles();
     initScrollReveal();
-    initNavbar();
-    initMegaDropdown();
     initCounters();
-    initSmoothScroll();
     initContactForm();
-    initAuthState();
     initBillingToggle();
     initRazorpayLanding();
     initFAQ();
