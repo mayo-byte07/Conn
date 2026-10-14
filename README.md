@@ -356,6 +356,7 @@ Verify that:
 - Database tables were created successfully
 
 ### JWT errors
+Ensure your `JWT_SECRET` is properly set in your `.env` file and is at least 32 characters long. If you recently changed your secret, all existing user sessions will be invalidated and users will need to log in again.
 
 ---
 
