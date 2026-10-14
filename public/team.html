@@ -287,26 +287,31 @@
 }
 
 .team-cta h2{
+  position:relative;
+  z-index:2;
   font-family:'Outfit',sans-serif;
-  font-size:clamp(2.5rem,5vw,4rem);
+  font-size:clamp(2rem,4vw,3.2rem);
   font-weight:900;
-  line-height:1.1;
-  color:#111827;
-  letter-spacing:-2px;
-  margin-bottom:24px;
-  text-shadow:0 2px 10px rgba(0,0,0,0.05);
+  line-height:1.15;
+  color:#f8fafc;
+  letter-spacing:-0.04em;
+  margin-bottom:18px;
 }
 
 .team-cta p{
-  max-width:700px;
-  margin:0 auto 40px;
-  font-size:1.15rem;
-  line-height:1.9;
+  position:relative;
+  z-index:2;
+  max-width:650px;
+  margin:0 auto 36px;
+  font-size:1rem;
+  line-height:1.8;
   font-weight:500;
-  color:#4b5563;
+  color:#b8b8b8;
 }
 
 .team-cta-roles{
+  position:relative;
+  z-index:2;
   display:flex;
   flex-wrap:wrap;
   justify-content:center;
@@ -315,27 +320,24 @@
 }
 
 .team-cta-role{
-  background:#ffffff;
-  color:#374151;
+  background:rgba(255,255,255,0.06);
+  color:#d1d5db;
   font-size:0.95rem;
   font-weight:700;
   padding:12px 20px;
   border-radius:999px;
-  border:1px solid rgba(168,85,247,0.2);
-  box-shadow:0 8px 20px rgba(0,0,0,0.06);
+  border:1px solid rgba(168,85,247,0.25);
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
   transition:all .3s ease;
+  backdrop-filter:blur(8px);
 }
 
 .team-cta-role:hover{
+  color:#fff;
   transform:translateY(-4px);
-  color:#a855f7;
-  box-shadow:0 12px 25px rgba(168,85,247,0.2);
-}
-
-.btn-apply{
-  font-size:1.1rem;
-  font-weight:800;
-  padding:20px 50px;
+  background:rgba(168,85,247,0.18);
+  border-color:rgba(168,85,247,0.45);
+  box-shadow:0 14px 32px rgba(168,85,247,0.2);
 }
 
     /* Footer */
