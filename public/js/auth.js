@@ -17,6 +17,26 @@
     if (el) el.classList.remove("visible");
   }
 
+  function setSubmitLoading(btn, loading, loadingText, defaultText) {
+    if (!btn) return;
+
+    const btnContent = btn.querySelector(".btn-content");
+    const btnLoader = btn.querySelector(".btn-loader");
+
+    btn.disabled = loading;
+    btn.textContent = loading ? loadingText : defaultText;
+    btn.style.opacity = loading ? "0.7" : "1";
+    btn.style.cursor = loading ? "not-allowed" : "pointer";
+
+    if (btnContent) {
+      btnContent.style.display = loading ? "none" : "flex";
+    }
+
+    if (btnLoader) {
+      btnLoader.style.display = loading ? "inline" : "none";
+    }
+  }
+
   // ─── Login ───
   function initLogin() {
     const form = document.getElementById("loginForm");
@@ -35,15 +55,7 @@
         return;
       }
 
-      btn.disabled = true;
-      btn.textContent = "Signing in…";
-     btn.disabled = true;
-     btn.style.opacity = '0.7';
-     btn.style.cursor = 'not-allowed';
-          const btnContent = btn.querySelector('.btn-content');
-          const btnLoader = btn.querySelector('.btn-loader');
-          btnContent.style.display = 'none';
-          btnLoader.style.display = 'inline';
+      setSubmitLoading(btn, true, "Signing in…", "Sign In");
 
       try {
         const res = await fetch("/api/auth/login", {
@@ -55,24 +67,14 @@
         const data = await res.json();
         if (!res.ok) {
           showError(data.error || "Login failed.");
-          btn.disabled = false;
-          btn.textContent = "Sign In";
-          btn.style.opacity = '1';
-          btn.style.cursor = 'pointer';
-          btnContent.style.display = 'flex';
-          btnLoader.style.display = 'none';
+          setSubmitLoading(btn, false, "Signing in…", "Sign In");
           return;
         }
 
         window.location.href = "/admin";
       } catch (err) {
         showError("Network error. Please try again.");
-        btn.disabled = false;
-        btn.textContent = "Sign In";
-        btn.style.opacity = '1';
-        btn.style.cursor = 'pointer';
-        btnContent.style.display = 'flex';
-        btnLoader.style.display = 'none';
+        setSubmitLoading(btn, false, "Signing in…", "Sign In");
       }
     });
   }
@@ -336,15 +338,7 @@
         return;
       }
 
-      btn.disabled = true;
-      btn.textContent = "Creating account…";
-      btn.style.opacity = '0.7';
-      btn.style.cursor = 'not-allowed';
-      const btnContent = btn.querySelector('.btn-content');
-      const btnLoader = btn.querySelector('.btn-loader');
-
-btnContent.style.display = 'none';
-btnLoader.style.display = 'inline';
+      setSubmitLoading(btn, true, "Creating account…", "Create Account");
 
       try {
         const res = await fetch("/api/auth/register", {
@@ -356,24 +350,14 @@ btnLoader.style.display = 'inline';
         const data = await res.json();
         if (!res.ok) {
           showError(data.error || "Registration failed.");
-          btn.disabled = false;
-          btn.textContent = "Create Account";
-          btn.style.opacity = '1';
-          btn.style.cursor = 'pointer';
-          btnContent.style.display = 'flex';
-          btnLoader.style.display = 'none';
+          setSubmitLoading(btn, false, "Creating account…", "Create Account");
           return;
         }
 
         window.location.href = "/admin";
       } catch (err) {
         showError("Network error. Please try again.");
-        btn.disabled = false;
-        btn.textContent = "Create Account";
-        btn.style.opacity = '1';
-        btn.style.cursor = 'pointer';
-        btnContent.style.display = 'flex';
-        btnLoader.style.display = 'none';
+        setSubmitLoading(btn, false, "Creating account…", "Create Account");
       }
     });
   }
