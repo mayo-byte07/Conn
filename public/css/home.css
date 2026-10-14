@@ -67,12 +67,14 @@
 }
 
 .navbar-inner {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 24px;
 }
 
 .navbar-logo {
@@ -103,6 +105,7 @@
   font-size: 1.3rem;
   font-weight: 800;
   color: var(--text-primary);
+  align-self: self-start;
 }
 
 .logo-dot {
