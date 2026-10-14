@@ -42,8 +42,8 @@
      btn.style.cursor = 'not-allowed';
           const btnContent = btn.querySelector('.btn-content');
           const btnLoader = btn.querySelector('.btn-loader');
-          btnContent.style.display = 'none';
-          btnLoader.style.display = 'inline';
+          if (btnContent) btnContent.style.display = 'none';
+          if (btnLoader) btnLoader.style.display = 'inline';
 
       try {
         const res = await fetch("/api/auth/login", {
@@ -59,8 +59,8 @@
           btn.textContent = "Sign In";
           btn.style.opacity = '1';
           btn.style.cursor = 'pointer';
-          btnContent.style.display = 'flex';
-          btnLoader.style.display = 'none';
+          if (btnContent) btnContent.style.display = 'flex';
+          if (btnLoader) btnLoader.style.display = 'none';
           return;
         }
 
@@ -71,8 +71,8 @@
         btn.textContent = "Sign In";
         btn.style.opacity = '1';
         btn.style.cursor = 'pointer';
-        btnContent.style.display = 'flex';
-        btnLoader.style.display = 'none';
+        if (btnContent) btnContent.style.display = 'flex';
+        if (btnLoader) btnLoader.style.display = 'none';
       }
     });
   }
@@ -343,8 +343,8 @@
       const btnContent = btn.querySelector('.btn-content');
       const btnLoader = btn.querySelector('.btn-loader');
 
-btnContent.style.display = 'none';
-btnLoader.style.display = 'inline';
+      if (btnContent) btnContent.style.display = 'none';
+      if (btnLoader) btnLoader.style.display = 'inline';
 
       try {
         const res = await fetch("/api/auth/register", {
@@ -360,8 +360,8 @@ btnLoader.style.display = 'inline';
           btn.textContent = "Create Account";
           btn.style.opacity = '1';
           btn.style.cursor = 'pointer';
-          btnContent.style.display = 'flex';
-          btnLoader.style.display = 'none';
+          if (btnContent) btnContent.style.display = 'flex';
+          if (btnLoader) btnLoader.style.display = 'none';
           return;
         }
 
@@ -372,8 +372,8 @@ btnLoader.style.display = 'inline';
         btn.textContent = "Create Account";
         btn.style.opacity = '1';
         btn.style.cursor = 'pointer';
-        btnContent.style.display = 'flex';
-        btnLoader.style.display = 'none';
+        if (btnContent) btnContent.style.display = 'flex';
+        if (btnLoader) btnLoader.style.display = 'none';
       }
     });
   }
