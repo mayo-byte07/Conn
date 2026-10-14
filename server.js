@@ -26,6 +26,10 @@ if (!process.env.GOOGLE_CLIENT_ID) {
   console.warn('  GOOGLE_CLIENT_ID not set — Google OAuth sign-in will be unavailable.');
 }
 
+// OAuth2Client is imported above but must be instantiated before use in
+// the Google token verification endpoint (/api/auth/google).
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 //LOGIN limiter
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
