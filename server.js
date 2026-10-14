@@ -713,11 +713,30 @@ app.put('/api/profile', requireAuth, async (req, res) => {
     }
   }
 
+  // Validate avatar URL before it is stored and served to every visitor of
+  // public profile pages. Reject non-http(s) schemes (javascript:, data:,
+  // vbscript:), malformed URLs, and characters that could break out of an
+  // HTML attribute — layered with client-side escaping to prevent stored XSS.
+  let avatar = (req.body.avatar ?? existing?.avatar ?? '').trim();
+  if (avatar) {
+    if (/[\s"'<>`]/.test(avatar) || !/^https?:\/\//i.test(avatar)) {
+      return res.status(400).json({ error: 'Avatar must be a valid http(s) URL' });
+    }
+    try {
+      const parsed = new URL(avatar);
+      if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+        return res.status(400).json({ error: 'Avatar must be a valid http(s) URL' });
+      }
+    } catch {
+      return res.status(400).json({ error: 'Avatar must be a valid URL' });
+    }
+  }
+
   const updates = {
     name: req.body.name ?? existing?.name ?? 'Your Name',
     bio: req.body.bio ?? existing?.bio ?? '',
     skills: req.body.skills ?? existing?.skills ?? '',
-    avatar: req.body.avatar ?? existing?.avatar ?? '',
+    avatar,
     interests: Array.isArray(req.body.interests) ? req.body.interests.filter(i => typeof i === 'string' && i.trim().length > 0) : (existing?.interests ?? []),
     socials
   };
